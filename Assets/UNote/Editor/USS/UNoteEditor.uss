@@ -1,0 +1,9 @@
+.container {
+    padding: 10px;
+}
+
+Label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    margin-bottom: 10px;
+}
