@@ -17,12 +17,16 @@ namespace UNote.Editor
                 label = "UNote",
                 guiHandler = (searchContext) =>
                 {
+                    ++EditorGUI.indentLevel;
+
                     UNoteSetting setting = UserConfig.GetSetting();
                     setting.UserName = EditorGUILayout.TextField("Editor Name", setting.UserName);
                     if (string.IsNullOrEmpty(setting.UserName))
                     {
                         setting.UserName = Environment.UserName;
                     }
+
+                    --EditorGUI.indentLevel;
                 },
                 keywords = new HashSet<string>(new[] { "UNote" })
             };
