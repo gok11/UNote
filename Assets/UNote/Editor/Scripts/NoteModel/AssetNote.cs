@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,8 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
-    public class AssetNote : NoteBase
+    [Serializable]
+    public sealed class AssetNote : NoteBase
     {
         #region Field
 

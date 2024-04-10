@@ -1,0 +1,32 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection.Emit;
+using UnityEditor;
+using UnityEngine;
+
+namespace UNote.Editor
+{
+    public class SettingsRegister
+    {
+        [SettingsProvider]
+        private static SettingsProvider CreateUNoteSettingProvider()
+        {
+            var provider = new SettingsProvider("UNote/", SettingsScope.User)
+            {
+                label = "UNote",
+                guiHandler = (searchContext) =>
+                {
+                    UNoteSetting setting = UserConfig.GetSetting();
+                    setting.UserName = EditorGUILayout.TextField("Editor Name", setting.UserName);
+                    if (string.IsNullOrEmpty(setting.UserName))
+                    {
+                        setting.UserName = Environment.UserName;
+                    }
+                },
+                keywords = new HashSet<string>(new[] { "UNote" })
+            };
+            return provider;
+        }
+    }
+}
