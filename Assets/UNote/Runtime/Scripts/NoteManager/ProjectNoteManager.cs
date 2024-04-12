@@ -9,16 +9,19 @@ namespace UNote.Runtime
         private const string TypeSuffix = "project";
         private string FileName
         {
-            get { return $"{UserConfig.GetSetting().UserName}_{TypeSuffix}"; }
+            get { return $"{UserConfig.GetUNoteSetting().UserName}_{TypeSuffix}"; }
         }
 
-        private List<ProjectNote> projectNoteList = new List<ProjectNote>();
+        [SerializeField]
+        private List<ProjectNote> m_projectNoteList = new List<ProjectNote>();
 
-        // public static string Serialize() { }
+        // public static string Serialize() {
+        //     JsonUtility.ToJson()
+        // }
 
-        // public static void Deserialize()
+        // public static void Deserialize(string json)
         // {
-        //     // 設定ファイルあれば読み込む
+        //     // 設定ファイルあれば読み込んで ScriptableObject に変換する
         // }
     }
 }

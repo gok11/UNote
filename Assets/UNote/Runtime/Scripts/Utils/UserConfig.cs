@@ -11,7 +11,7 @@ namespace UNote.Runtime
     {
         public const string SettingKey = "UNote.UserConfig";
 
-        public static UNoteSetting GetSetting()
+        public static UNoteSetting GetUNoteSetting()
         {
             UNoteSetting setting = Resources.Load<UNoteSetting>("UNoteSetting");
 
@@ -35,26 +35,6 @@ namespace UNote.Runtime
 #endif
 
             return setting;
-        }
-    }
-
-    public class UNoteSetting : ScriptableObject
-    {
-        [SerializeField, HideInInspector]
-        private string m_userName;
-
-        public string UserName
-        {
-            get => m_userName;
-#if UNITY_EDITOR
-            set
-            {
-                if (m_userName != value)
-                {
-                    m_userName = value;
-                }
-            }
-#endif
         }
     }
 }

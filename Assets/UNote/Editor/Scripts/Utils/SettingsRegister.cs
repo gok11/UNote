@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using UnityEditor;
 using UnityEngine;
+using UNote.Runtime;
 
 namespace UNote.Editor
 {
@@ -19,7 +20,7 @@ namespace UNote.Editor
                 {
                     ++EditorGUI.indentLevel;
 
-                    UNoteSetting setting = UserConfig.GetSetting();
+                    UNoteSetting setting = UserConfig.GetUNoteSetting();
                     setting.UserName = EditorGUILayout.TextField("Editor Name", setting.UserName);
                     if (string.IsNullOrEmpty(setting.UserName))
                     {
