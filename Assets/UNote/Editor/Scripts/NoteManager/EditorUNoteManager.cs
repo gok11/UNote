@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UNote.Runtime;
 
-namespace UNote
+namespace UNote.Editor
 {
-    public static class EditorUNoteManager
+    public static partial class UNoteManager
     {
         #region Constructor
-        static EditorUNoteManager() { }
+        static UNoteManager() { }
         #endregion // Constructor
 
         #region Public Method

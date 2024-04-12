@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace UNote.Runtime
 {
-    public static class RuntimeUNoteManager
+    public static partial class UNoteManager
     {
         // TODO scene note
 
         #region Constructor
-        static RuntimeUNoteManager()
+        static UNoteManager()
         {
             InitializeRuntimeNote();
         }
