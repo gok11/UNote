@@ -12,7 +12,7 @@ namespace UNote.Editor
         [SettingsProvider]
         private static SettingsProvider CreateUNoteSettingProvider()
         {
-            var provider = new SettingsProvider("UNote/", SettingsScope.User)
+            var provider = new SettingsProvider("Preferences/", SettingsScope.User)
             {
                 label = "UNote",
                 guiHandler = (searchContext) =>
