@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UNote.Runtime
 {
-    public class ProjectNoteContainer
+    public class ProjectNoteContainer : ScriptableObject
     {
         private const string TypeSuffix = "project";
         private string FileName
@@ -15,13 +15,14 @@ namespace UNote.Runtime
         [SerializeField]
         private List<ProjectNote> m_projectNoteList = new List<ProjectNote>();
 
-        // public static string Serialize() {
-        //     JsonUtility.ToJson()
-        // }
+        public string Serialize()
+        {
+            return JsonUtility.ToJson(m_projectNoteList);
+        }
 
-        // public static void Deserialize(string json)
-        // {
-        //     // 設定ファイルあれば読み込んで ScriptableObject に変換する
-        // }
+        public void Deserialize(string json)
+        {
+            m_projectNoteList = JsonUtility.FromJson<List<ProjectNote>>(json);
+        }
     }
 }
