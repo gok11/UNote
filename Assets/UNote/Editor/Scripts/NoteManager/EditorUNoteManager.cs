@@ -5,10 +5,13 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
-    public static partial class UNoteManager
+    public static class EditorUNoteManager
     {
         #region Constructor
-        static UNoteManager() { }
+        static EditorUNoteManager()
+        {
+            InitializeEditorNote();
+        }
         #endregion // Constructor
 
         #region Public Method
