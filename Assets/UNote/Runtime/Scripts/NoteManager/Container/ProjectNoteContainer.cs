@@ -5,11 +5,13 @@ using UnityEngine;
 
 namespace UNote.Runtime
 {
-    public class ProjectNoteContainer : ScriptableObject
+    public class ProjectNoteContainer : NoteContainerBase
     {
         #region  Const
 
-        private const string TypeSuffix = "project";
+        protected override string Identifier => "project";
+
+        protected override string SubDirectoryName => "Project";
 
         #endregion // Const
 
@@ -22,26 +24,18 @@ namespace UNote.Runtime
 
         #region Property
 
-        private string FileDirectory
+        public List<ProjectNote> ProjectNoteList
         {
             get
             {
-                string projectRoot = Directory.GetParent(Application.dataPath).FullName;
-                return Path.Combine(projectRoot, "UNote");
+                if (m_projectNoteList == null)
+                {
+                    Load();
+                }
+
+                return m_projectNoteList;
             }
         }
-
-        private string FileName
-        {
-            get { return $"{UserConfig.GetUNoteSetting().UserName}_{TypeSuffix}.json"; }
-        }
-
-        private string FileFullPath
-        {
-            get { return Path.Combine(FileDirectory, FileName); }
-        }
-
-        public List<ProjectNote> ProjectNoteList => m_projectNoteList;
 
         #endregion // Property
 
@@ -69,6 +63,7 @@ namespace UNote.Runtime
             else
             {
                 m_projectNoteList = new List<ProjectNote>();
+                Save();
             }
         }
     }
