@@ -7,7 +7,20 @@ namespace UNote.Runtime
 {
     public class ProjectNoteContainer : ScriptableObject
     {
+        #region  Const
+
         private const string TypeSuffix = "project";
+
+        #endregion // Const
+
+        #region Field
+
+        [SerializeField]
+        private List<ProjectNote> m_projectNoteList = new List<ProjectNote>();
+
+        #endregion // Field
+
+        #region Property
 
         private string FileDirectory
         {
@@ -28,18 +41,9 @@ namespace UNote.Runtime
             get { return Path.Combine(FileDirectory, FileName); }
         }
 
-        [SerializeField]
-        private List<ProjectNote> m_projectNoteList = new List<ProjectNote>();
+        public IReadOnlyList<ProjectNote> ProjectNoteList => m_projectNoteList;
 
-        public string Serialize()
-        {
-            return JsonUtility.ToJson(m_projectNoteList);
-        }
-
-        public void Deserialize(string json)
-        {
-            m_projectNoteList = JsonUtility.FromJson<List<ProjectNote>>(json);
-        }
+        #endregion // Property
 
         public void Save()
         {
@@ -48,7 +52,8 @@ namespace UNote.Runtime
                 Directory.CreateDirectory(FileDirectory);
             }
 
-            string json = Serialize();
+            // Serialize
+            string json = JsonUtility.ToJson(m_projectNoteList);
             File.WriteAllText(FileFullPath, json);
         }
 
@@ -57,7 +62,13 @@ namespace UNote.Runtime
             if (File.Exists(FileFullPath))
             {
                 string json = File.ReadAllText(FileFullPath);
-                Deserialize(json);
+
+                // Deserialize
+                m_projectNoteList = JsonUtility.FromJson<List<ProjectNote>>(json);
+            }
+            else
+            {
+                m_projectNoteList = new List<ProjectNote>();
             }
         }
     }
