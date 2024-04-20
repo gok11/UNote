@@ -41,7 +41,7 @@ namespace UNote.Runtime
             get { return Path.Combine(FileDirectory, FileName); }
         }
 
-        public IReadOnlyList<ProjectNote> ProjectNoteList => m_projectNoteList;
+        public List<ProjectNote> ProjectNoteList => m_projectNoteList;
 
         #endregion // Property
 

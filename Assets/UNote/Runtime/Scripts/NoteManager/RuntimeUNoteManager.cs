@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Playables;
 using UnityEngine;
 
 namespace UNote.Runtime
@@ -23,8 +24,35 @@ namespace UNote.Runtime
 
         public static void InitializeRuntimeNote()
         {
+            // ProjectNoteContainer
             s_projectNoteContainer = ScriptableObject.CreateInstance<ProjectNoteContainer>();
             s_projectNoteContainer.Load();
+        }
+
+        #region Project Note
+
+        public static void AddProjectNote()
+        {
+            ProjectNote newNote = new ProjectNote();
+            s_projectNoteContainer.ProjectNoteList.Add(newNote);
+        }
+
+        public static IReadOnlyList<ProjectNote> GetProjectNoteList()
+        {
+            return s_projectNoteContainer.ProjectNoteList;
+        }
+
+#if UNITY_EDITOR
+        public static SerializedObject CreateProjectNoteContainerObject()
+        {
+            return new SerializedObject(s_projectNoteContainer);
+        }
+#endif
+
+        #endregion // Project Note
+
+        public static void SaveAll()
+        {
             s_projectNoteContainer.Save();
         }
 

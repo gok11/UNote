@@ -13,7 +13,7 @@ namespace UNote.Runtime
         #endregion // Property
 
         #region Constructor
-        public ProjectNote(string editor)
+        public ProjectNote(string editor = null)
             : base(editor) { }
         #endregion // Constructor
     }

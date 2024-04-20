@@ -63,8 +63,13 @@ namespace UNote.Runtime
 
         #endregion // Property
 
-        public NoteBase(string editor)
+        public NoteBase(string editor = null)
         {
+            if (editor == null)
+            {
+                editor = UserConfig.GetUNoteSetting().UserName;
+            }
+
             m_noteId = Guid.NewGuid().ToString();
             m_editor = editor;
             m_createdDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
