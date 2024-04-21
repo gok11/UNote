@@ -4,7 +4,7 @@ namespace UNote.Editor
 {
     public static class UxmlPath
     {
-        public static readonly string UNoteEditor = AssetDatabase.GUIDToAssetPath("e838f9ff3421a5b47b6ea24fe2e02920");
+        public static readonly string UNoteEditorLeftPane = AssetDatabase.GUIDToAssetPath("2b2d08b882ec10f4fa1d91efcdc74365");
     }
 
     public static class UssPath
