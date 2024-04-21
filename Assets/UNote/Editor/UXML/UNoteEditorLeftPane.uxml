@@ -5,6 +5,5 @@
     xmlns:editor="UnityEditor.UIElements"
     xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
 >
-    <engine:VisualElement name="Container">
-    </engine:VisualElement>    
+    
 </engine:UXML>
