@@ -19,10 +19,36 @@ namespace UNote.Editor
         {
             VisualElement root = rootVisualElement;
 
-            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UxmlPath.UNoteEditor);
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath.UNoteEditor);
+            // Three split pane
+            int fixedPaneIndex = 0;
+            float leftPaneInitialWidth = 150f;
+            float middlePaneInitialWidth = 200f;
+            TwoPaneSplitViewOrientation orientation = TwoPaneSplitViewOrientation.Horizontal;
 
-            visualTree.CloneTree(root);
+            TwoPaneSplitView firstSplitView = new TwoPaneSplitView(
+                fixedPaneIndex,
+                leftPaneInitialWidth,
+                orientation
+            );
+            TwoPaneSplitView secondSplitView = new TwoPaneSplitView(
+                fixedPaneIndex,
+                middlePaneInitialWidth,
+                orientation
+            );
+            root.Add(firstSplitView);
+
+            // TODO: get from dedicated class
+            VisualElement leftPane = new VisualElement();
+            VisualElement middlePane = new VisualElement();
+            VisualElement rightPane = new VisualElement();
+
+            firstSplitView.Add(leftPane);
+            firstSplitView.Add(secondSplitView);
+
+            secondSplitView.Add(middlePane);
+            secondSplitView.Add(rightPane);
+
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath.UNoteEditor);
             root.styleSheets.Add(styleSheet);
         }
     }
