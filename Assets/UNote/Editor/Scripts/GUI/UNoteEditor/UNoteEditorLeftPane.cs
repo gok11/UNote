@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,10 +12,10 @@ namespace UNote.Editor
         {
             name = nameof(UNoteEditorLeftPane);
 
-            // Show logo
-            // Option menu
-
-            // Show note list
+            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+                UxmlPath.UNoteEditorLeftPane
+            );
+            contentContainer.Add(tree.Instantiate());
         }
 
         /// <summary>

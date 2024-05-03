@@ -38,7 +38,7 @@ namespace UNote.Editor
             root.Add(firstSplitView);
 
             // TODO: get from dedicated class
-            VisualElement leftPane = new VisualElement();
+            VisualElement leftPane = new UNoteEditorLeftPane();
             VisualElement middlePane = new VisualElement();
             VisualElement rightPane = new VisualElement();
 

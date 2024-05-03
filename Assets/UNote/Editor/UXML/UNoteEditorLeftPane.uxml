@@ -5,5 +5,5 @@
     xmlns:editor="UnityEditor.UIElements"
     xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
 >
-    
+    <engine:Label name="title" text="UNote"/>
 </engine:UXML>
