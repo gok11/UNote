@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UNote.Runtime;
 
 namespace UNote.Editor
 {
@@ -19,17 +20,17 @@ namespace UNote.Editor
             TemplateContainer template = tree.CloneTree();
             contentContainer.Add(template);
 
+            // Prepare item
+            IReadOnlyList<ProjectNote> noteList = RuntimeUNoteManager.GetProjectNoteList();
+
             // Add content to list
             ScrollView scrollView = template.Q<ScrollView>("NoteList");
             VisualElement container = scrollView.contentContainer;
 
-            VisualTreeAsset listItem = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                UxmlPath.NoteListItem
-            );
-
-            for (int i = 0; i < 5; i++)
+            foreach (var note in noteList)
             {
-                container.Add(listItem.CloneTree());
+                UNoteEditorListItem item = new UNoteEditorListItem();
+                item.Setup(note, container);
             }
         }
 
