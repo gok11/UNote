@@ -72,7 +72,7 @@ namespace UNote.Runtime
 
             m_noteId = Guid.NewGuid().ToString();
             m_editor = editor;
-            m_createdDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            m_createdDate = m_updatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

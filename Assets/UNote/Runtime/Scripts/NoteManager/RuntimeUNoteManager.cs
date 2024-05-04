@@ -34,12 +34,12 @@ namespace UNote.Runtime
         public static void AddProjectNote()
         {
             ProjectNote newNote = new ProjectNote();
-            s_projectNoteContainer.ProjectNoteList.Add(newNote);
+            s_projectNoteContainer.GetList(UserConfig.GetUNoteSetting().UserName).Add(newNote);
         }
 
         public static IReadOnlyList<ProjectNote> GetProjectNoteList()
         {
-            return s_projectNoteContainer.ProjectNoteList;
+            return s_projectNoteContainer.GetList(UserConfig.GetUNoteSetting().UserName);
         }
 
 #if UNITY_EDITOR
