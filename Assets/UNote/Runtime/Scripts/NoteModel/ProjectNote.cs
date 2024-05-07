@@ -26,7 +26,10 @@ namespace UNote.Runtime
 
         #region Constructor
         public ProjectNote(string editor = null)
-            : base(editor) { }
+            : base(editor)
+        {
+            title = "New Note";
+        }
         #endregion // Constructor
     }
 }

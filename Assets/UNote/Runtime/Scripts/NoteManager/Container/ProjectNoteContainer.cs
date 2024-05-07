@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor.Playables;
 using UnityEngine;
 
@@ -88,6 +89,16 @@ namespace UNote.Runtime
         public List<ProjectNote> GetList(string authorName)
         {
             return GetContainerSafe(authorName).m_projectNoteList;
+        }
+
+        public List<ProjectNote> GetOwnList()
+        {
+            return GetList(UserConfig.GetUNoteSetting().UserName);
+        }
+
+        public IEnumerable<List<ProjectNote>> GetListAll()
+        {
+            return m_projectNoteDict.Values.Select(t => t.m_projectNoteList);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace UNote.Editor
             contentContainer.Add(template);
 
             // Prepare item
-            IReadOnlyList<ProjectNote> noteList = RuntimeUNoteManager.GetProjectNoteList();
+            IReadOnlyList<ProjectNote> noteList = RuntimeUNoteManager.GetOwnProjectNoteList();
 
             // Add content to list
             ScrollView scrollView = template.Q<ScrollView>("NoteList");
@@ -30,8 +30,31 @@ namespace UNote.Editor
             foreach (var note in noteList)
             {
                 UNoteEditorListItem item = new UNoteEditorListItem();
-                item.Setup(note, container);
+                container.Add(item);
+                item.Setup(note);
             }
+
+            contentContainer.RegisterCallback<MouseDownEvent>(evt =>
+            {
+                if (evt.button == 1)
+                {
+                    GenericMenu menu = new GenericMenu();
+                    menu.AddItem(
+                        new GUIContent("New Note"),
+                        false,
+                        () =>
+                        {
+                            ProjectNote newNote = RuntimeUNoteManager.AddProjectNote();
+                            UNoteEditorListItem newItem = new UNoteEditorListItem();
+                            container.Add(newItem);
+                            newItem.Setup(newNote);
+
+                            // TODO 作成したメモを選択
+                        }
+                    );
+                    menu.ShowAsContext();
+                }
+            });
         }
 
         public void FilterNotesBySearchText() { }

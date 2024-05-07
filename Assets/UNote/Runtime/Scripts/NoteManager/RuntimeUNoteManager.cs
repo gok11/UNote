@@ -31,18 +31,21 @@ namespace UNote.Runtime
 
         #region Project Note
 
-        public static void AddProjectNote()
+        public static ProjectNote AddProjectNote()
         {
             ProjectNote newNote = new ProjectNote();
-            s_projectNoteContainer.GetList(UserConfig.GetUNoteSetting().UserName).Add(newNote);
+            s_projectNoteContainer.GetOwnList().Add(newNote);
+            s_projectNoteContainer.Save();
+            return newNote;
         }
 
-        public static IReadOnlyList<ProjectNote> GetProjectNoteList()
+        public static IReadOnlyList<ProjectNote> GetOwnProjectNoteList()
         {
-            return s_projectNoteContainer.GetList(UserConfig.GetUNoteSetting().UserName);
+            return s_projectNoteContainer.GetOwnList();
         }
 
 #if UNITY_EDITOR
+
         public static SerializedObject CreateProjectNoteContainerObject()
         {
             return new SerializedObject(s_projectNoteContainer);
@@ -50,6 +53,19 @@ namespace UNote.Runtime
 #endif
 
         #endregion // Project Note
+
+        public static void DeleteNote(NoteBase note)
+        {
+            if (note is ProjectNote projectNote)
+            {
+                List<ProjectNote> projectList = s_projectNoteContainer.GetOwnList();
+                if (projectList.Contains(projectNote))
+                {
+                    projectList.Remove(projectNote);
+                    s_projectNoteContainer.Save();
+                }
+            }
+        }
 
         public static void SaveAll()
         {
