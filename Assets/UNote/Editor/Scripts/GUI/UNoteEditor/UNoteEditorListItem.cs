@@ -11,7 +11,9 @@ namespace UNote.Editor
 {
     public class UNoteEditorListItem : VisualElement
     {
-        private TemplateContainer m_templateContainer;
+        private VisualElement m_parentContainer;
+
+        private NoteBase m_note;
 
         private Label m_nameLabel;
         private Label m_updateDateLabel;
@@ -22,24 +24,47 @@ namespace UNote.Editor
             VisualTreeAsset listItem = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteListItem
             );
-            m_templateContainer = listItem.CloneTree();
+            TemplateContainer template = listItem.CloneTree();
 
-            m_nameLabel = m_templateContainer.Q<Label>("Name");
-            m_updateDateLabel = m_templateContainer.Q<Label>("UpdateDate");
-            m_noteContentLabel = m_templateContainer.Q<Label>("ContentLine");
+            m_nameLabel = template.Q<Label>("Name");
+            m_updateDateLabel = template.Q<Label>("UpdateDate");
+            m_noteContentLabel = template.Q<Label>("ContentLine");
 
-            contentContainer.Add(m_templateContainer);
+            contentContainer.Add(template);
+
+            // マウスイベント
+            contentContainer.RegisterCallback<MouseDownEvent>(evt =>
+            {
+                if (evt.button == 1)
+                {
+                    GenericMenu menu = new GenericMenu();
+                    menu.AddItem(
+                        new GUIContent("Delete Note"),
+                        false,
+                        () =>
+                        {
+                            RuntimeUNoteManager.DeleteNote(m_note);
+                            parent.Remove(this);
+                        }
+                    );
+                    menu.ShowAsContext();
+                }
+
+                evt.StopPropagation();
+            });
         }
 
-        public void Setup(NoteBase note, VisualElement parentContainer)
+        public void Setup(NoteBase note)
         {
-            ProjectNote pNote = note as ProjectNote;
+            m_note = note;
 
-            m_nameLabel.text = pNote.Title;
+            if (note is ProjectNote projectNote)
+            {
+                m_nameLabel.text = projectNote.Title;
+            }
+
             m_updateDateLabel.text = DateTime.Parse(note.UpdatedDate).ToString("yyyy-MM-dd");
             m_noteContentLabel.text = note.NoteContent;
-
-            parentContainer.Add(this);
         }
     }
 }
