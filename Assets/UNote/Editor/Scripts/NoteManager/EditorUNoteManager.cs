@@ -44,13 +44,10 @@ namespace UNote.Editor
             return s_projectNoteContainer.GetOwnList();
         }
 
-#if UNITY_EDITOR
-
         public static SerializedObject CreateProjectNoteContainerObject()
         {
             return new SerializedObject(s_projectNoteContainer);
         }
-#endif
 
         #endregion // Project Note
 

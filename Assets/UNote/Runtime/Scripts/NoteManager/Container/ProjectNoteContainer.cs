@@ -38,6 +38,8 @@ namespace UNote.Runtime
 
         private Dictionary<string, InternalContainer> m_projectNoteDict = new();
 
+        private Dictionary<string, List<ProjectNote>> m_projectNoteDictByTitle = new();
+
         #endregion // Field
 
         public void Save()
@@ -52,6 +54,8 @@ namespace UNote.Runtime
             // Serialize
             string json = JsonUtility.ToJson(GetContainerSafe(authorName));
             File.WriteAllText(FileFullPath, json);
+
+            ClearCache();
         }
 
         public void Load()
@@ -99,6 +103,35 @@ namespace UNote.Runtime
         public IEnumerable<List<ProjectNote>> GetListAll()
         {
             return m_projectNoteDict.Values.Select(t => t.m_projectNoteList);
+        }
+
+        public List<ProjectNote> GetProjectNoteListByTitle(string title)
+        {
+            if (m_projectNoteDictByTitle.ContainsKey(title))
+            {
+                return m_projectNoteDictByTitle[title];
+            }
+
+            List<ProjectNote> newList = new(48);
+
+            foreach (var noteList in GetListAll())
+            {
+                foreach (var note in noteList)
+                {
+                    if (note.Title == title)
+                    {
+                        newList.Add(note);
+                    }
+                }
+            }
+
+            m_projectNoteDictByTitle[title] = newList;
+            return newList;
+        }
+
+        public void ClearCache()
+        {
+            m_projectNoteDictByTitle.Clear();
         }
     }
 }
