@@ -43,7 +43,7 @@ namespace UNote.Editor
                         false,
                         () =>
                         {
-                            RuntimeUNoteManager.DeleteNote(m_note);
+                            EditorUNoteManager.DeleteNote(m_note);
                             parent.Remove(this);
                         }
                     );
