@@ -21,7 +21,7 @@ namespace UNote.Editor
             contentContainer.Add(template);
 
             // Prepare item
-            IReadOnlyList<ProjectNote> noteList = RuntimeUNoteManager.GetOwnProjectNoteList();
+            IReadOnlyList<ProjectNote> noteList = EditorUNoteManager.GetOwnProjectNoteList();
 
             // Add content to list
             ScrollView scrollView = template.Q<ScrollView>("NoteList");
@@ -44,7 +44,7 @@ namespace UNote.Editor
                         false,
                         () =>
                         {
-                            ProjectNote newNote = RuntimeUNoteManager.AddProjectNote();
+                            ProjectNote newNote = EditorUNoteManager.AddProjectNote();
                             UNoteEditorListItem newItem = new UNoteEditorListItem();
                             container.Add(newItem);
                             newItem.Setup(newNote);
