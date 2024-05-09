@@ -44,7 +44,7 @@ namespace UNote.Editor
                         false,
                         () =>
                         {
-                            ProjectNote newNote = EditorUNoteManager.AddProjectNote();
+                            ProjectNote newNote = EditorUNoteManager.AddNewProjectNote();
                             UNoteEditorListItem newItem = new UNoteEditorListItem();
                             container.Add(newItem);
                             newItem.Setup(newNote);

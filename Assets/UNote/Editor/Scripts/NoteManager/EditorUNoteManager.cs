@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -31,9 +32,14 @@ namespace UNote.Editor
 
         #region Project Note
 
-        public static ProjectNote AddProjectNote()
+        public static ProjectNote AddNewProjectNote()
         {
-            ProjectNote newNote = new ProjectNote();
+            Guid guid = Guid.NewGuid();
+
+            // TODO GUIDと名前を紐づける
+            // 名前を編集できるのは作成者のみ
+
+            ProjectNote newNote = new ProjectNote(guid.ToString());
             s_projectNoteContainer.GetOwnList().Add(newNote);
             s_projectNoteContainer.Save();
             return newNote;
