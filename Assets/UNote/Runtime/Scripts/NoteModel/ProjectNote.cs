@@ -10,25 +10,25 @@ namespace UNote.Runtime
     {
         #region Field
         [SerializeField]
-        private string title;
+        private string m_projectNoteId;
         #endregion // Field
 
         #region  Property
         public override NoteType NoteType => NoteType.Project;
 
-        public string Title
+        public string ProjectNoteID
         {
-            get => title;
-            set => title = value;
+            get => m_projectNoteId;
+            set => m_projectNoteId = value;
         }
 
         #endregion // Property
 
         #region Constructor
-        public ProjectNote(string editor = null)
+        public ProjectNote(string noteId, string editor = null)
             : base(editor)
         {
-            title = "New Note";
+            m_projectNoteId = noteId;
         }
         #endregion // Constructor
     }

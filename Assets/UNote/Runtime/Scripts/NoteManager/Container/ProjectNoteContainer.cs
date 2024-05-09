@@ -105,11 +105,11 @@ namespace UNote.Runtime
             return m_projectNoteDict.Values.Select(t => t.m_projectNoteList);
         }
 
-        public List<ProjectNote> GetProjectNoteListByTitle(string title)
+        public List<ProjectNote> GetProjectNoteListByProjectNoteId(string projectNoteId)
         {
-            if (m_projectNoteDictByTitle.ContainsKey(title))
+            if (m_projectNoteDictByTitle.ContainsKey(projectNoteId))
             {
-                return m_projectNoteDictByTitle[title];
+                return m_projectNoteDictByTitle[projectNoteId];
             }
 
             List<ProjectNote> newList = new(48);
@@ -118,14 +118,14 @@ namespace UNote.Runtime
             {
                 foreach (var note in noteList)
                 {
-                    if (note.Title == title)
+                    if (note.NoteId == projectNoteId)
                     {
                         newList.Add(note);
                     }
                 }
             }
 
-            m_projectNoteDictByTitle[title] = newList;
+            m_projectNoteDictByTitle[projectNoteId] = newList;
             return newList;
         }
 
