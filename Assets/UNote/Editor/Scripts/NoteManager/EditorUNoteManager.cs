@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UNote.Runtime;
@@ -36,13 +37,36 @@ namespace UNote.Editor
         {
             Guid guid = Guid.NewGuid();
 
-            // TODO GUIDと名前を紐づける
-            // 名前を編集できるのは作成者のみ
+            ProjectNoteIdConvertData convertData = CreateOwnProjectIdConvertFileIfNeeded();
+            convertData.SetTitle(guid.ToString(), "New Note");
 
             ProjectNote newNote = new ProjectNote(guid.ToString());
             s_projectNoteContainer.GetOwnList().Add(newNote);
             s_projectNoteContainer.Save();
             return newNote;
+        }
+
+        private static ProjectNoteIdConvertData CreateOwnProjectIdConvertFileIfNeeded()
+        {
+            string fileName = $"{UserConfig.GetUNoteSetting().UserName}.json";
+            string convertDir = Path.Combine(
+                Application.streamingAssetsPath,
+                "UNote",
+                "ProjectNoteIdConvert"
+            );
+            Directory.CreateDirectory(convertDir);
+
+            string filePath = Path.Combine(convertDir, fileName);
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+                return JsonUtility.FromJson<ProjectNoteIdConvertData>(json);
+            }
+
+            ProjectNoteIdConvertData newData = new ProjectNoteIdConvertData();
+            string content = JsonUtility.ToJson(newData);
+            File.WriteAllText(filePath, content);
+            return newData;
         }
 
         public static IReadOnlyList<ProjectNote> GetOwnProjectNoteList()
