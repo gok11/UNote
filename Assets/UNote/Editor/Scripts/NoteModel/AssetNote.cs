@@ -26,8 +26,8 @@ namespace UNote.Editor
 
         #region Constructor
 
-        public AssetNote(string editor)
-            : base(editor) { }
+        public AssetNote(string author)
+            : base(author) { }
 
         #endregion // Constructor
     }

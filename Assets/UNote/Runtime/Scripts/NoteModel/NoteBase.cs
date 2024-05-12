@@ -15,7 +15,7 @@ namespace UNote.Runtime
         protected string m_noteId;
 
         [SerializeField]
-        protected string m_editor;
+        protected string m_author;
 
         [SerializeField]
         protected string m_noteContent;
@@ -38,10 +38,10 @@ namespace UNote.Runtime
             set => m_noteId = value;
         }
 
-        public string Editor
+        public string Author
         {
-            get => m_editor;
-            set => m_editor = value;
+            get => m_author;
+            set => m_author = value;
         }
 
         public string NoteContent
@@ -63,15 +63,15 @@ namespace UNote.Runtime
 
         #endregion // Property
 
-        public NoteBase(string editor = null)
+        public NoteBase(string author = null)
         {
-            if (editor == null)
+            if (author == null)
             {
-                editor = UserConfig.GetUNoteSetting().UserName;
+                author = UserConfig.GetUNoteSetting().UserName;
             }
 
             m_noteId = Guid.NewGuid().ToString();
-            m_editor = editor;
+            m_author = author;
             m_createdDate = m_updatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
         }
     }
