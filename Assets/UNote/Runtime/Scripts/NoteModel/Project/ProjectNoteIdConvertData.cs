@@ -14,13 +14,47 @@ namespace UNote.Runtime
     }
 
     [Serializable]
-    public class ProjectNoteIdConvertData
+    public class ProjectNoteIdConvertData : ScriptableObject
     {
-        public List<ProjectNoteIdConvertTable> convertTableList = new();
+        #region Define
+
+        [Serializable]
+        public class InternalData
+        {
+            public List<ProjectNoteIdConvertTable> m_convertTableList = new();
+        }
+
+        #endregion // Define
+
+        [SerializeField]
+        private InternalData m_internalData;
+
+        public void Load()
+        {
+            string fileName = $"{UserConfig.GetUNoteSetting().UserName}.json";
+            string convertDir = Path.Combine(
+                Application.streamingAssetsPath,
+                "UNote",
+                "ProjectNoteIdConvert"
+            );
+            Directory.CreateDirectory(convertDir);
+
+            string filePath = Path.Combine(convertDir, fileName);
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+                m_internalData = JsonUtility.FromJson<InternalData>(json);
+                return;
+            }
+
+            m_internalData = new InternalData();
+            string content = JsonUtility.ToJson(m_internalData);
+            File.WriteAllText(filePath, content);
+        }
 
         public void SetTitle(string guid, string newTitle)
         {
-            convertTableList.Add(
+            m_internalData.m_convertTableList.Add(
                 new ProjectNoteIdConvertTable() { guid = guid, title = newTitle, }
             );
 
@@ -37,7 +71,7 @@ namespace UNote.Runtime
             );
             string filePath = Path.Combine(convertDir, fileName);
 
-            string json = JsonUtility.ToJson(this);
+            string json = JsonUtility.ToJson(m_internalData);
 
             File.WriteAllText(filePath, json);
         }
