@@ -53,7 +53,7 @@ namespace UNote.Runtime
 
             // Serialize
             string json = JsonUtility.ToJson(GetContainerSafe(authorName));
-            File.WriteAllText(FileFullPath, json);
+            File.WriteAllText(OwnFileFullPath, json);
 
             ClearCache();
         }
@@ -63,9 +63,10 @@ namespace UNote.Runtime
             string authorName = UserConfig.GetUNoteSetting().UserName;
             InitContainerIfNeeded(authorName);
 
-            if (File.Exists(FileFullPath))
+            // 自身のメモをロード
+            if (File.Exists(OwnFileFullPath))
             {
-                string json = File.ReadAllText(FileFullPath);
+                string json = File.ReadAllText(OwnFileFullPath);
 
                 // Deserialize
                 m_projectNoteDict[authorName] = JsonUtility.FromJson<InternalContainer>(json);
@@ -74,6 +75,32 @@ namespace UNote.Runtime
             {
                 Save();
             }
+
+            // 他のユーザーのメモをロード
+            string[] filePaths = Directory.GetFiles(FileDirectory, "*.json");
+            foreach (var projectNotePath in filePaths)
+            {
+                if (projectNotePath == OwnFileFullPath)
+                {
+                    continue;
+                }
+
+                string otherAuthorName = Path.GetFileNameWithoutExtension(projectNotePath);
+                string otherJson = File.ReadAllText(projectNotePath);
+                if (!m_projectNoteDict.ContainsKey(otherAuthorName))
+                {
+                    m_projectNoteDict.Add(otherAuthorName, null);
+                }
+                m_projectNoteDict[otherAuthorName] = JsonUtility.FromJson<InternalContainer>(
+                    otherJson
+                );
+            }
+        }
+
+        private InternalContainer GetContainerSafe(string authorName)
+        {
+            InitContainerIfNeeded(authorName);
+            return m_projectNoteDict[authorName];
         }
 
         private void InitContainerIfNeeded(string authorName)
@@ -82,12 +109,6 @@ namespace UNote.Runtime
             {
                 m_projectNoteDict.Add(authorName, new InternalContainer());
             }
-        }
-
-        private InternalContainer GetContainerSafe(string authorName)
-        {
-            InitContainerIfNeeded(authorName);
-            return m_projectNoteDict[authorName];
         }
 
         public List<ProjectNote> GetList(string authorName)

@@ -20,14 +20,14 @@ namespace UNote.Runtime
             }
         }
 
-        protected virtual string FileName
+        protected virtual string OwnFileName
         {
             get { return $"{UserConfig.GetUNoteSetting().UserName}_{Identifier}.json"; }
         }
 
-        protected virtual string FileFullPath
+        protected virtual string OwnFileFullPath
         {
-            get { return Path.Combine(FileDirectory, FileName); }
+            get { return Path.Combine(FileDirectory, OwnFileName); }
         }
     }
 }
