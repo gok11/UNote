@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Playables;
 using UnityEngine;
@@ -13,6 +14,9 @@ namespace UNote.Editor
     public static class EditorUNoteManager
     {
         #region Field
+
+        private static NoteType s_currentNoteType = NoteType.Project;
+        private static NoteBase s_currentNote;
 
         private static ProjectNoteContainer s_projectNoteContainer;
         private static ProjectNoteIdConvertData s_projectNoteIdConvertData;
@@ -37,6 +41,21 @@ namespace UNote.Editor
             s_projectNoteIdConvertData =
                 ScriptableObject.CreateInstance<ProjectNoteIdConvertData>();
             s_projectNoteIdConvertData.Load(authorName);
+        }
+
+        public static NoteBase GetCurrentNote()
+        {
+            if (s_currentNote == null)
+            {
+                switch (s_currentNoteType)
+                {
+                    case NoteType.Project:
+                        s_currentNote = GetAllProjectNotes()?.FirstOrDefault()?.FirstOrDefault();
+                        break;
+                }
+            }
+
+            return s_currentNote;
         }
 
         #region Project Note
@@ -73,14 +92,17 @@ namespace UNote.Editor
 
         public static void DeleteNote(NoteBase note)
         {
-            if (note is ProjectNote projectNote)
+            switch (note.NoteType)
             {
-                List<ProjectNote> projectList = s_projectNoteContainer.GetOwnList();
-                if (projectList.Contains(projectNote))
-                {
-                    projectList.Remove(projectNote);
-                    s_projectNoteContainer.Save();
-                }
+                case NoteType.Project:
+                    ProjectNote projectNote = note as ProjectNote;
+                    List<ProjectNote> projectList = s_projectNoteContainer.GetOwnList();
+                    if (projectList.Contains(projectNote))
+                    {
+                        projectList.Remove(projectNote);
+                        s_projectNoteContainer.Save();
+                    }
+                    break;
             }
         }
 
