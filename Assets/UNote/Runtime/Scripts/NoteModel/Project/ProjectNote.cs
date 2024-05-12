@@ -25,8 +25,8 @@ namespace UNote.Runtime
         #endregion // Property
 
         #region Constructor
-        public ProjectNote(string noteId, string editor = null)
-            : base(editor)
+        public ProjectNote(string noteId, string author = null)
+            : base(author)
         {
             m_projectNoteId = noteId;
         }
