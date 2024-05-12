@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Playables;
 using UnityEngine;
 using UNote.Runtime;
 
@@ -28,12 +29,14 @@ namespace UNote.Editor
         #region Public Method
         public static void InitializeEditorNote()
         {
+            string authorName = UserConfig.GetUNoteSetting().UserName;
+
             s_projectNoteContainer = ScriptableObject.CreateInstance<ProjectNoteContainer>();
             s_projectNoteContainer.Load();
 
             s_projectNoteIdConvertData =
                 ScriptableObject.CreateInstance<ProjectNoteIdConvertData>();
-            s_projectNoteIdConvertData.Load();
+            s_projectNoteIdConvertData.Load(authorName);
         }
 
         #region Project Note
@@ -54,6 +57,11 @@ namespace UNote.Editor
         public static IReadOnlyList<ProjectNote> GetOwnProjectNoteList()
         {
             return s_projectNoteContainer.GetOwnList();
+        }
+
+        public static IEnumerable<IReadOnlyList<ProjectNote>> GetAllProjectNotes()
+        {
+            return s_projectNoteContainer.GetListAll();
         }
 
         public static SerializedObject CreateProjectNoteContainerObject()

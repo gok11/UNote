@@ -29,9 +29,9 @@ namespace UNote.Runtime
         [SerializeField]
         private InternalData m_internalData;
 
-        public void Load()
+        public void Load(string authorName)
         {
-            string fileName = $"{UserConfig.GetUNoteSetting().UserName}.json";
+            string fileName = $"{authorName}.json";
             string convertDir = Path.Combine(
                 Application.streamingAssetsPath,
                 "UNote",
