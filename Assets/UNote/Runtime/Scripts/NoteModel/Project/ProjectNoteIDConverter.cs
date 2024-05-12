@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,27 +29,25 @@ namespace UNote.Runtime
 
         private static void Initialize()
         {
+            s_convertDict = new Dictionary<string, string>();
+
             // StreamingAssets/UNote/ProjectNoteIdConvert にある json から ID 変換する
             string convertDir = Path.Combine(
                 Application.streamingAssetsPath,
                 "UNote",
                 "ProjectNoteIdConvert"
             );
-            string[] convertFiles = Directory.GetFiles(convertDir, "*.txt");
+            string[] convertFiles = Directory.GetFiles(convertDir, "*.json");
 
             foreach (var convertFile in convertFiles)
             {
-                using (StreamReader reader = new StreamReader(convertFile))
-                {
-                    string text = reader.ReadToEnd();
-                    ProjectNoteIdConvertData data = JsonUtility.FromJson<ProjectNoteIdConvertData>(
-                        text
-                    );
+                string json = File.ReadAllText(convertFile);
+                ProjectNoteIdConvertData.InternalData internalData =
+                    JsonUtility.FromJson<ProjectNoteIdConvertData.InternalData>(json);
 
-                    foreach (var table in data.convertTableList)
-                    {
-                        s_convertDict.Add(table.guid, table.title);
-                    }
+                foreach (var table in internalData.m_convertTableList)
+                {
+                    s_convertDict.Add(table.guid, table.title);
                 }
             }
         }
