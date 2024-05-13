@@ -13,6 +13,8 @@ namespace UNote.Editor
         {
             name = nameof(UNoteEditorCenterPane);
 
+            contentContainer.style.minWidth = 160;
+
             // Instantiate pane
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.UNoteEditorCenterPane
@@ -21,7 +23,14 @@ namespace UNote.Editor
             contentContainer.Add(template);
 
             // Prepare item
-            IReadOnlyList<ProjectNote> noteList = EditorUNoteManager.GetOwnProjectNoteList();
+            IReadOnlyList<NoteBase> noteList = null;
+
+            switch (EditorUNoteManager.CurrentNoteType)
+            {
+                case NoteType.Project:
+                    noteList = EditorUNoteManager.GetOwnProjectNoteList();
+                    break;
+            }
 
             // Add content to list
             ScrollView scrollView = template.Q<ScrollView>("NoteList");
@@ -48,8 +57,7 @@ namespace UNote.Editor
                             UNoteEditorListItem newItem = new UNoteEditorListItem();
                             container.Add(newItem);
                             newItem.Setup(newNote);
-
-                            // TODO 作成したメモを選択
+                            EditorUNoteManager.Select(newNote);
                         }
                     );
                     menu.ShowAsContext();
