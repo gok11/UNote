@@ -60,7 +60,7 @@ namespace UNote.Editor
 
             if (note is ProjectNote projectNote)
             {
-                m_nameLabel.text = ProjectNoteIDConverter.Convert(projectNote.ProjectNoteID);
+                m_nameLabel.text = ProjectNoteIDManager.ConvertGuid(projectNote.ProjectNoteID);
             }
 
             m_updateDateLabel.text = DateTime.Parse(note.UpdatedDate).ToString("yyyy-MM-dd");

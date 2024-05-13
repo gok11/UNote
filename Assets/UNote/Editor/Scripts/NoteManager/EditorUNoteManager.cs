@@ -52,8 +52,6 @@ namespace UNote.Editor
         static EditorUNoteManager()
         {
             InitializeEditorNote();
-
-            Debug.Log(CurrentNote.NoteId);
         }
         #endregion // Constructor
 
@@ -82,7 +80,7 @@ namespace UNote.Editor
             Guid guid = Guid.NewGuid();
 
             s_projectNoteIdConvertData.SetTitle(guid.ToString(), "New Note");
-            ProjectNoteIDConverter.ResetData();
+            ProjectNoteIDManager.ResetData();
 
             ProjectNote newNote = new ProjectNote(guid.ToString());
             s_projectNoteContainer.GetOwnList().Add(newNote);
@@ -90,14 +88,14 @@ namespace UNote.Editor
             return newNote;
         }
 
-        public static IReadOnlyList<ProjectNote> GetOwnProjectNoteList()
-        {
-            return s_projectNoteContainer.GetOwnList();
-        }
-
         public static IEnumerable<IReadOnlyList<ProjectNote>> GetAllProjectNotes()
         {
             return s_projectNoteContainer.GetListAll();
+        }
+
+        public static IReadOnlyList<ProjectNote> GetAllRootProjectNoteList()
+        {
+            return GetAllProjectNotes().SelectMany(t => t).Where(t => t.IsRootNote).ToList();
         }
 
         public static SerializedObject CreateProjectNoteContainerObject()

@@ -16,6 +16,11 @@ namespace UNote.Editor
                 UxmlPath.UNoteEditorRightPane
             );
             contentContainer.Add(tree.Instantiate());
+
+            if (EditorUNoteManager.CurrentNote != null)
+            {
+                Debug.Log("ok");
+            }
         }
     }
 }

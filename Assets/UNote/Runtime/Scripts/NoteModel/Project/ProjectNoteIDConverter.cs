@@ -8,11 +8,21 @@ using UnityEngine;
 
 namespace UNote.Runtime
 {
-    public static class ProjectNoteIDConverter
+    public static class ProjectNoteIDManager
     {
         private static Dictionary<string, string> s_convertDict = null;
 
-        public static string Convert(string guid)
+        public static string[] GetAllGuids()
+        {
+            if (s_convertDict == null)
+            {
+                Initialize();
+            }
+
+            return s_convertDict.Keys.ToArray();
+        }
+
+        public static string ConvertGuid(string guid)
         {
             if (s_convertDict == null)
             {

@@ -15,6 +15,9 @@ namespace UNote.Runtime
         protected string m_noteId;
 
         [SerializeField]
+        protected bool m_isRootNote;
+
+        [SerializeField]
         protected string m_author;
 
         [SerializeField]
@@ -36,6 +39,12 @@ namespace UNote.Runtime
         {
             get => m_noteId;
             set => m_noteId = value;
+        }
+
+        public bool IsRootNote
+        {
+            get => m_isRootNote;
+            set => m_isRootNote = value;
         }
 
         public string Author
