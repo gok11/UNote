@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="NoteContent" style="flex-grow: 0; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; border-left-color: rgb(89, 89, 89); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-right-color: rgb(89, 89, 89); border-top-color: rgb(89, 89, 89); border-bottom-color: rgb(89, 89, 89);">
+        <ui:VisualElement name="UpperLine" style="flex-grow: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-bottom-color: rgba(89, 89, 89, 0.51);">
+            <ui:Label tabindex="-1" text="Gok" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AuthorLabel" style="flex-grow: 1; font-size: 14px;" />
+            <ui:Label tabindex="-1" text="2024/05/13" parse-escape-sequences="true" display-tooltip-when-elided="true" name="UpdateDate" style="-unity-text-align: middle-right; font-size: 12px;" />
+        </ui:VisualElement>
+        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContentText" />
+    </ui:VisualElement>
+</ui:UXML>

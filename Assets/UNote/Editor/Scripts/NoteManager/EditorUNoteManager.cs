@@ -23,10 +23,37 @@ namespace UNote.Editor
 
         #endregion // Field
 
+        #region Property
+
+        public static NoteType CurrentNoteType => s_currentNoteType;
+        public static NoteBase CurrentNote
+        {
+            get
+            {
+                if (s_currentNote == null)
+                {
+                    switch (s_currentNoteType)
+                    {
+                        case NoteType.Project:
+                            s_currentNote = GetAllProjectNotes()
+                                ?.FirstOrDefault()
+                                ?.FirstOrDefault();
+                            break;
+                    }
+                }
+
+                return s_currentNote;
+            }
+        }
+
+        #endregion // Property
+
         #region Constructor
         static EditorUNoteManager()
         {
             InitializeEditorNote();
+
+            Debug.Log(CurrentNote.NoteId);
         }
         #endregion // Constructor
 
@@ -43,19 +70,9 @@ namespace UNote.Editor
             s_projectNoteIdConvertData.Load(authorName);
         }
 
-        public static NoteBase GetCurrentNote()
+        public static void Select(NoteBase note)
         {
-            if (s_currentNote == null)
-            {
-                switch (s_currentNoteType)
-                {
-                    case NoteType.Project:
-                        s_currentNote = GetAllProjectNotes()?.FirstOrDefault()?.FirstOrDefault();
-                        break;
-                }
-            }
-
-            return s_currentNote;
+            s_currentNote = note;
         }
 
         #region Project Note
