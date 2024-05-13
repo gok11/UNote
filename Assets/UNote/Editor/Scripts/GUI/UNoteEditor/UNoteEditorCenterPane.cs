@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -28,7 +30,7 @@ namespace UNote.Editor
             switch (EditorUNoteManager.CurrentNoteType)
             {
                 case NoteType.Project:
-                    noteList = EditorUNoteManager.GetOwnProjectNoteList();
+                    noteList = EditorUNoteManager.GetAllRootProjectNoteList();
                     break;
             }
 
@@ -53,11 +55,15 @@ namespace UNote.Editor
                         false,
                         () =>
                         {
+                            // メモ追加
                             ProjectNote newNote = EditorUNoteManager.AddNewProjectNote();
+                            newNote.IsRootNote = true;
+                            EditorUNoteManager.Select(newNote);
+
+                            // ビューに反映
                             UNoteEditorListItem newItem = new UNoteEditorListItem();
                             container.Add(newItem);
                             newItem.Setup(newNote);
-                            EditorUNoteManager.Select(newNote);
                         }
                     );
                     menu.ShowAsContext();
