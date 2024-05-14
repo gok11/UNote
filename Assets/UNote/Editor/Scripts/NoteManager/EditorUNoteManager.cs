@@ -116,6 +116,12 @@ namespace UNote.Editor
                     {
                         projectList.Remove(projectNote);
                         s_projectNoteContainer.Save();
+
+                        // Rootなら変換情報も削除
+                        if (projectNote.IsRootNote)
+                        {
+                            s_projectNoteIdConvertData.DeleteGuid(projectNote.ProjectNoteID);
+                        }
                     }
                     break;
             }
