@@ -61,6 +61,18 @@ namespace UNote.Runtime
             Save();
         }
 
+        public void DeleteGuid(string guid)
+        {
+            ProjectNoteIdConvertTable table = m_internalData.m_convertTableList.Find(t =>
+                t.guid == guid
+            );
+            if (table != null)
+            {
+                m_internalData.m_convertTableList.Remove(table);
+                Save();
+            }
+        }
+
         public void Save()
         {
             string fileName = $"{UserConfig.GetUNoteSetting().UserName}.json";
