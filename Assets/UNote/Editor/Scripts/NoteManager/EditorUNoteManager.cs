@@ -120,7 +120,7 @@ namespace UNote.Editor
                         // Rootなら変換情報も削除
                         if (projectNote.IsRootNote)
                         {
-                            s_projectNoteIdConvertData.DeleteGuid(projectNote.ProjectNoteID);
+                            s_projectNoteIdConvertData.DeleteTable(projectNote.ProjectNoteID);
                         }
                     }
                     break;
