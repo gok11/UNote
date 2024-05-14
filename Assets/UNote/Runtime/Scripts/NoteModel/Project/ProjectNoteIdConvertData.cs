@@ -61,7 +61,7 @@ namespace UNote.Runtime
             Save();
         }
 
-        public void DeleteGuid(string guid)
+        public void DeleteTable(string guid)
         {
             ProjectNoteIdConvertTable table = m_internalData.m_convertTableList.Find(t =>
                 t.guid == guid
