@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
@@ -10,7 +12,9 @@ namespace UNote.Editor
     public class UNoteEditorRightPane : VisualElement
     {
         private Label m_noteTitle;
+        private ScrollView m_noteList;
         private TextField m_inputText;
+        private Label m_authorLabel;
         private Button m_sendButton;
 
         public UNoteEditorRightPane()
@@ -24,24 +28,79 @@ namespace UNote.Editor
 
             //
             m_noteTitle = contentContainer.Q<Label>("NoteTitle");
+            m_noteList = contentContainer.Q<ScrollView>("NoteList");
             m_inputText = contentContainer.Q<TextField>("InputText");
+
+            m_authorLabel = contentContainer.Q<Label>("Author");
             m_sendButton = contentContainer.Q<Button>("SendButton");
 
             // CurrentNote からタイトルを取得する
             NoteBase note = EditorUNoteManager.CurrentNote;
 
+            m_noteTitle.text = GetNoteTitle(note);
+            m_authorLabel.text = UserConfig.GetUNoteSetting().UserName;
+
+            // CurrentNote と同じメモを時系列で並べる
+            SetupNoteList(note);
+
+            // ボタンを押したら新しいメモを作成
+            m_sendButton.clicked += () =>
+            {
+                ProjectNote srcNote = note as ProjectNote;
+                ProjectNote projectNote = EditorUNoteManager.AddNewLeafProjectNote(
+                    srcNote.ProjectNoteID,
+                    m_inputText.text
+                );
+                m_noteList.Add(CreateNoteContentElement(projectNote));
+
+                m_inputText.Clear();
+            };
+        }
+
+        private string GetNoteTitle(NoteBase note)
+        {
             switch (note.NoteType)
             {
                 case NoteType.Project:
                     ProjectNote projectNote = note as ProjectNote;
-                    string noteName = ProjectNoteIDManager.ConvertGuid(projectNote.ProjectNoteID);
-                    m_noteTitle.text = noteName;
-                    break;
+                    return ProjectNoteIDManager.ConvertGuid(projectNote.ProjectNoteID);
             }
 
-            m_sendButton.clicked += () => {
-                // TODO メモリストに新しい IsRoot false のメモを追加
-            };
+            return string.Empty;
+        }
+
+        private void SetupNoteList(NoteBase note)
+        {
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                    ProjectNote projectNote = note as ProjectNote;
+                    string projectNoteId = projectNote.ProjectNoteID;
+                    IEnumerable<ProjectNote> otherNotes = EditorUNoteManager
+                        .GetAllProjectNotes()
+                        .SelectMany(t => t)
+                        .Where(t => !t.IsRootNote)
+                        .Where(t => t.ProjectNoteID == projectNoteId);
+
+                    foreach (var otherNote in otherNotes)
+                    {
+                        m_noteList.Add(CreateNoteContentElement(otherNote));
+                    }
+                    break;
+            }
+        }
+
+        private VisualElement CreateNoteContentElement(NoteBase note)
+        {
+            VisualTreeAsset noteContentTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+                UxmlPath.NoteContent
+            );
+
+            VisualElement noteElement = noteContentTree.Instantiate();
+            noteElement.Q<Label>("AuthorLabel").text = note.Author;
+            noteElement.Q<Label>("UpdateDate").text = note.UpdatedDate;
+            noteElement.Q<Label>("ContentText").text = note.NoteContent;
+            return noteElement;
         }
     }
 }
