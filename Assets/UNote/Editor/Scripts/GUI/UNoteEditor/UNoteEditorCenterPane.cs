@@ -56,8 +56,7 @@ namespace UNote.Editor
                         () =>
                         {
                             // メモ追加
-                            ProjectNote newNote = EditorUNoteManager.AddNewProjectNote();
-                            newNote.IsRootNote = true;
+                            ProjectNote newNote = EditorUNoteManager.AddNewRootProjectNote();
                             EditorUNoteManager.Select(newNote);
 
                             // ビューに反映

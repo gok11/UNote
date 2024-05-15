@@ -35,9 +35,7 @@ namespace UNote.Editor
                     switch (s_currentNoteType)
                     {
                         case NoteType.Project:
-                            s_currentNote = GetAllProjectNotes()
-                                ?.FirstOrDefault()
-                                ?.FirstOrDefault();
+                            s_currentNote = GetAllRootProjectNoteList()?.FirstOrDefault();
                             break;
                     }
                 }
@@ -75,7 +73,7 @@ namespace UNote.Editor
 
         #region Project Note
 
-        public static ProjectNote AddNewProjectNote()
+        public static ProjectNote AddNewRootProjectNote()
         {
             Guid guid = Guid.NewGuid();
 
@@ -83,6 +81,17 @@ namespace UNote.Editor
             ProjectNoteIDManager.ResetData();
 
             ProjectNote newNote = new ProjectNote(guid.ToString());
+            newNote.IsRootNote = true;
+            s_projectNoteContainer.GetOwnList().Add(newNote);
+            s_projectNoteContainer.Save();
+            return newNote;
+        }
+
+        public static ProjectNote AddNewLeafProjectNote(string guid, string noteContent)
+        {
+            ProjectNote newNote = new ProjectNote(guid);
+            newNote.IsRootNote = false;
+            newNote.NoteContent = noteContent;
             s_projectNoteContainer.GetOwnList().Add(newNote);
             s_projectNoteContainer.Save();
             return newNote;
