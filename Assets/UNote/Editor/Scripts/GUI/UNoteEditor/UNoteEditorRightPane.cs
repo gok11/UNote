@@ -49,11 +49,16 @@ namespace UNote.Editor
                 ProjectNote srcNote = note as ProjectNote;
                 ProjectNote projectNote = EditorUNoteManager.AddNewLeafProjectNote(
                     srcNote.ProjectNoteID,
-                    m_inputText.text
+                    m_inputText.value
                 );
-                m_noteList.Add(CreateNoteContentElement(projectNote));
+                VisualElement newNoteElem = CreateNoteContentElement(projectNote);
+                m_noteList.Add(newNoteElem);
+                EditorApplication.delayCall += () =>
+                {
+                    m_noteList.ScrollTo(newNoteElem);
+                };
 
-                m_inputText.Clear();
+                m_inputText.value = "";
             };
         }
 
@@ -71,6 +76,10 @@ namespace UNote.Editor
 
         private void SetupNoteList(NoteBase note)
         {
+            VisualElement lastAddedElem = null;
+
+            m_noteList.visible = false;
+
             switch (note.NoteType)
             {
                 case NoteType.Project:
@@ -84,10 +93,20 @@ namespace UNote.Editor
 
                     foreach (var otherNote in otherNotes)
                     {
-                        m_noteList.Add(CreateNoteContentElement(otherNote));
+                        lastAddedElem = CreateNoteContentElement(otherNote);
+                        m_noteList.Add(lastAddedElem);
                     }
                     break;
             }
+
+            EditorApplication.delayCall += () =>
+            {
+                if (lastAddedElem != null)
+                {
+                    m_noteList.ScrollTo(lastAddedElem);
+                }
+                m_noteList.visible = true;
+            };
         }
 
         private VisualElement CreateNoteContentElement(NoteBase note)

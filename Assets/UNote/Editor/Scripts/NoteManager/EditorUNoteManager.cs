@@ -73,6 +73,16 @@ namespace UNote.Editor
 
         #region Project Note
 
+        public static SerializedObject GetProjectNoteContainerObject()
+        {
+            return new SerializedObject(s_projectNoteContainer);
+        }
+
+        public static SerializedObject ProjectNoteIdConvertDataObject()
+        {
+            return new SerializedObject(s_projectNoteIdConvertData);
+        }
+
         public static ProjectNote AddNewRootProjectNote()
         {
             Guid guid = Guid.NewGuid();
@@ -139,6 +149,7 @@ namespace UNote.Editor
         public static void SaveAll()
         {
             s_projectNoteContainer.Save();
+            s_projectNoteIdConvertData.Save();
         }
         #endregion // Public Method
     }
