@@ -9,7 +9,7 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
-    public class UNoteEditorCenterPane : VisualElement
+    public class UNoteEditorCenterPane : UNoteEditorPaneBase
     {
         public UNoteEditorCenterPane(NoteEditor noteEditor)
         {
@@ -71,7 +71,5 @@ namespace UNote.Editor
         }
 
         public void FilterNotesBySearchText() { }
-
-        public void OnUndoRedo() { }
     }
 }

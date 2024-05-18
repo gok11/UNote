@@ -12,6 +12,7 @@
         </ui:ScrollView>
         <ui:VisualElement name="FooterArea" style="flex-grow: 1; flex-direction: row; height: auto;">
             <ui:Button text="&gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SendButton" />
+            <ui:Label tabindex="-1" text="Shift + Enter to add a new note" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 1; -unity-text-align: middle-right; -unity-font-style: normal; font-size: 9px; white-space: nowrap;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

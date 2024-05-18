@@ -29,6 +29,10 @@ namespace UNote.Editor
         [SerializeField]
         private NoteEditorModel m_model;
 
+        private UNoteEditorLeftPane m_leftPane;
+        private UNoteEditorCenterPane m_centerPane;
+        private UNoteEditorRightPane m_rightPane;
+
         public NoteEditorModel Model => m_model;
 
         [MenuItem("UNote/Note Editor")]
@@ -61,15 +65,15 @@ namespace UNote.Editor
             );
             root.Add(firstSplitView);
 
-            UNoteEditorLeftPane leftPane = new UNoteEditorLeftPane(this);
-            UNoteEditorCenterPane centerPane = new UNoteEditorCenterPane(this);
-            UNoteEditorRightPane rightPane = new UNoteEditorRightPane(this);
+            m_leftPane = new UNoteEditorLeftPane(this);
+            m_centerPane = new UNoteEditorCenterPane(this);
+            m_rightPane = new UNoteEditorRightPane(this);
 
-            firstSplitView.Add(leftPane);
+            firstSplitView.Add(m_leftPane);
             firstSplitView.Add(secondSplitView);
 
-            secondSplitView.Add(centerPane);
-            secondSplitView.Add(rightPane);
+            secondSplitView.Add(m_centerPane);
+            secondSplitView.Add(m_rightPane);
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath.UNoteEditor);
             root.styleSheets.Add(styleSheet);
@@ -79,9 +83,9 @@ namespace UNote.Editor
             {
                 if (info.undoName.Contains("UNote"))
                 {
-                    leftPane.OnUndoRedo();
-                    centerPane.OnUndoRedo();
-                    rightPane.OnUndoRedo();
+                    m_leftPane.OnUndoRedo();
+                    m_centerPane.OnUndoRedo();
+                    m_rightPane.OnUndoRedo();
                 }
             };
         }

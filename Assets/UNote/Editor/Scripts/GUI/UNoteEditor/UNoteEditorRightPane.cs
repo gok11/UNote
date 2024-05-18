@@ -17,8 +17,10 @@ namespace UNote.Editor
         public SerializedProperty EditingText => ModelObject.FindProperty(nameof(editingText));
     }
 
-    public class UNoteEditorRightPane : VisualElement
+    public class UNoteEditorRightPane : UNoteEditorPaneBase
     {
+        private NoteEditor m_noteEditor;
+
         private Label m_noteTitle;
         private ScrollView m_noteList;
         private TextField m_inputText;
@@ -28,6 +30,8 @@ namespace UNote.Editor
         public UNoteEditorRightPane(NoteEditor noteEditor)
         {
             name = nameof(UNoteEditorRightPane);
+
+            m_noteEditor = noteEditor;
 
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.UNoteEditorRightPane
@@ -39,7 +43,7 @@ namespace UNote.Editor
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
             m_inputText = contentContainer.Q<TextField>("InputText");
 
-            m_inputText.BindProperty(noteEditor.Model.EditingText);
+            m_inputText.BindProperty(m_noteEditor.Model.EditingText);
 
             m_authorLabel = contentContainer.Q<Label>("Author");
             m_sendButton = contentContainer.Q<Button>("SendButton");
@@ -56,21 +60,47 @@ namespace UNote.Editor
             // ボタンを押したら新しいメモを作成
             m_sendButton.clicked += () =>
             {
-                ProjectNote srcNote = note as ProjectNote;
-                ProjectNote projectNote = EditorUNoteManager.AddNewLeafProjectNote(
-                    srcNote.ProjectNoteID,
-                    m_inputText.value
-                );
-
-                VisualElement newNoteElem = CreateNoteContentElement(projectNote);
-                m_noteList.Add(newNoteElem);
-                EditorApplication.delayCall += () =>
-                {
-                    m_noteList.ScrollTo(newNoteElem);
-                };
-
-                m_inputText.value = "";
+                SendNote();
             };
+
+            contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+        }
+
+        private void OnKeyDown(KeyDownEvent evt)
+        {
+            if (evt.keyCode == KeyCode.Return && evt.shiftKey)
+            {
+                SendNote();
+            }
+        }
+
+        private void SendNote()
+        {
+            if (string.IsNullOrWhiteSpace(m_inputText.value))
+            {
+                return;
+            }
+
+            // Undoに乗らないよう一時的にバインド解除
+            m_inputText.Unbind();
+
+            NoteBase note = EditorUNoteManager.CurrentNote;
+            ProjectNote srcNote = note as ProjectNote;
+            ProjectNote projectNote = EditorUNoteManager.AddNewLeafProjectNote(
+                srcNote.ProjectNoteID,
+                m_inputText.value
+            );
+
+            VisualElement newNoteElem = CreateNoteContentElement(projectNote);
+            m_noteList.Add(newNoteElem);
+            EditorApplication.delayCall += () =>
+            {
+                m_noteList.ScrollTo(newNoteElem);
+            };
+
+            m_inputText.value = "";
+
+            m_inputText.BindProperty(m_noteEditor.Model.EditingText);
         }
 
         private string GetNoteTitle(NoteBase note)
@@ -135,7 +165,7 @@ namespace UNote.Editor
             return noteElement;
         }
 
-        public void OnUndoRedo()
+        public override void OnUndoRedo()
         {
             NoteBase note = EditorUNoteManager.CurrentNote;
             SetupNoteList(note);
