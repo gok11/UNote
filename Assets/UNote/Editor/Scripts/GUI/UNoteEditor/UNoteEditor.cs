@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -7,8 +8,29 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
+    public partial class NoteEditorModel : ScriptableObject
+    {
+        private SerializedObject m_modelObject;
+        public SerializedObject ModelObject
+        {
+            get
+            {
+                if (m_modelObject == null)
+                {
+                    m_modelObject = new SerializedObject(this);
+                }
+                return m_modelObject;
+            }
+        }
+    }
+
     public class NoteEditor : EditorWindow
     {
+        [SerializeField]
+        private NoteEditorModel m_model;
+
+        public NoteEditorModel Model => m_model;
+
         [MenuItem("UNote/Note Editor")]
         private static void OpenWindow()
         {
@@ -17,6 +39,8 @@ namespace UNote.Editor
 
         private void CreateGUI()
         {
+            m_model = CreateInstance<NoteEditorModel>();
+
             VisualElement root = rootVisualElement;
 
             // Three split pane
@@ -37,18 +61,29 @@ namespace UNote.Editor
             );
             root.Add(firstSplitView);
 
-            VisualElement leftPane = new UNoteEditorLeftPane();
-            VisualElement middlePane = new UNoteEditorCenterPane();
-            VisualElement rightPane = new UNoteEditorRightPane();
+            UNoteEditorLeftPane leftPane = new UNoteEditorLeftPane(this);
+            UNoteEditorCenterPane centerPane = new UNoteEditorCenterPane(this);
+            UNoteEditorRightPane rightPane = new UNoteEditorRightPane(this);
 
             firstSplitView.Add(leftPane);
             firstSplitView.Add(secondSplitView);
 
-            secondSplitView.Add(middlePane);
+            secondSplitView.Add(centerPane);
             secondSplitView.Add(rightPane);
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath.UNoteEditor);
             root.styleSheets.Add(styleSheet);
+
+            // Undo Setup
+            Undo.undoRedoEvent += (in UndoRedoInfo info) =>
+            {
+                if (info.undoName.Contains("UNote"))
+                {
+                    leftPane.OnUndoRedo();
+                    centerPane.OnUndoRedo();
+                    rightPane.OnUndoRedo();
+                }
+            };
         }
     }
 }

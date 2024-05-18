@@ -11,7 +11,7 @@ namespace UNote.Editor
 {
     public class UNoteEditorCenterPane : VisualElement
     {
-        public UNoteEditorCenterPane()
+        public UNoteEditorCenterPane(NoteEditor noteEditor)
         {
             name = nameof(UNoteEditorCenterPane);
 
@@ -71,5 +71,7 @@ namespace UNote.Editor
         }
 
         public void FilterNotesBySearchText() { }
+
+        public void OnUndoRedo() { }
     }
 }

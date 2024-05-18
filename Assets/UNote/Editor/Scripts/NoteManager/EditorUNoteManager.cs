@@ -92,7 +92,10 @@ namespace UNote.Editor
 
             ProjectNote newNote = new ProjectNote(guid.ToString());
             newNote.IsRootNote = true;
+
+            Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
             s_projectNoteContainer.GetOwnList().Add(newNote);
+
             s_projectNoteContainer.Save();
             return newNote;
         }
@@ -102,7 +105,10 @@ namespace UNote.Editor
             ProjectNote newNote = new ProjectNote(guid);
             newNote.IsRootNote = false;
             newNote.NoteContent = noteContent;
+
+            Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
             s_projectNoteContainer.GetOwnList().Add(newNote);
+
             s_projectNoteContainer.Save();
             return newNote;
         }
