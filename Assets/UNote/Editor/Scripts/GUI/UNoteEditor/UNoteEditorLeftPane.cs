@@ -8,7 +8,7 @@ namespace UNote.Editor
 {
     public class UNoteEditorLeftPane : VisualElement
     {
-        public UNoteEditorLeftPane()
+        public UNoteEditorLeftPane(NoteEditor noteEditor)
         {
             name = nameof(UNoteEditorLeftPane);
 
@@ -22,5 +22,7 @@ namespace UNote.Editor
         /// Toggle fold state
         /// </summary>
         public void ToggleFoldState() { }
+
+        public void OnUndoRedo() { }
     }
 }

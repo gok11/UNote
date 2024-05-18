@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Playables;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    public partial class NoteEditorModel : ScriptableObject
+    {
+        public string editingText;
+
+        public SerializedProperty EditingText => ModelObject.FindProperty(nameof(editingText));
+    }
+
     public class UNoteEditorRightPane : VisualElement
     {
         private Label m_noteTitle;
@@ -17,7 +25,7 @@ namespace UNote.Editor
         private Label m_authorLabel;
         private Button m_sendButton;
 
-        public UNoteEditorRightPane()
+        public UNoteEditorRightPane(NoteEditor noteEditor)
         {
             name = nameof(UNoteEditorRightPane);
 
@@ -30,6 +38,8 @@ namespace UNote.Editor
             m_noteTitle = contentContainer.Q<Label>("NoteTitle");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
             m_inputText = contentContainer.Q<TextField>("InputText");
+
+            m_inputText.BindProperty(noteEditor.Model.EditingText);
 
             m_authorLabel = contentContainer.Q<Label>("Author");
             m_sendButton = contentContainer.Q<Button>("SendButton");
@@ -51,6 +61,7 @@ namespace UNote.Editor
                     srcNote.ProjectNoteID,
                     m_inputText.value
                 );
+
                 VisualElement newNoteElem = CreateNoteContentElement(projectNote);
                 m_noteList.Add(newNoteElem);
                 EditorApplication.delayCall += () =>
@@ -77,6 +88,8 @@ namespace UNote.Editor
         private void SetupNoteList(NoteBase note)
         {
             VisualElement lastAddedElem = null;
+
+            m_noteList.contentContainer.Clear();
 
             m_noteList.visible = false;
 
@@ -120,6 +133,12 @@ namespace UNote.Editor
             noteElement.Q<Label>("UpdateDate").text = note.UpdatedDate;
             noteElement.Q<Label>("ContentText").text = note.NoteContent;
             return noteElement;
+        }
+
+        public void OnUndoRedo()
+        {
+            NoteBase note = EditorUNoteManager.CurrentNote;
+            SetupNoteList(note);
         }
     }
 }
