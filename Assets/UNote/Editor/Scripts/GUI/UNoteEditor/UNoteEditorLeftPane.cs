@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
-    public class UNoteEditorLeftPane : VisualElement
+    public class UNoteEditorLeftPane : UNoteEditorPaneBase
     {
         public UNoteEditorLeftPane(NoteEditor noteEditor)
         {
@@ -22,7 +22,5 @@ namespace UNote.Editor
         /// Toggle fold state
         /// </summary>
         public void ToggleFoldState() { }
-
-        public void OnUndoRedo() { }
     }
 }
