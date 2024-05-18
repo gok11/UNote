@@ -103,11 +103,7 @@ namespace UNote.Editor
             m_noteEditor.Model.EditingText.stringValue = "";
             m_noteEditor.Model.ModelObject.ApplyModifiedProperties();
 
-            EditorApplication.delayCall += () =>
-                EditorApplication.delayCall += () =>
-                {
-                    m_inputText.BindProperty(m_noteEditor.Model.EditingText);
-                };
+            m_inputText.BindProperty(m_noteEditor.Model.EditingText);
         }
 
         private string GetNoteTitle(NoteBase note)
