@@ -98,9 +98,16 @@ namespace UNote.Editor
                 m_noteList.ScrollTo(newNoteElem);
             };
 
-            m_inputText.value = "";
+            // バインドしなおす前に最新の状態にする
+            m_noteEditor.Model.ModelObject.Update();
+            m_noteEditor.Model.EditingText.stringValue = "";
+            m_noteEditor.Model.ModelObject.ApplyModifiedProperties();
 
-            m_inputText.BindProperty(m_noteEditor.Model.EditingText);
+            EditorApplication.delayCall += () =>
+                EditorApplication.delayCall += () =>
+                {
+                    m_inputText.BindProperty(m_noteEditor.Model.EditingText);
+                };
         }
 
         private string GetNoteTitle(NoteBase note)
