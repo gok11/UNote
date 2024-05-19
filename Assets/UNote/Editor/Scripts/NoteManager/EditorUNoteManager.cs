@@ -118,24 +118,29 @@ namespace UNote.Editor
 
         public static ProjectNote AddNewProjectNote()
         {
-            Guid guid = Guid.NewGuid();
+            ProjectNote newNote = new ProjectNote();
+            newNote.Author = UserConfig.GetUNoteSetting().UserName;
 
-            s_projectNoteIdConvertData.SetTitle(guid.ToString(), "New Note");
+            string uniqueName = GenerateUniqueName(NoteType.Project);
+            s_projectNoteIdConvertData.SetTitle(newNote.NoteId, uniqueName);
             ProjectNoteIDManager.ResetData();
 
-            ProjectNote newNote = new ProjectNote();
+            if (s_projectNoteContainer)
+            {
+                Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
+            }
 
-            Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
             s_projectNoteContainer.GetOwnProjectNoteList().Add(newNote);
-
             s_projectNoteContainer.Save();
             return newNote;
         }
 
         public static ProjectLeafNote AddNewLeafProjectNote(string guid, string noteContent)
         {
-            ProjectLeafNote newNote = new ProjectLeafNote(guid);
+            ProjectLeafNote newNote = new ProjectLeafNote();
+            newNote.Author = UserConfig.GetUNoteSetting().UserName;
             newNote.NoteContent = noteContent;
+            newNote.NoteId = guid;
 
             Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
             s_projectNoteContainer.GetOwnProjectLeafNoteList().Add(newNote);
@@ -203,5 +208,45 @@ namespace UNote.Editor
             s_projectNoteIdConvertData.Save();
         }
         #endregion // Public Method
+
+        #region Private Method
+
+        private static string GenerateUniqueName(NoteType noteType)
+        {
+            const string baseName = "New Note";
+
+            switch (noteType)
+            {
+                case NoteType.Project:
+                    string noteName = baseName;
+                    int id = 0;
+                    var notes = GetAllProjectNotes();
+                    while (true)
+                    {
+                        bool isOverlap = false;
+                        foreach (var note in notes)
+                        {
+                            if (ProjectNoteIDManager.ConvertGuid(note.NoteId) == noteName)
+                            {
+                                isOverlap = true;
+                                break;
+                            }
+                        }
+
+                        if (!isOverlap)
+                        {
+                            break;
+                        }
+
+                        noteName = $"{baseName} {id++}";
+                    }
+                    return noteName;
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        #endregion // Private Method
     }
 }

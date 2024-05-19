@@ -66,15 +66,9 @@ namespace UNote.Runtime
 
         #endregion // Property
 
-        public NoteBase(string author = null)
+        public NoteBase()
         {
-            if (author == null)
-            {
-                author = UserConfig.GetUNoteSetting().UserName;
-            }
-
             m_noteId = Guid.NewGuid().ToString();
-            m_author = author;
             m_createdDate = m_updatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
         }
     }

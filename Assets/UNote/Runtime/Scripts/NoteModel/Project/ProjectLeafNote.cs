@@ -9,12 +9,5 @@ namespace UNote.Runtime
     public class ProjectLeafNote : NoteBase
     {
         public override NoteType NoteType => NoteType.Project;
-
-        // ID上書き
-        public ProjectLeafNote(string guid)
-            : base()
-        {
-            base.m_noteId = guid;
-        }
     }
 }
