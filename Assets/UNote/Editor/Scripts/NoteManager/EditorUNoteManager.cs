@@ -102,6 +102,26 @@ namespace UNote.Editor
         public static void SelectLeaf(NoteBase note)
         {
             s_currentLeafNote = note;
+
+            // Root を探して設定
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                    string projectNoteId = note.NoteId;
+                    var projectNotes = GetAllProjectNotes();
+                    foreach (var projectNote in projectNotes)
+                    {
+                        if (projectNote.NoteId == projectNoteId)
+                        {
+                            s_currentRootNote = projectNote;
+                            break;
+                        }
+                    }
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         #region Project Note

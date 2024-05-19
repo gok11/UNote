@@ -18,8 +18,11 @@ namespace UNote.Editor
         private Label m_nameLabel;
         private Label m_updateDateLabel;
         private Label m_noteContentLabel;
+        private VisualElement m_noteListItem;
 
-        public UNoteEditorListItem()
+        public NoteBase BindNote => m_note;
+
+        public UNoteEditorListItem(NoteEditor noteEditor)
         {
             VisualTreeAsset listItem = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteListItem
@@ -32,22 +35,35 @@ namespace UNote.Editor
 
             contentContainer.Add(template);
 
+            m_noteListItem = contentContainer.Q("NoteListItem");
+
             // マウスイベント
             contentContainer.RegisterCallback<MouseDownEvent>(evt =>
             {
-                if (evt.button == 1)
+                switch (evt.button)
                 {
-                    GenericMenu menu = new GenericMenu();
-                    menu.AddItem(
-                        new GUIContent("Delete Note"),
-                        false,
-                        () =>
+                    case 0:
+                        if (EditorUNoteManager.CurrentRootNote != m_note)
                         {
-                            EditorUNoteManager.DeleteNote(m_note);
-                            parent.Remove(this);
+                            EditorUNoteManager.SelectRoot(m_note);
+                            noteEditor.RightPane.SetupNoteList();
+                            noteEditor.CenterPane.UpdateNoteList();
                         }
-                    );
-                    menu.ShowAsContext();
+                        break;
+
+                    case 1:
+                        GenericMenu menu = new GenericMenu();
+                        menu.AddItem(
+                            new GUIContent("Delete Note"),
+                            false,
+                            () =>
+                            {
+                                EditorUNoteManager.DeleteNote(m_note);
+                                parent.Remove(this);
+                            }
+                        );
+                        menu.ShowAsContext();
+                        break;
                 }
 
                 evt.StopPropagation();
@@ -65,6 +81,19 @@ namespace UNote.Editor
 
             m_updateDateLabel.text = DateTime.Parse(note.UpdatedDate).ToString("yyyy-MM-dd");
             m_noteContentLabel.text = note.NoteContent;
+            Focus();
+        }
+
+        public void SelectItem(bool select)
+        {
+            if (select)
+            {
+                m_noteListItem.style.backgroundColor = StyleUtil.SelectColor;
+            }
+            else
+            {
+                m_noteListItem.style.backgroundColor = StyleUtil.UnselectColor;
+            }
         }
     }
 }

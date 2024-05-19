@@ -33,7 +33,15 @@ namespace UNote.Editor
         private UNoteEditorCenterPane m_centerPane;
         private UNoteEditorRightPane m_rightPane;
 
+        #region Property
+
+        public UNoteEditorLeftPane LeftPane => m_leftPane;
+        public UNoteEditorCenterPane CenterPane => m_centerPane;
+        public UNoteEditorRightPane RightPane => m_rightPane;
+
         public NoteEditorModel Model => m_model;
+
+        #endregion // Property
 
         [MenuItem("UNote/Note Editor")]
         private static void OpenWindow()
