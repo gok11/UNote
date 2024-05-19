@@ -23,12 +23,5 @@ namespace UNote.Editor
         public string GUID => m_guid;
 
         #endregion // Property
-
-        #region Constructor
-
-        public AssetNote(string author)
-            : base(author) { }
-
-        #endregion // Constructor
     }
 }
