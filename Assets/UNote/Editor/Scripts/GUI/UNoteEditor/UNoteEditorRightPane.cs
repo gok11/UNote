@@ -24,8 +24,12 @@ namespace UNote.Editor
         private Label m_noteTitle;
         private ScrollView m_noteList;
         private TextField m_inputText;
+        private ScrollView m_inputScroll;
+
         private Label m_authorLabel;
         private Button m_sendButton;
+
+        private float m_lastScrollPosition;
 
         public UNoteEditorRightPane(NoteEditor noteEditor)
         {
@@ -42,6 +46,7 @@ namespace UNote.Editor
             m_noteTitle = contentContainer.Q<Label>("NoteTitle");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
             m_inputText = contentContainer.Q<TextField>("InputText");
+            m_inputScroll = contentContainer.Q<ScrollView>("TextArea");
 
             m_inputText.BindProperty(m_noteEditor.Model.EditingText);
 
@@ -61,6 +66,25 @@ namespace UNote.Editor
             m_sendButton.clicked += () =>
             {
                 SendNote();
+            };
+
+            EditorApplication.update += () =>
+            {
+                float pos = m_inputText.cursorPosition.y;
+                if (Mathf.Abs(pos - m_lastScrollPosition) > 0.1f)
+                {
+                    // Bound の更新を待つため1フレーム待つ
+                    EditorApplication.delayCall += () =>
+                    {
+                        float min = 14.52f;
+                        float max = m_inputText.worldBound.height - 4;
+
+                        float rate = (pos - min) / (max - min);
+                        float scrollMax = m_inputScroll.verticalScroller.highValue;
+                        m_inputScroll.verticalScroller.value = rate * scrollMax;
+                    };
+                    m_lastScrollPosition = pos;
+                }
             };
 
             contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
