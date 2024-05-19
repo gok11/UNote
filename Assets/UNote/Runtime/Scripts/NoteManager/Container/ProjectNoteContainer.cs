@@ -17,6 +17,7 @@ namespace UNote.Runtime
         {
             public string m_authorName;
             public List<ProjectNote> m_projectNoteList = new List<ProjectNote>();
+            public List<ProjectLeafNote> m_projectLeafNoteList = new List<ProjectLeafNote>();
         }
 
         #endregion // Define
@@ -36,7 +37,7 @@ namespace UNote.Runtime
 
         private Dictionary<string, InternalContainer> m_projectNoteDict = new();
 
-        private Dictionary<string, List<ProjectNote>> m_projectNoteDictByTitle = new();
+        private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByTitle = new();
 
         #endregion // Field
 
@@ -107,31 +108,46 @@ namespace UNote.Runtime
             return m_projectNoteDict[authorName];
         }
 
-        public List<ProjectNote> GetList(string authorName)
+        public List<ProjectNote> GetProjectNoteList(string authorName)
         {
             return GetContainerSafe(authorName).m_projectNoteList;
         }
 
-        public List<ProjectNote> GetOwnList()
+        public List<ProjectLeafNote> GetProjectLeafNoteList(string authorName)
         {
-            return GetList(UserConfig.GetUNoteSetting().UserName);
+            return GetContainerSafe(authorName).m_projectLeafNoteList;
         }
 
-        public IEnumerable<List<ProjectNote>> GetListAll()
+        public List<ProjectNote> GetOwnProjectNoteList()
         {
-            return m_projectNoteDict.Values.Select(t => t.m_projectNoteList);
+            return GetProjectNoteList(UserConfig.GetUNoteSetting().UserName);
         }
 
-        public List<ProjectNote> GetProjectNoteListByProjectNoteId(string projectNoteId)
+        public List<ProjectLeafNote> GetOwnProjectLeafNoteList()
+        {
+            return GetProjectLeafNoteList(UserConfig.GetUNoteSetting().UserName);
+        }
+
+        public IEnumerable<List<ProjectNote>> GetProjectNoteListAll()
+        {
+            return m_projectNoteDict.Values.Where(t => t != null).Select(t => t.m_projectNoteList);
+        }
+
+        public IEnumerable<List<ProjectLeafNote>> GetProjectLeafNoteListAll()
+        {
+            return m_projectNoteDict.Values.Select(t => t.m_projectLeafNoteList);
+        }
+
+        public List<ProjectLeafNote> GetProjectLeafNoteListByProjectNoteId(string projectNoteId)
         {
             if (m_projectNoteDictByTitle.ContainsKey(projectNoteId))
             {
                 return m_projectNoteDictByTitle[projectNoteId];
             }
 
-            List<ProjectNote> newList = new(48);
+            List<ProjectLeafNote> newList = new(48);
 
-            foreach (var noteList in GetListAll())
+            foreach (var noteList in GetProjectLeafNoteListAll())
             {
                 foreach (var note in noteList)
                 {

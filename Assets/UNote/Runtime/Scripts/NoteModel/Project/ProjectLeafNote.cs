@@ -6,10 +6,15 @@ using UnityEngine;
 namespace UNote.Runtime
 {
     [Serializable]
-    public sealed class ProjectNote : NoteBase
+    public class ProjectLeafNote : NoteBase
     {
-        #region  Property
         public override NoteType NoteType => NoteType.Project;
-        #endregion // Property
+
+        // ID上書き
+        public ProjectLeafNote(string guid)
+            : base()
+        {
+            base.m_noteId = guid;
+        }
     }
 }
