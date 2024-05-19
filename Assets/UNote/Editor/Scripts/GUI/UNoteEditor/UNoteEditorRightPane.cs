@@ -53,14 +53,10 @@ namespace UNote.Editor
             m_authorLabel = contentContainer.Q<Label>("Author");
             m_sendButton = contentContainer.Q<Button>("SendButton");
 
-            // CurrentNote からタイトルを取得する
-            NoteBase note = EditorUNoteManager.CurrentRootNote;
-
-            m_noteTitle.text = GetNoteTitle(note);
             m_authorLabel.text = UserConfig.GetUNoteSetting().UserName;
 
             // CurrentNote と同じメモを時系列で並べる
-            SetupNoteList(note);
+            SetupNoteList();
 
             // ボタンを押したら新しいメモを作成
             m_sendButton.clicked += () =>
@@ -143,8 +139,13 @@ namespace UNote.Editor
             return string.Empty;
         }
 
-        private void SetupNoteList(NoteBase note)
+        public void SetupNoteList()
         {
+            // CurrentNote からタイトルを取得する
+            NoteBase note = EditorUNoteManager.CurrentRootNote;
+            m_noteTitle.text = GetNoteTitle(note);
+
+            // 要素を追加し、その要素までスクロール
             VisualElement lastAddedElem = null;
 
             m_noteList.contentContainer.Clear();
@@ -193,8 +194,7 @@ namespace UNote.Editor
 
         public override void OnUndoRedo()
         {
-            NoteBase note = EditorUNoteManager.CurrentLeafNote;
-            SetupNoteList(note);
+            SetupNoteList();
         }
     }
 }
