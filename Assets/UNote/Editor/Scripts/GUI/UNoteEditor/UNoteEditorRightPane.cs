@@ -54,7 +54,7 @@ namespace UNote.Editor
             m_sendButton = contentContainer.Q<Button>("SendButton");
 
             // CurrentNote からタイトルを取得する
-            NoteBase note = EditorUNoteManager.CurrentNote;
+            NoteBase note = EditorUNoteManager.CurrentRootNote;
 
             m_noteTitle.text = GetNoteTitle(note);
             m_authorLabel.text = UserConfig.GetUNoteSetting().UserName;
@@ -108,14 +108,15 @@ namespace UNote.Editor
             // Undoに乗らないよう一時的にバインド解除
             m_inputText.Unbind();
 
-            NoteBase note = EditorUNoteManager.CurrentNote;
+            NoteBase note = EditorUNoteManager.CurrentRootNote;
             ProjectNote srcNote = note as ProjectNote;
-            ProjectNote projectNote = EditorUNoteManager.AddNewLeafProjectNote(
-                srcNote.ProjectNoteID,
+
+            ProjectLeafNote projectLeafNote = EditorUNoteManager.AddNewLeafProjectNote(
+                srcNote.NoteId,
                 m_inputText.value
             );
 
-            VisualElement newNoteElem = CreateNoteContentElement(projectNote);
+            VisualElement newNoteElem = CreateNoteContentElement(projectLeafNote);
             m_noteList.Add(newNoteElem);
             EditorApplication.delayCall += () =>
             {
@@ -132,11 +133,11 @@ namespace UNote.Editor
 
         private string GetNoteTitle(NoteBase note)
         {
-            switch (note.NoteType)
+            switch (note?.NoteType)
             {
                 case NoteType.Project:
                     ProjectNote projectNote = note as ProjectNote;
-                    return ProjectNoteIDManager.ConvertGuid(projectNote.ProjectNoteID);
+                    return ProjectNoteIDManager.ConvertGuid(projectNote.NoteId);
             }
 
             return string.Empty;
@@ -150,16 +151,14 @@ namespace UNote.Editor
 
             m_noteList.visible = false;
 
-            switch (note.NoteType)
+            switch (note?.NoteType)
             {
                 case NoteType.Project:
                     ProjectNote projectNote = note as ProjectNote;
-                    string projectNoteId = projectNote.ProjectNoteID;
-                    IEnumerable<ProjectNote> otherNotes = EditorUNoteManager
-                        .GetAllProjectNotes()
-                        .SelectMany(t => t)
-                        .Where(t => !t.IsRootNote)
-                        .Where(t => t.ProjectNoteID == projectNoteId);
+                    string projectNoteId = projectNote.NoteId;
+                    IEnumerable<ProjectLeafNote> otherNotes = EditorUNoteManager
+                        .GetAllProjectLeafNotes()
+                        .Where(t => t.NoteId == projectNoteId);
 
                     foreach (var otherNote in otherNotes)
                     {
@@ -194,7 +193,7 @@ namespace UNote.Editor
 
         public override void OnUndoRedo()
         {
-            NoteBase note = EditorUNoteManager.CurrentNote;
+            NoteBase note = EditorUNoteManager.CurrentLeafNote;
             SetupNoteList(note);
         }
     }

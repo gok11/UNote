@@ -54,9 +54,19 @@ namespace UNote.Runtime
 
         public void SetTitle(string guid, string newTitle)
         {
-            m_internalData.m_convertTableList.Add(
-                new ProjectNoteIdConvertTable() { guid = guid, title = newTitle, }
+            ProjectNoteIdConvertTable table = m_internalData.m_convertTableList.Find(t =>
+                t.guid == guid
             );
+            if (table != null)
+            {
+                table.title = newTitle;
+            }
+            else
+            {
+                m_internalData.m_convertTableList.Add(
+                    new ProjectNoteIdConvertTable() { guid = guid, title = newTitle, }
+                );
+            }
 
             Save();
         }

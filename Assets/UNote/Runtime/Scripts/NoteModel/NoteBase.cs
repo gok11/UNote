@@ -41,12 +41,6 @@ namespace UNote.Runtime
             set => m_noteId = value;
         }
 
-        public bool IsRootNote
-        {
-            get => m_isRootNote;
-            set => m_isRootNote = value;
-        }
-
         public string Author
         {
             get => m_author;

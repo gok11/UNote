@@ -25,12 +25,12 @@ namespace UNote.Editor
             contentContainer.Add(template);
 
             // Prepare item
-            IReadOnlyList<NoteBase> noteList = null;
+            IEnumerable<NoteBase> notes = null;
 
             switch (EditorUNoteManager.CurrentNoteType)
             {
                 case NoteType.Project:
-                    noteList = EditorUNoteManager.GetAllRootProjectNoteList();
+                    notes = EditorUNoteManager.GetAllProjectNotes();
                     break;
             }
 
@@ -38,7 +38,7 @@ namespace UNote.Editor
             ScrollView scrollView = template.Q<ScrollView>("NoteList");
             VisualElement container = scrollView.contentContainer;
 
-            foreach (var note in noteList)
+            foreach (var note in notes)
             {
                 UNoteEditorListItem item = new UNoteEditorListItem();
                 container.Add(item);
@@ -56,8 +56,8 @@ namespace UNote.Editor
                         () =>
                         {
                             // メモ追加
-                            ProjectNote newNote = EditorUNoteManager.AddNewRootProjectNote();
-                            EditorUNoteManager.Select(newNote);
+                            ProjectNote newNote = EditorUNoteManager.AddNewProjectNote();
+                            EditorUNoteManager.SelectRoot(newNote);
 
                             // ビューに反映
                             UNoteEditorListItem newItem = new UNoteEditorListItem();

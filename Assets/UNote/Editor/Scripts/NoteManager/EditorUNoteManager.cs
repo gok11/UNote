@@ -16,7 +16,8 @@ namespace UNote.Editor
         #region Field
 
         private static NoteType s_currentNoteType = NoteType.Project;
-        private static NoteBase s_currentNote;
+        private static NoteBase s_currentRootNote;
+        private static NoteBase s_currentLeafNote;
 
         private static ProjectNoteContainer s_projectNoteContainer;
         private static ProjectNoteIdConvertData s_projectNoteIdConvertData;
@@ -26,21 +27,47 @@ namespace UNote.Editor
         #region Property
 
         public static NoteType CurrentNoteType => s_currentNoteType;
-        public static NoteBase CurrentNote
+
+        public static NoteBase CurrentRootNote
         {
             get
             {
-                if (s_currentNote == null)
+                if (s_currentRootNote != null)
                 {
-                    switch (s_currentNoteType)
-                    {
-                        case NoteType.Project:
-                            s_currentNote = GetAllRootProjectNoteList()?.FirstOrDefault();
-                            break;
-                    }
+                    return s_currentRootNote;
                 }
 
-                return s_currentNote;
+                switch (s_currentNoteType)
+                {
+                    case NoteType.Project:
+                        s_currentRootNote = GetAllProjectNotes()?.FirstOrDefault();
+                        break;
+                }
+
+                return s_currentRootNote;
+            }
+        }
+
+        public static NoteBase CurrentLeafNote
+        {
+            get
+            {
+                if (s_currentLeafNote != null)
+                {
+                    return s_currentLeafNote;
+                }
+
+                switch (s_currentNoteType)
+                {
+                    case NoteType.Project:
+                        string noteId = CurrentRootNote.NoteId;
+                        s_currentLeafNote = GetAllProjectLeafNotes()
+                            .Where(t => t.NoteId == noteId)
+                            .FirstOrDefault();
+                        break;
+                }
+
+                return s_currentLeafNote;
             }
         }
 
@@ -66,9 +93,15 @@ namespace UNote.Editor
             s_projectNoteIdConvertData.Load(authorName);
         }
 
-        public static void Select(NoteBase note)
+        public static void SelectRoot(NoteBase note)
         {
-            s_currentNote = note;
+            s_currentRootNote = note;
+            s_currentLeafNote = null;
+        }
+
+        public static void SelectLeaf(NoteBase note)
+        {
+            s_currentLeafNote = note;
         }
 
         #region Project Note
@@ -83,44 +116,42 @@ namespace UNote.Editor
             return new SerializedObject(s_projectNoteIdConvertData);
         }
 
-        public static ProjectNote AddNewRootProjectNote()
+        public static ProjectNote AddNewProjectNote()
         {
             Guid guid = Guid.NewGuid();
 
             s_projectNoteIdConvertData.SetTitle(guid.ToString(), "New Note");
             ProjectNoteIDManager.ResetData();
 
-            ProjectNote newNote = new ProjectNote(guid.ToString());
-            newNote.IsRootNote = true;
+            ProjectNote newNote = new ProjectNote();
 
             Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
-            s_projectNoteContainer.GetOwnList().Add(newNote);
+            s_projectNoteContainer.GetOwnProjectNoteList().Add(newNote);
 
             s_projectNoteContainer.Save();
             return newNote;
         }
 
-        public static ProjectNote AddNewLeafProjectNote(string guid, string noteContent)
+        public static ProjectLeafNote AddNewLeafProjectNote(string guid, string noteContent)
         {
-            ProjectNote newNote = new ProjectNote(guid);
-            newNote.IsRootNote = false;
+            ProjectLeafNote newNote = new ProjectLeafNote(guid);
             newNote.NoteContent = noteContent;
 
             Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
-            s_projectNoteContainer.GetOwnList().Add(newNote);
+            s_projectNoteContainer.GetOwnProjectLeafNoteList().Add(newNote);
 
             s_projectNoteContainer.Save();
             return newNote;
         }
 
-        public static IEnumerable<IReadOnlyList<ProjectNote>> GetAllProjectNotes()
+        public static IEnumerable<ProjectNote> GetAllProjectNotes()
         {
-            return s_projectNoteContainer.GetListAll();
+            return s_projectNoteContainer.GetProjectNoteListAll().SelectMany(t => t);
         }
 
-        public static IReadOnlyList<ProjectNote> GetAllRootProjectNoteList()
+        public static IEnumerable<ProjectLeafNote> GetAllProjectLeafNotes()
         {
-            return GetAllProjectNotes().SelectMany(t => t).Where(t => t.IsRootNote).ToList();
+            return s_projectNoteContainer.GetProjectLeafNoteListAll().SelectMany(t => t);
         }
 
         public static SerializedObject CreateProjectNoteContainerObject()
@@ -135,19 +166,33 @@ namespace UNote.Editor
             switch (note.NoteType)
             {
                 case NoteType.Project:
-                    ProjectNote projectNote = note as ProjectNote;
-                    List<ProjectNote> projectList = s_projectNoteContainer.GetOwnList();
-                    if (projectList.Contains(projectNote))
+                    if (note is ProjectNote projectNote)
                     {
-                        projectList.Remove(projectNote);
-                        s_projectNoteContainer.Save();
-
-                        // Rootなら変換情報も削除
-                        if (projectNote.IsRootNote)
+                        List<ProjectNote> projectList =
+                            s_projectNoteContainer.GetOwnProjectNoteList();
+                        if (projectList.Contains(projectNote))
                         {
-                            s_projectNoteIdConvertData.DeleteTable(projectNote.ProjectNoteID);
+                            projectList.Remove(projectNote);
+                            s_projectNoteContainer.Save();
+
+                            // 変換情報も削除
+                            s_projectNoteIdConvertData.DeleteTable(projectNote.NoteId);
                         }
                     }
+                    else if (note is ProjectLeafNote projectLeafNote)
+                    {
+                        List<ProjectLeafNote> projectList =
+                            s_projectNoteContainer.GetOwnProjectLeafNoteList();
+                        if (projectList.Contains(projectLeafNote))
+                        {
+                            projectList.Remove(projectLeafNote);
+                            s_projectNoteContainer.Save();
+
+                            // 変換情報も削除
+                            s_projectNoteIdConvertData.DeleteTable(projectLeafNote.NoteId);
+                        }
+                    }
+
                     break;
             }
         }
