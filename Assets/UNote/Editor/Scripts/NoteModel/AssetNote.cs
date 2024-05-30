@@ -22,6 +22,8 @@ namespace UNote.Editor
 
         public string GUID => m_guid;
 
+        public override string NoteName => "Asset Note";
+
         #endregion // Property
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -16,7 +17,6 @@ namespace UNote.Editor
         private NoteBase m_note;
 
         private Label m_nameLabel;
-        private Label m_updateDateLabel;
         private Label m_noteContentLabel;
         private VisualElement m_noteListItem;
 
@@ -30,7 +30,6 @@ namespace UNote.Editor
             TemplateContainer template = listItem.CloneTree();
 
             m_nameLabel = template.Q<Label>("Name");
-            m_updateDateLabel = template.Q<Label>("UpdateDate");
             m_noteContentLabel = template.Q<Label>("ContentLine");
 
             contentContainer.Add(template);
@@ -74,13 +73,16 @@ namespace UNote.Editor
         {
             m_note = note;
 
-            if (note is ProjectNote projectNote)
-            {
-                m_nameLabel.text = ProjectNoteIDManager.ConvertGuid(projectNote.NoteId);
-            }
+            m_nameLabel.text = note.NoteName;
 
-            m_updateDateLabel.text = DateTime.Parse(note.UpdatedDate).ToString("yyyy-MM-dd");
-            m_noteContentLabel.text = note.NoteContent;
+            // TODO 一番新しいメモの内容を書く
+            ProjectLeafNote leafNote = EditorUNoteManager
+                .GetAllProjectLeafNotes()
+                .Where(t => t.NoteId == note.NoteId)
+                .OrderByDescending(t => t.UpdatedDate)
+                .FirstOrDefault();
+
+            m_noteContentLabel.text = leafNote?.NoteContent.Replace("\r", " ").Replace("\n", " ");
             Focus();
         }
 
