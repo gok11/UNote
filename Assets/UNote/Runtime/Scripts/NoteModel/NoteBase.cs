@@ -41,6 +41,8 @@ namespace UNote.Runtime
             set => m_noteId = value;
         }
 
+        public abstract string NoteName { get; }
+
         public string Author
         {
             get => m_author;

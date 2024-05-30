@@ -10,6 +10,8 @@ namespace UNote.Runtime
     {
         #region  Property
         public override NoteType NoteType => NoteType.Project;
+
+        public override string NoteName => ProjectNoteIDManager.ConvertGuid(NoteId);
         #endregion // Property
     }
 }

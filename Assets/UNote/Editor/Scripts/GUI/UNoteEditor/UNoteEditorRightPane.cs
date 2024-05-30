@@ -157,13 +157,13 @@ namespace UNote.Editor
                 case NoteType.Project:
                     ProjectNote projectNote = note as ProjectNote;
                     string projectNoteId = projectNote.NoteId;
-                    IEnumerable<ProjectLeafNote> otherNotes = EditorUNoteManager
+                    IEnumerable<ProjectLeafNote> leafNotes = EditorUNoteManager
                         .GetAllProjectLeafNotes()
                         .Where(t => t.NoteId == projectNoteId);
 
-                    foreach (var otherNote in otherNotes)
+                    foreach (var leafNote in leafNotes)
                     {
-                        lastAddedElem = CreateNoteContentElement(otherNote);
+                        lastAddedElem = CreateNoteContentElement(leafNote);
                         m_noteList.Add(lastAddedElem);
                     }
                     break;
