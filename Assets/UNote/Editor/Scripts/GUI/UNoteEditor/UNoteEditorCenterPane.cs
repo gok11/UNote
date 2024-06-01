@@ -27,28 +27,10 @@ namespace UNote.Editor
             TemplateContainer template = tree.CloneTree();
             contentContainer.Add(template);
 
-            // Prepare item
-            IEnumerable<NoteBase> notes = null;
-
-            switch (EditorUNoteManager.CurrentNoteType)
-            {
-                case NoteType.Project:
-                    notes = EditorUNoteManager.GetAllProjectNotes();
-                    break;
-            }
-
-            // Add content to list
             m_noteScroll = template.Q<ScrollView>("NoteList");
             VisualElement container = m_noteScroll.contentContainer;
 
-            foreach (var note in notes)
-            {
-                UNoteEditorListItem item = new UNoteEditorListItem(noteEditor);
-                container.Add(item);
-                item.Setup(note);
-            }
-
-            UpdateNoteList();
+            SetupListItems(noteEditor);
 
             contentContainer.RegisterCallback<MouseDownEvent>(evt =>
             {
@@ -74,6 +56,32 @@ namespace UNote.Editor
                     menu.ShowAsContext();
                 }
             });
+        }
+
+        public void SetupListItems(NoteEditor noteEditor)
+        {
+            VisualElement container = m_noteScroll.contentContainer;
+            container.Clear();
+
+            // Prepare item
+            IEnumerable<NoteBase> notes = null;
+
+            switch (EditorUNoteManager.CurrentNoteType)
+            {
+                case NoteType.Project:
+                    notes = EditorUNoteManager.GetAllProjectNotes();
+                    break;
+            }
+
+            // Add content to list
+            foreach (var note in notes)
+            {
+                UNoteEditorListItem item = new UNoteEditorListItem(noteEditor);
+                container.Add(item);
+                item.Setup(note);
+            }
+
+            UpdateNoteList();
         }
 
         public void UpdateNoteList()

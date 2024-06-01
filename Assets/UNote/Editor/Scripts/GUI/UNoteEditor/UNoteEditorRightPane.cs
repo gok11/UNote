@@ -125,6 +125,9 @@ namespace UNote.Editor
             m_noteEditor.Model.ModelObject.ApplyModifiedProperties();
 
             m_inputText.BindProperty(m_noteEditor.Model.EditingText);
+
+            // 中央ペインを更新
+            m_noteEditor.CenterPane.SetupListItems(m_noteEditor);
         }
 
         private string GetNoteTitle(NoteBase note)

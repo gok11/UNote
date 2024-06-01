@@ -162,7 +162,10 @@ namespace UNote.Editor
             newNote.NoteContent = noteContent;
             newNote.NoteId = guid;
 
-            Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
+            if (s_projectNoteContainer)
+            {
+                Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
+            }
             s_projectNoteContainer.GetOwnProjectLeafNoteList().Add(newNote);
 
             s_projectNoteContainer.Save();
