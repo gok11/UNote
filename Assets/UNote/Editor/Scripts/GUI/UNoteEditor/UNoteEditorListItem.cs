@@ -75,14 +75,20 @@ namespace UNote.Editor
 
             m_nameLabel.text = note.NoteName;
 
-            // TODO 一番新しいメモの内容を書く
-            ProjectLeafNote leafNote = EditorUNoteManager
-                .GetAllProjectLeafNotes()
-                .Where(t => t.NoteId == note.NoteId)
-                .OrderByDescending(t => t.UpdatedDate)
-                .FirstOrDefault();
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                    ProjectLeafNote leafNote = EditorUNoteManager
+                        .GetAllProjectLeafNotes()
+                        .Where(t => t.NoteId == note.NoteId)
+                        .OrderByDescending(t => t.UpdatedDate)
+                        .FirstOrDefault();
 
-            m_noteContentLabel.text = leafNote?.NoteContent.Replace("\r", " ").Replace("\n", " ");
+                    m_noteContentLabel.text = leafNote
+                        ?.NoteContent.Replace("\r", " ")
+                        .Replace("\n", " ");
+                    break;
+            }
             Focus();
         }
 
