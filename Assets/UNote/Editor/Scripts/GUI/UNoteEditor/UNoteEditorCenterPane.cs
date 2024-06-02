@@ -30,8 +30,10 @@ namespace UNote.Editor
             m_noteScroll = template.Q<ScrollView>("NoteList");
             VisualElement container = m_noteScroll.contentContainer;
 
+            // Setup
             SetupListItems(noteEditor);
 
+            // Handle mouse event
             contentContainer.RegisterCallback<MouseDownEvent>(evt =>
             {
                 if (evt.button == 1)

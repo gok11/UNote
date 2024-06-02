@@ -18,6 +18,7 @@ namespace UNote.Editor
 
         private Label m_nameLabel;
         private Label m_noteContentLabel;
+        private Button m_contextButton;
         private VisualElement m_noteListItem;
 
         public NoteBase BindNote => m_note;
@@ -31,42 +32,49 @@ namespace UNote.Editor
 
             m_nameLabel = template.Q<Label>("Name");
             m_noteContentLabel = template.Q<Label>("ContentLine");
+            m_contextButton = template.Q<Button>("ContextButton");
 
             contentContainer.Add(template);
 
             m_noteListItem = contentContainer.Q("NoteListItem");
 
-            // マウスイベント
+            m_contextButton.visible = false;
+
+            // Handle mouse event
             contentContainer.RegisterCallback<MouseDownEvent>(evt =>
             {
+                if (EditorUNoteManager.CurrentRootNote != m_note)
+                {
+                    EditorUNoteManager.SelectRoot(m_note);
+                    noteEditor.RightPane.SetupNoteList();
+                    noteEditor.CenterPane.UpdateNoteList();
+                }
+
                 switch (evt.button)
                 {
-                    case 0:
-                        if (EditorUNoteManager.CurrentRootNote != m_note)
-                        {
-                            EditorUNoteManager.SelectRoot(m_note);
-                            noteEditor.RightPane.SetupNoteList();
-                            noteEditor.CenterPane.UpdateNoteList();
-                        }
-                        break;
-
                     case 1:
-                        GenericMenu menu = new GenericMenu();
-                        menu.AddItem(
-                            new GUIContent("Delete Note"),
-                            false,
-                            () =>
-                            {
-                                EditorUNoteManager.DeleteNote(m_note);
-                                parent.Remove(this);
-                            }
-                        );
-                        menu.ShowAsContext();
+                        ShowContextMenu();
                         break;
                 }
 
                 evt.StopPropagation();
             });
+
+            contentContainer.RegisterCallback<MouseEnterEvent>(_ =>
+            {
+                m_contextButton.visible = true;
+            });
+
+            contentContainer.RegisterCallback<MouseLeaveEvent>(_ =>
+            {
+                m_contextButton.visible = false;
+            });
+
+            // Handle button event
+            m_contextButton.clicked += () =>
+            {
+                ShowContextMenu();
+            };
         }
 
         public void Setup(NoteBase note)
@@ -102,6 +110,21 @@ namespace UNote.Editor
             {
                 m_noteListItem.style.backgroundColor = StyleUtil.UnselectColor;
             }
+        }
+
+        private void ShowContextMenu()
+        {
+            GenericMenu menu = new GenericMenu();
+            menu.AddItem(
+                new GUIContent("Delete Note"),
+                false,
+                () =>
+                {
+                    EditorUNoteManager.DeleteNote(m_note);
+                    parent.Remove(this);
+                }
+            );
+            menu.ShowAsContext();
         }
     }
 }

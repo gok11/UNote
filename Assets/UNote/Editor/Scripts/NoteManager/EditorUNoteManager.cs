@@ -10,7 +10,6 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
-    [InitializeOnLoad]
     public static class EditorUNoteManager
     {
         #region Field
@@ -81,6 +80,7 @@ namespace UNote.Editor
         #endregion // Constructor
 
         #region Public Method
+        [InitializeOnLoadMethod]
         public static void InitializeEditorNote()
         {
             string authorName = UserConfig.GetUNoteSetting().UserName;
