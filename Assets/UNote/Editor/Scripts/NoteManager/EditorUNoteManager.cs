@@ -93,15 +93,26 @@ namespace UNote.Editor
             s_projectNoteIdConvertData.Load(authorName);
         }
 
+        public static void SelectCategory(NoteType noteType)
+        {
+            s_currentRootNote = null;
+            s_currentLeafNote = null;
+
+            s_currentNoteType = noteType;
+        }
+
         public static void SelectRoot(NoteBase note)
         {
             s_currentRootNote = note;
             s_currentLeafNote = null;
+
+            s_currentNoteType = note.NoteType;
         }
 
         public static void SelectLeaf(NoteBase note)
         {
             s_currentLeafNote = note;
+            s_currentNoteType = note.NoteType;
 
             // Root を探して設定
             switch (note.NoteType)
