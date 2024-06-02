@@ -23,7 +23,7 @@ namespace UNote.Editor
 
         public NoteBase BindNote => m_note;
 
-        public UNoteEditorListItem(NoteEditor noteEditor)
+        public UNoteEditorListItem(UNoteEditor noteEditor)
         {
             VisualTreeAsset listItem = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteListItem

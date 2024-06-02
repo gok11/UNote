@@ -14,7 +14,7 @@ namespace UNote.Editor
     {
         private ScrollView m_noteScroll;
 
-        public UNoteEditorCenterPane(NoteEditor noteEditor)
+        public UNoteEditorCenterPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorCenterPane);
 
@@ -60,7 +60,7 @@ namespace UNote.Editor
             });
         }
 
-        public void SetupListItems(NoteEditor noteEditor)
+        public void SetupListItems(UNoteEditor noteEditor)
         {
             VisualElement container = m_noteScroll.contentContainer;
             container.Clear();

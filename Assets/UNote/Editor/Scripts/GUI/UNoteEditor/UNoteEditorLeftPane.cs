@@ -8,7 +8,7 @@ namespace UNote.Editor
 {
     public class UNoteEditorLeftPane : UNoteEditorPaneBase
     {
-        public UNoteEditorLeftPane(NoteEditor noteEditor)
+        public UNoteEditorLeftPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorLeftPane);
 
