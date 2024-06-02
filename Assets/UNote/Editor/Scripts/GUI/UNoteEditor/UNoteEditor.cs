@@ -24,7 +24,7 @@ namespace UNote.Editor
         }
     }
 
-    public class NoteEditor : EditorWindow
+    public class UNoteEditor : EditorWindow
     {
         [SerializeField]
         private NoteEditorModel m_model;
@@ -46,7 +46,7 @@ namespace UNote.Editor
         [MenuItem("UNote/Note Editor")]
         private static void OpenWindow()
         {
-            GetWindow<NoteEditor>("Note Editor");
+            GetWindow<UNoteEditor>("UNote Editor");
         }
 
         private void CreateGUI()

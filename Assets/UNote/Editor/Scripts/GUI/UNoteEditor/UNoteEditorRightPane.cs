@@ -19,7 +19,7 @@ namespace UNote.Editor
 
     public class UNoteEditorRightPane : UNoteEditorPaneBase
     {
-        private NoteEditor m_noteEditor;
+        private UNoteEditor m_noteEditor;
 
         private Label m_noteTitle;
         private ScrollView m_noteList;
@@ -31,7 +31,7 @@ namespace UNote.Editor
 
         private float m_lastScrollPosition;
 
-        public UNoteEditorRightPane(NoteEditor noteEditor)
+        public UNoteEditorRightPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorRightPane);
 
