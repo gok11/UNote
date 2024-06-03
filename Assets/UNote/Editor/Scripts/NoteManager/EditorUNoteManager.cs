@@ -216,6 +216,8 @@ namespace UNote.Editor
 
                             // 変換情報も削除
                             s_projectNoteIdConvertData.DeleteTable(projectNote.NoteId);
+
+                            // TODO 他の所属Leaf削除
                         }
                     }
                     else if (note is ProjectLeafNote projectLeafNote)
@@ -227,8 +229,7 @@ namespace UNote.Editor
                             projectList.Remove(projectLeafNote);
                             s_projectNoteContainer.Save();
 
-                            // 変換情報も削除
-                            s_projectNoteIdConvertData.DeleteTable(projectLeafNote.NoteId);
+                            // TODO 最後の一つなら変換テーブル削除
                         }
                     }
 
