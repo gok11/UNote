@@ -194,13 +194,35 @@ namespace UNote.Editor
             noteElement.Q<Label>("UpdateDate").text = note.UpdatedDate;
             noteElement.Q<Label>("ContentText").text = note.NoteContent;
 
-            Button contextButton = noteElement.Q<Button>("ContextButton");
-            contextButton.visible = note.Author == UserConfig.GetUNoteSetting().UserName;
+            bool isOwnNote = note.Author == UserConfig.GetUNoteSetting().UserName;
 
+            Button contextButton = noteElement.Q<Button>("ContextButton");
             contextButton.clicked += () =>
             {
                 ShowContextMenu(note);
             };
+
+            // 自分のメモなら編集等のメニューを出す
+            if (isOwnNote)
+            {
+                noteElement.RegisterCallback<MouseEnterEvent>(_ =>
+                {
+                    contextButton.visible = true;
+                });
+
+                noteElement.RegisterCallback<MouseLeaveEvent>(_ =>
+                {
+                    contextButton.visible = false;
+                });
+
+                noteElement.RegisterCallback<MouseDownEvent>(evt =>
+                {
+                    if (evt.button == 1)
+                    {
+                        ShowContextMenu(note);
+                    }
+                });
+            }
 
             return noteElement;
         }
@@ -214,7 +236,7 @@ namespace UNote.Editor
                 () =>
                 {
                     EditorUNoteManager.DeleteNote(note);
-                    m_noteEditor.RightPane.SetupNoteList();
+                    SetupNoteList();
                 }
             );
             menu.ShowAsContext();
