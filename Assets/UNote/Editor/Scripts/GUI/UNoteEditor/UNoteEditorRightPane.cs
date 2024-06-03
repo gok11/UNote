@@ -115,9 +115,10 @@ namespace UNote.Editor
             VisualElement newNoteElem = CreateNoteContentElement(projectLeafNote);
             m_noteList.Add(newNoteElem);
             EditorApplication.delayCall += () =>
-            {
-                m_noteList.ScrollTo(newNoteElem);
-            };
+                EditorApplication.delayCall += () =>
+                {
+                    m_noteList.ScrollTo(newNoteElem);
+                };
 
             // バインドしなおす前に最新の状態にする
             m_noteEditor.Model.ModelObject.Update();
@@ -171,15 +172,15 @@ namespace UNote.Editor
                     }
                     break;
             }
-
             EditorApplication.delayCall += () =>
-            {
-                if (lastAddedElem != null)
+                EditorApplication.delayCall += () =>
                 {
-                    m_noteList.ScrollTo(lastAddedElem);
-                }
-                m_noteList.visible = true;
-            };
+                    if (lastAddedElem != null)
+                    {
+                        m_noteList.ScrollTo(lastAddedElem);
+                    }
+                    m_noteList.visible = true;
+                };
         }
 
         private VisualElement CreateNoteContentElement(NoteBase note)
@@ -192,7 +193,31 @@ namespace UNote.Editor
             noteElement.Q<Label>("AuthorLabel").text = note.Author;
             noteElement.Q<Label>("UpdateDate").text = note.UpdatedDate;
             noteElement.Q<Label>("ContentText").text = note.NoteContent;
+
+            Button contextButton = noteElement.Q<Button>("ContextButton");
+            contextButton.visible = note.Author == UserConfig.GetUNoteSetting().UserName;
+
+            contextButton.clicked += () =>
+            {
+                ShowContextMenu(note);
+            };
+
             return noteElement;
+        }
+
+        private void ShowContextMenu(NoteBase note)
+        {
+            GenericMenu menu = new GenericMenu();
+            menu.AddItem(
+                new GUIContent("Delete Note"),
+                false,
+                () =>
+                {
+                    EditorUNoteManager.DeleteNote(note);
+                    m_noteEditor.RightPane.SetupNoteList();
+                }
+            );
+            menu.ShowAsContext();
         }
 
         public override void OnUndoRedo()
