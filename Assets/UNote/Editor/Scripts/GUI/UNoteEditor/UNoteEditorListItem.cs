@@ -50,11 +50,15 @@ namespace UNote.Editor
                     noteEditor.CenterPane.UpdateNoteList();
                 }
 
-                switch (evt.button)
+                bool isOwnNote = m_note.Author == UserConfig.GetUNoteSetting().UserName;
+                if (isOwnNote)
                 {
-                    case 1:
-                        ShowContextMenu();
-                        break;
+                    switch (evt.button)
+                    {
+                        case 1:
+                            ShowContextMenu();
+                            break;
+                    }
                 }
 
                 evt.StopPropagation();
@@ -62,12 +66,20 @@ namespace UNote.Editor
 
             contentContainer.RegisterCallback<MouseEnterEvent>(_ =>
             {
-                m_contextButton.visible = true;
+                bool isOwnNote = m_note.Author == UserConfig.GetUNoteSetting().UserName;
+                if (isOwnNote)
+                {
+                    m_contextButton.visible = true;
+                }
             });
 
             contentContainer.RegisterCallback<MouseLeaveEvent>(_ =>
             {
-                m_contextButton.visible = false;
+                bool isOwnNote = m_note.Author == UserConfig.GetUNoteSetting().UserName;
+                if (isOwnNote)
+                {
+                    m_contextButton.visible = false;
+                }
             });
 
             // Handle button event
@@ -116,12 +128,22 @@ namespace UNote.Editor
         {
             GenericMenu menu = new GenericMenu();
             menu.AddItem(
-                new GUIContent("Delete Note"),
+                new GUIContent("Delete"),
                 false,
                 () =>
                 {
                     EditorUNoteManager.DeleteNote(m_note);
                     parent.Remove(this);
+                }
+            );
+
+            string archiveLabel = m_note.Archived ? "Unarchived" : "Archive";
+            menu.AddItem(
+                new GUIContent(archiveLabel),
+                false,
+                () =>
+                {
+                    EditorUNoteManager.ToggleArchived(m_note);
                 }
             );
             menu.ShowAsContext();

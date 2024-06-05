@@ -237,6 +237,13 @@ namespace UNote.Editor
             }
         }
 
+        public static void ToggleArchived(NoteBase note)
+        {
+            note.Archived = !note.Archived;
+
+            SaveAll();
+        }
+
         public static void SaveAll()
         {
             s_projectNoteContainer.Save();
