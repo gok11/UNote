@@ -29,6 +29,9 @@ namespace UNote.Runtime
         [SerializeField]
         protected string m_updatedDate;
 
+        [SerializeField]
+        protected bool m_archived;
+
         #endregion // Field
 
         #region Property
@@ -64,6 +67,12 @@ namespace UNote.Runtime
         {
             get => m_updatedDate;
             set => m_updatedDate = value;
+        }
+
+        public bool Archived
+        {
+            get => m_archived;
+            set => m_archived = value;
         }
 
         #endregion // Property
