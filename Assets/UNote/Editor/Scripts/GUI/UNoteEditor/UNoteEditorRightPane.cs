@@ -115,10 +115,10 @@ namespace UNote.Editor
             VisualElement newNoteElem = CreateNoteContentElement(projectLeafNote);
             m_noteList.Add(newNoteElem);
             EditorApplication.delayCall += () =>
-                EditorApplication.delayCall += () =>
-                {
-                    m_noteList.ScrollTo(newNoteElem);
-                };
+            EditorApplication.delayCall += () =>
+            {
+                m_noteList.ScrollTo(newNoteElem);
+            };
 
             // バインドしなおす前に最新の状態にする
             m_noteEditor.Model.ModelObject.Update();
@@ -150,37 +150,37 @@ namespace UNote.Editor
             m_noteTitle.text = GetNoteTitle(note);
 
             // 要素を追加し、その要素までスクロール
-            VisualElement lastAddedElem = null;
-
             m_noteList.contentContainer.Clear();
 
             m_noteList.visible = false;
+
+            VisualElement footerElem = new VisualElement();
+            footerElem.name = "footer_elem";
+            footerElem.style.height = 0;
+            m_noteList.Add(footerElem);
 
             switch (note?.NoteType)
             {
                 case NoteType.Project:
                     ProjectNote projectNote = note as ProjectNote;
-                    string projectNoteId = projectNote.NoteId;
+                    string projectNoteId = projectNote?.NoteId;
                     IEnumerable<ProjectLeafNote> leafNotes = EditorUNoteManager
                         .GetAllProjectLeafNotes()
                         .Where(t => t.NoteId == projectNoteId);
 
                     foreach (var leafNote in leafNotes)
                     {
-                        lastAddedElem = CreateNoteContentElement(leafNote);
-                        m_noteList.Add(lastAddedElem);
+                        m_noteList.Insert(m_noteList.childCount - 1, CreateNoteContentElement(leafNote));
                     }
                     break;
             }
+            
             EditorApplication.delayCall += () =>
-                EditorApplication.delayCall += () =>
-                {
-                    if (lastAddedElem != null)
-                    {
-                        m_noteList.ScrollTo(lastAddedElem);
-                    }
-                    m_noteList.visible = true;
-                };
+            EditorApplication.delayCall += () =>
+            {
+                m_noteList.ScrollTo(footerElem);
+                m_noteList.visible = true;
+            };
         }
 
         private VisualElement CreateNoteContentElement(NoteBase note)

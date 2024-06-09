@@ -11,17 +11,7 @@ namespace UNote.Editor
     public partial class NoteEditorModel : ScriptableObject
     {
         private SerializedObject m_modelObject;
-        public SerializedObject ModelObject
-        {
-            get
-            {
-                if (m_modelObject == null)
-                {
-                    m_modelObject = new SerializedObject(this);
-                }
-                return m_modelObject;
-            }
-        }
+        public SerializedObject ModelObject => m_modelObject ??= new SerializedObject(this);
     }
 
     public class UNoteEditor : EditorWindow
@@ -29,15 +19,13 @@ namespace UNote.Editor
         [SerializeField]
         private NoteEditorModel m_model;
 
-        private UNoteEditorLeftPane m_leftPane;
-        private UNoteEditorCenterPane m_centerPane;
-        private UNoteEditorRightPane m_rightPane;
-
         #region Property
 
-        public UNoteEditorLeftPane LeftPane => m_leftPane;
-        public UNoteEditorCenterPane CenterPane => m_centerPane;
-        public UNoteEditorRightPane RightPane => m_rightPane;
+        public UNoteEditorLeftPane LeftPane { get; private set; }
+
+        public UNoteEditorCenterPane CenterPane { get; private set; }
+
+        public UNoteEditorRightPane RightPane { get; private set; }
 
         public NoteEditorModel Model => m_model;
 
@@ -73,17 +61,17 @@ namespace UNote.Editor
             );
             root.Add(firstSplitView);
 
-            m_leftPane = new UNoteEditorLeftPane(this);
-            m_leftPane.style.minWidth = leftPaneInitialWidth;
-            m_centerPane = new UNoteEditorCenterPane(this);
-            m_centerPane.style.minWidth = centerPaneInitialWidth;
-            m_rightPane = new UNoteEditorRightPane(this);
+            LeftPane = new UNoteEditorLeftPane(this);
+            LeftPane.style.minWidth = leftPaneInitialWidth;
+            CenterPane = new UNoteEditorCenterPane(this);
+            CenterPane.style.minWidth = centerPaneInitialWidth;
+            RightPane = new UNoteEditorRightPane(this);
 
-            firstSplitView.Add(m_leftPane);
+            firstSplitView.Add(LeftPane);
             firstSplitView.Add(secondSplitView);
 
-            secondSplitView.Add(m_centerPane);
-            secondSplitView.Add(m_rightPane);
+            secondSplitView.Add(CenterPane);
+            secondSplitView.Add(RightPane);
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath.UNoteEditor);
             root.styleSheets.Add(styleSheet);
@@ -93,9 +81,9 @@ namespace UNote.Editor
             {
                 if (info.undoName.Contains("UNote"))
                 {
-                    m_leftPane.OnUndoRedo();
-                    m_centerPane.OnUndoRedo();
-                    m_rightPane.OnUndoRedo();
+                    LeftPane.OnUndoRedo();
+                    CenterPane.OnUndoRedo();
+                    RightPane.OnUndoRedo();
                 }
             };
         }
