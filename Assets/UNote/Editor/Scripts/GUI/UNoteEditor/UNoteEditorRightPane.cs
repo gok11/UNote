@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.Playables;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
+using Button = UnityEngine.UIElements.Button;
 
 namespace UNote.Editor
 {
@@ -22,6 +22,9 @@ namespace UNote.Editor
         private UNoteEditor m_noteEditor;
 
         private Label m_noteTitle;
+        private TextField m_titleField;
+        private Button m_openButton;
+        
         private ScrollView m_noteList;
         private TextField m_inputText;
         private ScrollView m_inputScroll;
@@ -44,6 +47,9 @@ namespace UNote.Editor
 
             //
             m_noteTitle = contentContainer.Q<Label>("NoteTitle");
+            m_titleField = contentContainer.Q<TextField>("TitleField");
+            m_openButton = contentContainer.Q<Button>("OpenButton");
+            
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
             m_inputText = contentContainer.Q<TextField>("InputText");
             m_inputScroll = contentContainer.Q<ScrollView>("TextArea");
@@ -63,7 +69,14 @@ namespace UNote.Editor
             {
                 SendNote();
             };
-
+            
+            // 自分が所有するメモならタイトルクリックで編集モードにする
+            m_noteTitle.RegisterCallback<MouseDownEvent>(_ =>
+            {
+                EnableChangeTitleMode();
+            });
+            
+            // テキストフィールド内のカーソル移動に合わせてスクロールする
             EditorApplication.update += () =>
             {
                 float pos = m_inputText.cursorPosition.y;
@@ -91,6 +104,7 @@ namespace UNote.Editor
             if (evt.keyCode == KeyCode.Return && evt.shiftKey)
             {
                 SendNote();
+                evt.StopPropagation();
             }
         }
 
@@ -106,6 +120,11 @@ namespace UNote.Editor
 
             NoteBase note = EditorUNoteManager.CurrentRootNote;
             ProjectNote srcNote = note as ProjectNote;
+
+            if (srcNote == null)
+            {
+                return;
+            }
 
             ProjectLeafNote projectLeafNote = EditorUNoteManager.AddNewLeafProjectNote(
                 srcNote.NoteId,
@@ -128,7 +147,50 @@ namespace UNote.Editor
             m_inputText.BindProperty(m_noteEditor.Model.EditingText);
 
             // 中央ペインを更新
-            m_noteEditor.CenterPane.SetupListItems(m_noteEditor);
+            m_noteEditor.CenterPane.SetupListItems();
+        }
+
+        private void EnableChangeTitleMode()
+        {
+            NoteBase note = EditorUNoteManager.CurrentRootNote;
+            bool isOwnNote = note.Author == UserConfig.GetUNoteSetting().UserName;
+
+            if (!isOwnNote)
+            {
+                return;
+            }
+            
+            m_noteTitle.style.display = DisplayStyle.None;
+            m_titleField.style.display = DisplayStyle.Flex;
+
+            m_titleField.value = GetNoteTitle(note);
+            m_titleField.Focus();
+            
+            m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
+            m_titleField.RegisterCallback<KeyDownEvent>(TryChangeTitle);
+
+            void TryChangeTitle(KeyDownEvent evt)
+            {
+                if (evt.keyCode == KeyCode.Return)
+                {
+                    switch (note?.NoteType)
+                    {
+                        case NoteType.Project:
+                            ProjectNote projectNote = note as ProjectNote;
+                            string projectNoteId = projectNote?.NoteId;
+                            EditorUNoteManager.ChangeProjectNoteTitle(projectNoteId, m_titleField.value);
+                            break;
+                    }
+                    
+                    // 編集を終え、テキスト更新
+                    m_noteTitle.style.display = DisplayStyle.Flex;
+                    m_titleField.style.display = DisplayStyle.None;
+
+                    m_noteTitle.text = GetNoteTitle(EditorUNoteManager.CurrentRootNote);
+                    
+                    m_noteEditor.CenterPane.SetupListItems();
+                }
+            }
         }
 
         private string GetNoteTitle(NoteBase note)
@@ -137,7 +199,7 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                     ProjectNote projectNote = note as ProjectNote;
-                    return ProjectNoteIDManager.ConvertGuid(projectNote.NoteId);
+                    return ProjectNoteIDManager.ConvertGuid(projectNote?.NoteId);
             }
 
             return string.Empty;
@@ -145,6 +207,12 @@ namespace UNote.Editor
 
         public void SetupNoteList()
         {
+            // メモの表示状態をリセットする
+            m_noteTitle.style.display = DisplayStyle.Flex;
+            m_titleField.style.display = DisplayStyle.None;
+            
+            // TODO 外部アセット等を参照するメモならそれを開くボタンを表示
+            
             // CurrentNote からタイトルを取得する
             NoteBase note = EditorUNoteManager.CurrentRootNote;
             m_noteTitle.text = GetNoteTitle(note);
@@ -175,6 +243,7 @@ namespace UNote.Editor
                     break;
             }
             
+            // スクロールが正しくできるよう待つ
             EditorApplication.delayCall += () =>
             EditorApplication.delayCall += () =>
             {

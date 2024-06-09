@@ -12,11 +12,15 @@ namespace UNote.Editor
 {
     public class UNoteEditorCenterPane : UNoteEditorPaneBase
     {
+        private UNoteEditor m_noteEditor;
+        
         private ScrollView m_noteScroll;
 
         public UNoteEditorCenterPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorCenterPane);
+
+            m_noteEditor = noteEditor;
 
             contentContainer.style.minWidth = 160;
 
@@ -31,7 +35,7 @@ namespace UNote.Editor
             VisualElement container = m_noteScroll.contentContainer;
 
             // Setup
-            SetupListItems(noteEditor);
+            SetupListItems();
 
             // Handle mouse event
             contentContainer.RegisterCallback<MouseDownEvent>(evt =>
@@ -60,7 +64,7 @@ namespace UNote.Editor
             });
         }
 
-        public void SetupListItems(UNoteEditor noteEditor)
+        public void SetupListItems()
         {
             VisualElement container = m_noteScroll.contentContainer;
             container.Clear();
@@ -78,7 +82,7 @@ namespace UNote.Editor
             // Add content to list
             foreach (var note in notes)
             {
-                UNoteEditorListItem item = new UNoteEditorListItem(noteEditor);
+                UNoteEditorListItem item = new UNoteEditorListItem(m_noteEditor);
                 container.Add(item);
                 item.Setup(note);
             }
