@@ -61,8 +61,7 @@ namespace UNote.Editor
                     case NoteType.Project:
                         string noteId = CurrentRootNote.NoteId;
                         s_currentLeafNote = GetAllProjectLeafNotes()
-                            .Where(t => t.NoteId == noteId)
-                            .FirstOrDefault();
+                            .FirstOrDefault(t => t.NoteId == noteId);
                         break;
                 }
 
@@ -196,6 +195,12 @@ namespace UNote.Editor
         public static SerializedObject CreateProjectNoteContainerObject()
         {
             return new SerializedObject(s_projectNoteContainer);
+        }
+
+        public static void ChangeProjectNoteTitle(string guid, string newTitle)
+        {
+            s_projectNoteIdConvertData.SetTitle(guid, newTitle);
+            ProjectNoteIDManager.ResetData();
         }
 
         #endregion // Project Note

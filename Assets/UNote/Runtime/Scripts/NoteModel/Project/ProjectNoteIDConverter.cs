@@ -29,12 +29,7 @@ namespace UNote.Runtime
                 Initialize();
             }
 
-            if (!s_convertDict.ContainsKey(guid))
-            {
-                return null;
-            }
-
-            return s_convertDict[guid];
+            return s_convertDict.GetValueOrDefault(guid);
         }
 
         private static void Initialize()

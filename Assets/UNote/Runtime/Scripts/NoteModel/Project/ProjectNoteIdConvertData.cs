@@ -57,6 +57,7 @@ namespace UNote.Runtime
             ProjectNoteIdConvertTable table = m_internalData.m_convertTableList.Find(t =>
                 t.guid == guid
             );
+            
             if (table != null)
             {
                 table.title = newTitle;
