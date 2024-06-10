@@ -128,12 +128,15 @@ namespace UNote.Editor
         {
             GenericMenu menu = new GenericMenu();
             menu.AddItem(
-                new GUIContent("Delete"),
+                new GUIContent("Delete Note"),
                 false,
                 () =>
                 {
-                    EditorUNoteManager.DeleteNote(m_note);
-                    parent.Remove(this);
+                    if (EditorUtility.DisplayDialog("Confirm", "Do you want to delete this note?", "OK", "Cancel"))
+                    {
+                        EditorUNoteManager.DeleteNote(m_note);
+                        parent.Remove(this);   
+                    }
                 }
             );
 
