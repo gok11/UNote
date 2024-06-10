@@ -65,10 +65,7 @@ namespace UNote.Editor
             SetupNoteList();
 
             // ボタンを押したら新しいメモを作成
-            m_sendButton.clicked += () =>
-            {
-                SendNote();
-            };
+            m_sendButton.clicked += SendNote;
             
             // 自分が所有するメモならタイトルクリックで編集モードにする
             m_noteTitle.RegisterCallback<MouseDownEvent>(_ =>
@@ -160,8 +157,7 @@ namespace UNote.Editor
                 return;
             }
             
-            m_noteTitle.style.display = DisplayStyle.None;
-            m_titleField.style.display = DisplayStyle.Flex;
+            SetTitleGUIEditMode(true);
 
             m_titleField.value = GetNoteTitle(note);
             m_titleField.Focus();
@@ -183,12 +179,18 @@ namespace UNote.Editor
                     }
                     
                     // 編集を終え、テキスト更新
-                    m_noteTitle.style.display = DisplayStyle.Flex;
-                    m_titleField.style.display = DisplayStyle.None;
+                    SetTitleGUIEditMode(false);
 
                     m_noteTitle.text = GetNoteTitle(EditorUNoteManager.CurrentRootNote);
                     
                     m_noteEditor.CenterPane.SetupListItems();
+                }
+
+                if (evt.keyCode == KeyCode.Escape)
+                {
+                    m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
+
+                    SetTitleGUIEditMode(false);
                 }
             }
         }
@@ -205,11 +207,24 @@ namespace UNote.Editor
             return string.Empty;
         }
 
+        private void SetTitleGUIEditMode(bool enableEdit)
+        {
+            if (enableEdit)
+            {
+                m_noteTitle.style.display = DisplayStyle.None;
+                m_titleField.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                m_noteTitle.style.display = DisplayStyle.Flex;
+                m_titleField.style.display = DisplayStyle.None;
+            }
+        }
+        
         public void SetupNoteList()
         {
             // メモの表示状態をリセットする
-            m_noteTitle.style.display = DisplayStyle.Flex;
-            m_titleField.style.display = DisplayStyle.None;
+            SetTitleGUIEditMode(false);
             
             // TODO 外部アセット等を参照するメモならそれを開くボタンを表示
             
@@ -247,8 +262,11 @@ namespace UNote.Editor
             EditorApplication.delayCall += () =>
             EditorApplication.delayCall += () =>
             {
-                m_noteList.ScrollTo(footerElem);
-                m_noteList.visible = true;
+                if (m_noteList != null)
+                {
+                    m_noteList.ScrollTo(footerElem);
+                    m_noteList.visible = true;   
+                }
             };
         }
 
@@ -304,8 +322,11 @@ namespace UNote.Editor
                 false,
                 () =>
                 {
-                    EditorUNoteManager.DeleteNote(note);
-                    SetupNoteList();
+                    if (EditorUtility.DisplayDialog("Confirm", "Do you want to delete this note?", "OK", "Cancel"))
+                    {
+                        EditorUNoteManager.DeleteNote(note);
+                        SetupNoteList();   
+                    }
                 }
             );
             menu.ShowAsContext();
