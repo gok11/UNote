@@ -128,7 +128,7 @@ namespace UNote.Editor
                 m_inputText.value
             );
 
-            VisualElement newNoteElem = CreateNoteContentElement(projectLeafNote);
+            VisualElement newNoteElem = new UNoteEditorContentElem(m_noteEditor, projectLeafNote);
             m_noteList.Add(newNoteElem);
             EditorApplication.delayCall += () =>
             EditorApplication.delayCall += () =>
@@ -206,20 +206,6 @@ namespace UNote.Editor
 
             return string.Empty;
         }
-
-        private void SetTitleGUIEditMode(bool enableEdit)
-        {
-            if (enableEdit)
-            {
-                m_noteTitle.style.display = DisplayStyle.None;
-                m_titleField.style.display = DisplayStyle.Flex;
-            }
-            else
-            {
-                m_noteTitle.style.display = DisplayStyle.Flex;
-                m_titleField.style.display = DisplayStyle.None;
-            }
-        }
         
         public void SetupNoteList()
         {
@@ -253,7 +239,7 @@ namespace UNote.Editor
 
                     foreach (var leafNote in leafNotes)
                     {
-                        m_noteList.Insert(m_noteList.childCount - 1, CreateNoteContentElement(leafNote));
+                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(m_noteEditor, leafNote));
                     }
                     break;
             }
@@ -270,66 +256,18 @@ namespace UNote.Editor
             };
         }
 
-        private VisualElement CreateNoteContentElement(NoteBase note)
+        private void SetTitleGUIEditMode(bool enableEdit)
         {
-            VisualTreeAsset noteContentTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                UxmlPath.NoteContent
-            );
-
-            VisualElement noteElement = noteContentTree.Instantiate();
-            noteElement.Q<Label>("AuthorLabel").text = note.Author;
-            noteElement.Q<Label>("UpdateDate").text = note.UpdatedDate;
-            noteElement.Q<Label>("ContentText").text = note.NoteContent;
-
-            bool isOwnNote = note.Author == UserConfig.GetUNoteSetting().UserName;
-
-            Button contextButton = noteElement.Q<Button>("ContextButton");
-            contextButton.clicked += () =>
+            if (enableEdit)
             {
-                ShowContextMenu(note);
-            };
-
-            // 自分のメモなら編集等のメニューを出す
-            if (isOwnNote)
-            {
-                noteElement.RegisterCallback<MouseEnterEvent>(_ =>
-                {
-                    contextButton.visible = true;
-                });
-
-                noteElement.RegisterCallback<MouseLeaveEvent>(_ =>
-                {
-                    contextButton.visible = false;
-                });
-
-                noteElement.RegisterCallback<MouseDownEvent>(evt =>
-                {
-                    if (evt.button == 1)
-                    {
-                        ShowContextMenu(note);
-                    }
-                });
+                m_noteTitle.style.display = DisplayStyle.None;
+                m_titleField.style.display = DisplayStyle.Flex;
             }
-
-            return noteElement;
-        }
-
-        private void ShowContextMenu(NoteBase note)
-        {
-            GenericMenu menu = new GenericMenu();
-            menu.AddItem(
-                new GUIContent("Delete Note"),
-                false,
-                () =>
-                {
-                    if (EditorUtility.DisplayDialog("Confirm", "Do you want to delete this note?", "OK", "Cancel"))
-                    {
-                        EditorUNoteManager.DeleteNote(note);
-                        SetupNoteList();   
-                    }
-                }
-            );
-            menu.ShowAsContext();
+            else
+            {
+                m_noteTitle.style.display = DisplayStyle.Flex;
+                m_titleField.style.display = DisplayStyle.None;
+            }
         }
 
         public override void OnUndoRedo()
