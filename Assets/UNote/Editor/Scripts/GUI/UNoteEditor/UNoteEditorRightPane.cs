@@ -101,7 +101,6 @@ namespace UNote.Editor
             if (evt.keyCode == KeyCode.Return && evt.shiftKey)
             {
                 SendNote();
-                evt.StopPropagation();
             }
         }
 
@@ -250,7 +249,10 @@ namespace UNote.Editor
             {
                 if (m_noteList != null)
                 {
-                    m_noteList.ScrollTo(footerElem);
+                    if (m_noteList.Contains(footerElem))
+                    {
+                        m_noteList.ScrollTo(footerElem);   
+                    }
                     m_noteList.visible = true;   
                 }
             };
