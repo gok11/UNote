@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -39,8 +41,15 @@ namespace UNote.Editor
             m_sendButton = noteElement.Q<Button>("SendButton");
             
             noteElement.Q<Label>("AuthorLabel").text = note.Author;
-            noteElement.Q<Label>("UpdateDate").text = note.UpdatedDate;
+            noteElement.Q<Label>("CreatedDate").text = note.CreatedDate;
+
+            bool isEdited = note.CreatedDate != note.UpdatedDate;
             m_contentText.text = note.NoteContent;
+
+            if (isEdited)
+            {
+                m_contentText.text += CreateEditedText();
+            }
 
             bool isOwnNote = note.Author == UserConfig.GetUNoteSetting().UserName;
 
@@ -120,7 +129,7 @@ namespace UNote.Editor
             m_editNoteElem.style.display = DisplayStyle.Flex;
             m_contextButton.style.display = DisplayStyle.None;
 
-            m_editField.value = m_contentText.text;
+            m_editField.value = m_note.NoteContent;
             m_editField.Focus();
         }
 
@@ -137,10 +146,16 @@ namespace UNote.Editor
             m_editNoteElem.style.display = DisplayStyle.None;
             m_contextButton.style.display = DisplayStyle.Flex;
 
-            m_contentText.text = m_editField.value;
+            if (m_note.NoteContent != m_editField.value)
+            {
+                m_contentText.text = $"{m_editField.value} {CreateEditedText()}";
 
-            m_note.NoteContent = m_editField.value;
-            EditorUNoteManager.SaveAll();
+                m_note.NoteContent = m_editField.value;
+                m_note.UpdatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+                EditorUNoteManager.SaveAll();   
+            }
         }
+
+        private string CreateEditedText() => "<size=10><color=#999999> (edited)</color></size>";
     }
 }
