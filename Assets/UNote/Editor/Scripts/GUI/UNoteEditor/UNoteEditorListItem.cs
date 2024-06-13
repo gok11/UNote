@@ -128,7 +128,7 @@ namespace UNote.Editor
         {
             GenericMenu menu = new GenericMenu();
             menu.AddItem(
-                new GUIContent("Delete Note"),
+                new GUIContent("Delete"),
                 false,
                 () =>
                 {

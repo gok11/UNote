@@ -155,13 +155,12 @@ namespace UNote.Editor
             s_projectNoteIdConvertData.SetTitle(newNote.NoteId, uniqueName);
             ProjectNoteIDManager.ResetData();
 
-            if (s_projectNoteContainer)
-            {
-                Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
-            }
+            Undo.RegisterCompleteObjectUndo(s_projectNoteContainer, "UNote Add New Project Note");
 
             s_projectNoteContainer.GetOwnProjectNoteList().Add(newNote);
             s_projectNoteContainer.Save();
+            
+            EditorUtility.SetDirty(s_projectNoteContainer);
             return newNote;
         }
 

@@ -79,12 +79,11 @@ namespace UNote.Editor
             // Undo Setup
             Undo.undoRedoEvent += (in UndoRedoInfo info) =>
             {
-                if (info.undoName.Contains("UNote"))
-                {
-                    LeftPane.OnUndoRedo();
-                    CenterPane.OnUndoRedo();
-                    RightPane.OnUndoRedo();
-                }
+                LeftPane.OnUndoRedo();
+                CenterPane.OnUndoRedo();
+                RightPane.OnUndoRedo();
+                
+                EditorUNoteManager.SaveAll();
             };
         }
     }
