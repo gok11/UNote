@@ -101,7 +101,7 @@ namespace UNote.Editor
                     ProjectLeafNote leafNote = EditorUNoteManager
                         .GetAllProjectLeafNotes()
                         .Where(t => t.NoteId == note.NoteId)
-                        .OrderByDescending(t => t.UpdatedDate)
+                        .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
 
                     m_noteContentLabel.text = leafNote
