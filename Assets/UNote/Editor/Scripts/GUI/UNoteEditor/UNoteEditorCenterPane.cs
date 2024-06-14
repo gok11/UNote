@@ -100,5 +100,10 @@ namespace UNote.Editor
                 item.SelectItem(item.BindNote == EditorUNoteManager.CurrentRootNote);
             }
         }
+
+        public override void OnUndoRedo()
+        {
+            SetupListItems();
+        }
     }
 }

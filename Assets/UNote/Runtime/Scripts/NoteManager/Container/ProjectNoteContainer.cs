@@ -39,6 +39,8 @@ namespace UNote.Runtime
 
         private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByTitle = new();
 
+        public int test;
+
         #endregion // Field
 
         public void Load()

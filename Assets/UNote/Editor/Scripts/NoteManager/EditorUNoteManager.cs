@@ -10,40 +10,44 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
-    public static class EditorUNoteManager
+    public class EditorUNoteManager
     {
         #region Field
 
-        private static NoteType s_currentNoteType = NoteType.Project;
-        private static NoteBase s_currentRootNote;
-        private static NoteBase s_currentLeafNote;
+        private NoteType m_currentNoteType = NoteType.Project;
+        private NoteBase m_currentRootNote;
+        private NoteBase m_currentLeafNote;
 
-        private static ProjectNoteContainer s_projectNoteContainer;
-        private static ProjectNoteIdConvertData s_projectNoteIdConvertData;
+        private ProjectNoteContainer m_projectNoteContainer;
+        private ProjectNoteIdConvertData m_projectNoteIdConvertData;
+
+        private static EditorUNoteManager s_instance;
 
         #endregion // Field
 
         #region Property
 
-        public static NoteType CurrentNoteType => s_currentNoteType;
+        public static EditorUNoteManager Instance => s_instance ??= new EditorUNoteManager();
+
+        public static NoteType CurrentNoteType => Instance.m_currentNoteType;
 
         public static NoteBase CurrentRootNote
         {
             get
             {
-                if (s_currentRootNote != null)
+                if (Instance.m_currentRootNote != null)
                 {
-                    return s_currentRootNote;
+                    return Instance.m_currentRootNote;
                 }
 
-                switch (s_currentNoteType)
+                switch (Instance.m_currentNoteType)
                 {
                     case NoteType.Project:
-                        s_currentRootNote = GetAllProjectNotes()?.FirstOrDefault();
+                        Instance.m_currentRootNote = GetAllProjectNotes()?.FirstOrDefault();
                         break;
                 }
 
-                return s_currentRootNote;
+                return Instance.m_currentRootNote;
             }
         }
 
@@ -51,21 +55,21 @@ namespace UNote.Editor
         {
             get
             {
-                if (s_currentLeafNote != null)
+                if (Instance.m_currentLeafNote != null)
                 {
-                    return s_currentLeafNote;
+                    return Instance.m_currentLeafNote;
                 }
 
-                switch (s_currentNoteType)
+                switch (Instance.m_currentNoteType)
                 {
                     case NoteType.Project:
                         string noteId = CurrentRootNote.NoteId;
-                        s_currentLeafNote = GetAllProjectLeafNotes()
+                        Instance.m_currentLeafNote = GetAllProjectLeafNotes()
                             .FirstOrDefault(t => t.NoteId == noteId);
                         break;
                 }
 
-                return s_currentLeafNote;
+                return Instance.m_currentLeafNote;
             }
         }
 
@@ -84,34 +88,34 @@ namespace UNote.Editor
         {
             string authorName = UserConfig.GetUNoteSetting().UserName;
 
-            s_projectNoteContainer = ScriptableObject.CreateInstance<ProjectNoteContainer>();
-            s_projectNoteContainer.Load();
+            Instance.m_projectNoteContainer = ScriptableObject.CreateInstance<ProjectNoteContainer>();
+            Instance.m_projectNoteContainer.Load();
 
-            s_projectNoteIdConvertData =
+            Instance.m_projectNoteIdConvertData =
                 ScriptableObject.CreateInstance<ProjectNoteIdConvertData>();
-            s_projectNoteIdConvertData.Load(authorName);
+            Instance.m_projectNoteIdConvertData.Load(authorName);
         }
 
         public static void SelectCategory(NoteType noteType)
         {
-            s_currentRootNote = null;
-            s_currentLeafNote = null;
+            Instance.m_currentRootNote = null;
+            Instance.m_currentLeafNote = null;
 
-            s_currentNoteType = noteType;
+            Instance.m_currentNoteType = noteType;
         }
 
         public static void SelectRoot(NoteBase note)
         {
-            s_currentRootNote = note;
-            s_currentLeafNote = null;
+            Instance.m_currentRootNote = note;
+            Instance.m_currentLeafNote = null;
 
-            s_currentNoteType = note.NoteType;
+            Instance.m_currentNoteType = note.NoteType;
         }
 
         public static void SelectLeaf(NoteBase note)
         {
-            s_currentLeafNote = note;
-            s_currentNoteType = note.NoteType;
+            Instance.m_currentLeafNote = note;
+            Instance.m_currentNoteType = note.NoteType;
 
             // Root を探して設定
             switch (note.NoteType)
@@ -123,7 +127,7 @@ namespace UNote.Editor
                     {
                         if (projectNote.NoteId == projectNoteId)
                         {
-                            s_currentRootNote = projectNote;
+                            Instance.m_currentRootNote = projectNote;
                             break;
                         }
                     }
@@ -138,12 +142,12 @@ namespace UNote.Editor
 
         public static SerializedObject GetProjectNoteContainerObject()
         {
-            return new SerializedObject(s_projectNoteContainer);
+            return new SerializedObject(Instance.m_projectNoteContainer);
         }
 
         public static SerializedObject ProjectNoteIdConvertDataObject()
         {
-            return new SerializedObject(s_projectNoteIdConvertData);
+            return new SerializedObject(Instance.m_projectNoteIdConvertData);
         }
 
         public static ProjectNote AddNewProjectNote()
@@ -152,15 +156,14 @@ namespace UNote.Editor
             newNote.Author = UserConfig.GetUNoteSetting().UserName;
 
             string uniqueName = GenerateUniqueName(NoteType.Project);
-            s_projectNoteIdConvertData.SetTitle(newNote.NoteId, uniqueName);
+            Instance.m_projectNoteIdConvertData.SetTitle(newNote.NoteId, uniqueName);
             ProjectNoteIDManager.ResetData();
 
-            Undo.RegisterCompleteObjectUndo(s_projectNoteContainer, "UNote Add New Project Note");
+            Undo.RecordObject(Instance.m_projectNoteContainer, "UNote Add New Project Note");
 
-            s_projectNoteContainer.GetOwnProjectNoteList().Add(newNote);
-            s_projectNoteContainer.Save();
+            Instance.m_projectNoteContainer.GetOwnProjectNoteList().Add(newNote);
+            Instance.m_projectNoteContainer.Save();
             
-            EditorUtility.SetDirty(s_projectNoteContainer);
             return newNote;
         }
 
@@ -171,34 +174,32 @@ namespace UNote.Editor
             newNote.NoteContent = noteContent;
             newNote.NoteId = guid;
 
-            if (s_projectNoteContainer)
-            {
-                Undo.RecordObject(s_projectNoteContainer, "UNote Add New Project Note");
-            }
-            s_projectNoteContainer.GetOwnProjectLeafNoteList().Add(newNote);
-
-            s_projectNoteContainer.Save();
+            Undo.RecordObject(Instance.m_projectNoteContainer, "UNote Add New Project Note");
+            
+            Instance.m_projectNoteContainer.GetOwnProjectLeafNoteList().Add(newNote);
+            Instance.m_projectNoteContainer.Save();
+            
             return newNote;
         }
 
         public static IEnumerable<ProjectNote> GetAllProjectNotes()
         {
-            return s_projectNoteContainer.GetProjectNoteListAll().SelectMany(t => t);
+            return Instance.m_projectNoteContainer.GetProjectNoteListAll().SelectMany(t => t);
         }
 
         public static IEnumerable<ProjectLeafNote> GetAllProjectLeafNotes()
         {
-            return s_projectNoteContainer.GetProjectLeafNoteListAll().SelectMany(t => t);
+            return Instance.m_projectNoteContainer.GetProjectLeafNoteListAll().SelectMany(t => t);
         }
 
         public static SerializedObject CreateProjectNoteContainerObject()
         {
-            return new SerializedObject(s_projectNoteContainer);
+            return new SerializedObject(Instance.m_projectNoteContainer);
         }
 
         public static void ChangeProjectNoteTitle(string guid, string newTitle)
         {
-            s_projectNoteIdConvertData.SetTitle(guid, newTitle);
+            Instance.m_projectNoteIdConvertData.SetTitle(guid, newTitle);
             ProjectNoteIDManager.ResetData();
         }
 
@@ -212,14 +213,14 @@ namespace UNote.Editor
                     if (note is ProjectNote projectNote)
                     {
                         List<ProjectNote> projectList =
-                            s_projectNoteContainer.GetOwnProjectNoteList();
+                            Instance.m_projectNoteContainer.GetOwnProjectNoteList();
                         if (projectList.Contains(projectNote))
                         {
                             projectList.Remove(projectNote);
-                            s_projectNoteContainer.Save();
+                            Instance.m_projectNoteContainer.Save();
 
                             // 変換情報も削除
-                            s_projectNoteIdConvertData.DeleteTable(projectNote.NoteId);
+                            Instance.m_projectNoteIdConvertData.DeleteTable(projectNote.NoteId);
 
                             // TODO 他の所属Leaf削除
                         }
@@ -227,11 +228,11 @@ namespace UNote.Editor
                     else if (note is ProjectLeafNote projectLeafNote)
                     {
                         List<ProjectLeafNote> projectList =
-                            s_projectNoteContainer.GetOwnProjectLeafNoteList();
+                            Instance.m_projectNoteContainer.GetOwnProjectLeafNoteList();
                         if (projectList.Contains(projectLeafNote))
                         {
                             projectList.Remove(projectLeafNote);
-                            s_projectNoteContainer.Save();
+                            Instance.m_projectNoteContainer.Save();
 
                             // TODO 最後の一つなら変換テーブル削除
                         }
@@ -250,8 +251,8 @@ namespace UNote.Editor
 
         public static void SaveAll()
         {
-            s_projectNoteContainer.Save();
-            s_projectNoteIdConvertData.Save();
+            Instance.m_projectNoteContainer.Save();
+            Instance.m_projectNoteIdConvertData.Save();
         }
         #endregion // Public Method
 
