@@ -110,24 +110,14 @@ namespace UNote.Runtime
             return m_projectNoteDict[authorName];
         }
 
-        public List<ProjectNote> GetProjectNoteList(string authorName)
-        {
-            return GetContainerSafe(authorName).m_projectNoteList;
-        }
-
-        public List<ProjectLeafNote> GetProjectLeafNoteList(string authorName)
-        {
-            return GetContainerSafe(authorName).m_projectLeafNoteList;
-        }
-
         public List<ProjectNote> GetOwnProjectNoteList()
         {
-            return GetProjectNoteList(UserConfig.GetUNoteSetting().UserName);
+            return GetContainerSafe(UserConfig.GetUNoteSetting().UserName).m_projectNoteList;
         }
 
         public List<ProjectLeafNote> GetOwnProjectLeafNoteList()
         {
-            return GetProjectLeafNoteList(UserConfig.GetUNoteSetting().UserName);
+            return GetContainerSafe(UserConfig.GetUNoteSetting().UserName).m_projectLeafNoteList;
         }
 
         public IEnumerable<List<ProjectNote>> GetProjectNoteListAll()
@@ -147,7 +137,7 @@ namespace UNote.Runtime
                 return m_projectNoteDictByTitle[projectNoteId];
             }
 
-            List<ProjectLeafNote> newList = new(48);
+            List<ProjectLeafNote> newList = new(64);
 
             foreach (var noteList in GetProjectLeafNoteListAll())
             {

@@ -79,9 +79,9 @@ namespace UNote.Editor
             // Undo Setup
             Undo.undoRedoEvent += (in UndoRedoInfo info) =>
             {
-                LeftPane.OnUndoRedo();
-                CenterPane.OnUndoRedo();
-                RightPane.OnUndoRedo();
+                LeftPane.OnUndoRedo(info.undoName);
+                CenterPane.OnUndoRedo(info.undoName);
+                RightPane.OnUndoRedo(info.undoName);
                 
                 EditorUNoteManager.SaveAll();
             };
