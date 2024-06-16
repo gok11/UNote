@@ -77,6 +77,8 @@ namespace UNote.Editor
                 case NoteType.Project:
                     notes = EditorUNoteManager.GetAllProjectNotes();
                     break;
+                default:
+                    throw new NotImplementedException();
             }
 
             // Add content to list
@@ -101,7 +103,7 @@ namespace UNote.Editor
             }
         }
 
-        public override void OnUndoRedo()
+        public override void OnUndoRedo(string undoRedoName)
         {
             SetupListItems();
         }

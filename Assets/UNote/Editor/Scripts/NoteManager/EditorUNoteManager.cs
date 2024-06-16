@@ -19,7 +19,6 @@ namespace UNote.Editor
         private NoteBase m_currentLeafNote;
 
         private ProjectNoteContainer m_projectNoteContainer;
-        private ProjectNoteIdConvertData m_projectNoteIdConvertData;
 
         private static EditorUNoteManager s_instance;
 
@@ -87,25 +86,6 @@ namespace UNote.Editor
                 return Instance.m_projectNoteContainer;
             }
         }
-
-        private static ProjectNoteIdConvertData ProjectNoteIdConvertData
-        {
-            get
-            {
-                if (Instance.m_projectNoteIdConvertData)
-                {
-                    return Instance.m_projectNoteIdConvertData;
-                }
-                
-                string authorName = UserConfig.GetUNoteSetting().UserName;
-            
-                Instance.m_projectNoteIdConvertData =
-                    ScriptableObject.CreateInstance<ProjectNoteIdConvertData>();
-                Instance.m_projectNoteIdConvertData.Load(authorName);
-
-                return Instance.m_projectNoteIdConvertData;
-            }
-        }
         
         #endregion // Property
 
@@ -160,21 +140,15 @@ namespace UNote.Editor
             return new SerializedObject(ProjectNoteContainer);
         }
 
-        public static SerializedObject ProjectNoteIdConvertDataObject()
-        {
-            return new SerializedObject(ProjectNoteIdConvertData);
-        }
-
         public static ProjectNote AddNewProjectNote()
         {
+            Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
+            
             ProjectNote newNote = new ProjectNote();
             newNote.Author = UserConfig.GetUNoteSetting().UserName;
 
             string uniqueName = GenerateUniqueName(NoteType.Project);
-            ProjectNoteIdConvertData.SetTitle(newNote.NoteId, uniqueName);
-            ProjectNoteIDManager.ResetData();
-
-            Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
+            newNote.ChangeProjectNoteName(uniqueName);
 
             ProjectNoteContainer.GetOwnProjectNoteList().Add(newNote);
             ProjectNoteContainer.Save();
@@ -184,12 +158,12 @@ namespace UNote.Editor
 
         public static ProjectLeafNote AddNewLeafProjectNote(string guid, string noteContent)
         {
+            Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
+            
             ProjectLeafNote newNote = new ProjectLeafNote();
             newNote.Author = UserConfig.GetUNoteSetting().UserName;
             newNote.NoteContent = noteContent;
             newNote.NoteId = guid;
-
-            Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
             
             ProjectNoteContainer.GetOwnProjectLeafNoteList().Add(newNote);
             ProjectNoteContainer.Save();
@@ -212,12 +186,6 @@ namespace UNote.Editor
             return new SerializedObject(ProjectNoteContainer);
         }
 
-        public static void ChangeProjectNoteTitle(string guid, string newTitle)
-        {
-            ProjectNoteIdConvertData.SetTitle(guid, newTitle);
-            ProjectNoteIDManager.ResetData();
-        }
-
         #endregion // Project Note
 
         public static void DeleteNote(NoteBase note)
@@ -225,6 +193,8 @@ namespace UNote.Editor
             switch (note.NoteType)
             {
                 case NoteType.Project:
+                    Undo.RecordObject(ProjectNoteContainer, "Delete Project Note");
+                    
                     if (note is ProjectNote projectNote)
                     {
                         List<ProjectNote> projectList =
@@ -233,9 +203,6 @@ namespace UNote.Editor
                         {
                             projectList.Remove(projectNote);
                             ProjectNoteContainer.Save();
-
-                            // 変換情報も削除
-                            ProjectNoteIdConvertData.DeleteTable(projectNote.NoteId);
 
                             // TODO 他の所属Leaf削除
                         }
@@ -252,8 +219,10 @@ namespace UNote.Editor
                             // TODO 最後の一つなら変換テーブル削除
                         }
                     }
-
                     break;
+                
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -267,7 +236,6 @@ namespace UNote.Editor
         public static void SaveAll()
         {
             ProjectNoteContainer.Save();
-            ProjectNoteIdConvertData.Save();
         }
         #endregion // Public Method
 
@@ -288,7 +256,7 @@ namespace UNote.Editor
                         bool isOverlap = false;
                         foreach (var note in notes)
                         {
-                            if (ProjectNoteIDManager.ConvertGuid(note.NoteId) == noteName)
+                            if (note.NoteName == noteName)
                             {
                                 isOverlap = true;
                                 break;

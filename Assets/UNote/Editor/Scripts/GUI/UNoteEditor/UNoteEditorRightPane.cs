@@ -171,9 +171,10 @@ namespace UNote.Editor
                     switch (note?.NoteType)
                     {
                         case NoteType.Project:
-                            ProjectNote projectNote = note as ProjectNote;
-                            string projectNoteId = projectNote?.NoteId;
-                            EditorUNoteManager.ChangeProjectNoteTitle(projectNoteId, m_titleField.value);
+                            if (note is ProjectNote projectNote)
+                            {
+                                projectNote.ChangeProjectNoteName(m_titleField.value);
+                            }
                             break;
                     }
                     
@@ -200,7 +201,7 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                     ProjectNote projectNote = note as ProjectNote;
-                    return ProjectNoteIDManager.ConvertGuid(projectNote?.NoteId);
+                    return projectNote.NoteName;
             }
 
             return string.Empty;
@@ -272,8 +273,12 @@ namespace UNote.Editor
             }
         }
 
-        public override void OnUndoRedo()
+        public override void OnUndoRedo(string undoName)
         {
+            if (undoName.Contains("UNote Change Project Note Title"))
+            {
+                m_noteEditor.CenterPane.OnUndoRedo(undoName);
+            }
             SetupNoteList();
         }
     }

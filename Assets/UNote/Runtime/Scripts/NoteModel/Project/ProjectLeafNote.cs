@@ -9,7 +9,5 @@ namespace UNote.Runtime
     public sealed class ProjectLeafNote : NoteBase
     {
         public override NoteType NoteType => NoteType.Project;
-
-        public override string NoteName => ProjectNoteIDManager.ConvertGuid(NoteId);
     }
 }
