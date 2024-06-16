@@ -168,15 +168,7 @@ namespace UNote.Editor
             {
                 if (evt.keyCode == KeyCode.Return)
                 {
-                    switch (note?.NoteType)
-                    {
-                        case NoteType.Project:
-                            if (note is ProjectNote projectNote)
-                            {
-                                projectNote.ChangeProjectNoteName(m_titleField.value);
-                            }
-                            break;
-                    }
+                    EditorUNoteManager.ChangeNoteName(note, m_titleField.value);
                     
                     // 編集を終え、テキスト更新
                     SetTitleGUIEditMode(false);

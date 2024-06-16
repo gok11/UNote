@@ -188,6 +188,21 @@ namespace UNote.Editor
 
         #endregion // Project Note
 
+        public static void ChangeNoteName(NoteBase note, string noteName)
+        {
+            switch (note?.NoteType)
+            {
+                case NoteType.Project:
+                    if (note is ProjectNote projectNote)
+                    {
+                        Undo.RecordObject(ProjectNoteContainer, "UNote Change Project Note Title");
+                        projectNote.ChangeProjectNoteName(noteName);
+                        ProjectNoteContainer.Save();
+                    }
+                    break;
+            }
+        }
+
         public static void DeleteNote(NoteBase note)
         {
             switch (note.NoteType)
