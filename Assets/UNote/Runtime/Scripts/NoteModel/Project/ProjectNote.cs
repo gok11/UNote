@@ -6,24 +6,11 @@ using UnityEngine;
 namespace UNote.Runtime
 {
     [Serializable]
-    public sealed class ProjectNote : NoteBase
+    public sealed class ProjectNote : RootNoteBase
     {
-        #region Field
-
-        [SerializeField] private string m_noteName;
-
-        #endregion
-        
         #region Property
         public override NoteType NoteType => NoteType.Project;
 
-        public override string NoteName => m_noteName;
-
         #endregion // Property
-
-        public void ChangeProjectNoteName(string newName)
-        {
-            m_noteName = newName;
-        }
     }
 }

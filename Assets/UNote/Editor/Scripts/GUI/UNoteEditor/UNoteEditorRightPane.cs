@@ -158,7 +158,7 @@ namespace UNote.Editor
             
             SetTitleGUIEditMode(true);
 
-            m_titleField.value = GetNoteTitle(note);
+            m_titleField.value = note.NoteName;
             m_titleField.Focus();
             
             m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
@@ -173,11 +173,12 @@ namespace UNote.Editor
                     // 編集を終え、テキスト更新
                     SetTitleGUIEditMode(false);
 
-                    m_noteTitle.text = GetNoteTitle(EditorUNoteManager.CurrentRootNote);
+                    m_noteTitle.text = EditorUNoteManager.CurrentRootNote.NoteName;
                     
                     m_noteEditor.CenterPane.SetupListItems();
                 }
 
+                
                 if (evt.keyCode == KeyCode.Escape)
                 {
                     m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
@@ -185,18 +186,6 @@ namespace UNote.Editor
                     SetTitleGUIEditMode(false);
                 }
             }
-        }
-
-        private string GetNoteTitle(NoteBase note)
-        {
-            switch (note?.NoteType)
-            {
-                case NoteType.Project:
-                    ProjectNote projectNote = note as ProjectNote;
-                    return projectNote.NoteName;
-            }
-
-            return string.Empty;
         }
         
         public void SetupNoteList()
@@ -206,9 +195,8 @@ namespace UNote.Editor
             
             // TODO 外部アセット等を参照するメモならそれを開くボタンを表示
             
-            // CurrentNote からタイトルを取得する
             NoteBase note = EditorUNoteManager.CurrentRootNote;
-            m_noteTitle.text = GetNoteTitle(note);
+            m_noteTitle.text = note.NoteName;
 
             // 要素を追加し、その要素までスクロール
             m_noteList.contentContainer.Clear();

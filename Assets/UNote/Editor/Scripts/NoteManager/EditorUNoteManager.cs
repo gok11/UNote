@@ -148,7 +148,7 @@ namespace UNote.Editor
             newNote.Author = UserConfig.GetUNoteSetting().UserName;
 
             string uniqueName = GenerateUniqueName(NoteType.Project);
-            newNote.ChangeProjectNoteName(uniqueName);
+            newNote.ChangeNoteName(uniqueName);
 
             ProjectNoteContainer.GetOwnProjectNoteList().Add(newNote);
             ProjectNoteContainer.Save();
@@ -196,7 +196,7 @@ namespace UNote.Editor
                     if (note is ProjectNote projectNote)
                     {
                         Undo.RecordObject(ProjectNoteContainer, "UNote Change Project Note Title");
-                        projectNote.ChangeProjectNoteName(noteName);
+                        projectNote.ChangeNoteName(noteName);
                         ProjectNoteContainer.Save();
                     }
                     break;
