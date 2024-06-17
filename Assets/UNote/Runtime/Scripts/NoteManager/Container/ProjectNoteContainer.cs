@@ -13,9 +13,8 @@ namespace UNote.Runtime
         #region Define
 
         [Serializable]
-        private class InternalContainer
+        private class ProjectInternalContainer
         {
-            public string m_authorName;
             public List<ProjectNote> m_projectNoteList = new List<ProjectNote>();
             public List<ProjectLeafNote> m_projectLeafNoteList = new List<ProjectLeafNote>();
         }
@@ -33,9 +32,9 @@ namespace UNote.Runtime
         #region Field
 
         [SerializeField]
-        private InternalContainer m_projectNoteContainer;
+        private ProjectInternalContainer m_projectNoteContainer;
 
-        private Dictionary<string, InternalContainer> m_projectNoteDict = new();
+        private Dictionary<string, ProjectInternalContainer> m_projectNoteDict = new();
 
         private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByTitle = new();
 
@@ -43,68 +42,30 @@ namespace UNote.Runtime
 
         #endregion // Field
 
-        public void Load()
+        public override void Load()
         {
-            string authorName = UserConfig.GetUNoteSetting().UserName;
+            Load<ProjectInternalContainer>();
+        }
 
-            // 自身のメモをロード
-            if (File.Exists(OwnFileFullPath))
+        protected override void LoadData<T>(T container, string authorName)
+        {
+            if (container is ProjectInternalContainer projectContainer)
             {
-                string json = File.ReadAllText(OwnFileFullPath);
-
-                // Deserialize
-                m_projectNoteContainer = JsonUtility.FromJson<InternalContainer>(json);
-                m_projectNoteDict[authorName] = m_projectNoteContainer;
-            }
-            else
-            {
-                Save();
-            }
-
-            // 他のユーザーのメモをロード
-            string[] filePaths = Directory.GetFiles(FileDirectory, "*.json");
-            foreach (var projectNotePath in filePaths)
-            {
-                if (projectNotePath == OwnFileFullPath)
-                {
-                    continue;
-                }
-
-                string otherAuthorName = Path.GetFileNameWithoutExtension(projectNotePath);
-                string otherJson = File.ReadAllText(projectNotePath);
-                if (!m_projectNoteDict.ContainsKey(otherAuthorName))
-                {
-                    m_projectNoteDict.Add(otherAuthorName, null);
-                }
-                m_projectNoteDict[otherAuthorName] = JsonUtility.FromJson<InternalContainer>(
-                    otherJson
-                );
+                m_projectNoteDict[authorName] = projectContainer;
             }
         }
 
-        public void Save()
+        public override void Save()
         {
-            if (!Directory.Exists(FileDirectory))
-            {
-                Directory.CreateDirectory(FileDirectory);
-            }
-
             string authorName = UserConfig.GetUNoteSetting().UserName;
-
-            // Serialize
-            string json = JsonUtility.ToJson(GetContainerSafe(authorName));
-            File.WriteAllText(OwnFileFullPath, json);
-
-            ClearCache();
+            Save(GetContainerSafe(authorName));
         }
 
-        private InternalContainer GetContainerSafe(string authorName)
+        private ProjectInternalContainer GetContainerSafe(string authorName)
         {
             if (!m_projectNoteDict.ContainsKey(authorName))
             {
-                m_projectNoteContainer = new InternalContainer();
-                m_projectNoteContainer.m_authorName = UserConfig.GetUNoteSetting().UserName;
-
+                m_projectNoteContainer = new ProjectInternalContainer();
                 m_projectNoteDict.Add(authorName, m_projectNoteContainer);
             }
             return m_projectNoteDict[authorName];
@@ -154,7 +115,7 @@ namespace UNote.Runtime
             return newList;
         }
 
-        public void ClearCache()
+        public override void ClearCache()
         {
             m_projectNoteDictByTitle.Clear();
         }
