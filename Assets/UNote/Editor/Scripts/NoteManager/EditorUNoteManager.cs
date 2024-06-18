@@ -63,8 +63,8 @@ namespace UNote.Editor
                 {
                     case NoteType.Project:
                         string noteId = CurrentRootNote.NoteId;
-                        Instance.m_currentLeafNote = GetAllProjectLeafNotes()
-                            .FirstOrDefault(t => t.NoteId == noteId);
+                        Instance.m_currentLeafNote =
+                            GetProjectLeafNoteListByProjectNoteId(noteId).FirstOrDefault();
                         break;
                 }
 
@@ -144,8 +144,10 @@ namespace UNote.Editor
         {
             Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
             
-            ProjectNote newNote = new ProjectNote();
-            newNote.Author = UserConfig.GetUNoteSetting().UserName;
+            ProjectNote newNote = new ProjectNote
+            {
+                Author = UserConfig.GetUNoteSetting().UserName
+            };
 
             string uniqueName = GenerateUniqueName(NoteType.Project);
             newNote.ChangeNoteName(uniqueName);
@@ -160,11 +162,13 @@ namespace UNote.Editor
         {
             Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
             
-            ProjectLeafNote newNote = new ProjectLeafNote();
-            newNote.Author = UserConfig.GetUNoteSetting().UserName;
-            newNote.NoteContent = noteContent;
-            newNote.NoteId = guid;
-            
+            ProjectLeafNote newNote = new ProjectLeafNote
+            {
+                Author = UserConfig.GetUNoteSetting().UserName,
+                NoteContent = noteContent,
+                NoteId = guid
+            };
+
             ProjectNoteContainer.GetOwnProjectLeafNoteList().Add(newNote);
             ProjectNoteContainer.Save();
             
@@ -179,6 +183,11 @@ namespace UNote.Editor
         public static IEnumerable<ProjectLeafNote> GetAllProjectLeafNotes()
         {
             return ProjectNoteContainer.GetProjectLeafNoteListAll().SelectMany(t => t);
+        }
+
+        public static IReadOnlyList<ProjectLeafNote> GetProjectLeafNoteListByProjectNoteId(string noteId)
+        {
+            return ProjectNoteContainer.GetProjectLeafNoteListByProjectNoteId(noteId);
         }
 
         public static SerializedObject CreateProjectNoteContainerObject()

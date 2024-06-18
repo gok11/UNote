@@ -99,8 +99,7 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                     ProjectLeafNote leafNote = EditorUNoteManager
-                        .GetAllProjectLeafNotes()
-                        .Where(t => t.NoteId == note.NoteId)
+                        .GetProjectLeafNoteListByProjectNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
 

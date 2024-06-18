@@ -213,11 +213,8 @@ namespace UNote.Editor
                 case NoteType.Project:
                     ProjectNote projectNote = note as ProjectNote;
                     string projectNoteId = projectNote?.NoteId;
-                    IEnumerable<ProjectLeafNote> leafNotes = EditorUNoteManager
-                        .GetAllProjectLeafNotes()
-                        .Where(t => t.NoteId == projectNoteId);
 
-                    foreach (var leafNote in leafNotes)
+                    foreach (var leafNote in EditorUNoteManager.GetProjectLeafNoteListByProjectNoteId(projectNoteId))
                     {
                         m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(m_noteEditor, leafNote));
                     }
