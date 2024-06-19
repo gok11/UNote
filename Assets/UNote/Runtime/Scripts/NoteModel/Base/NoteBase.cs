@@ -15,9 +15,6 @@ namespace UNote.Runtime
         protected string m_noteId;
 
         [SerializeField]
-        protected bool m_isRootNote;
-
-        [SerializeField]
         protected string m_author;
 
         [SerializeField]

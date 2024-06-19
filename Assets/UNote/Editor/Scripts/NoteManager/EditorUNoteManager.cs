@@ -239,8 +239,6 @@ namespace UNote.Editor
                         {
                             projectList.Remove(projectLeafNote);
                             ProjectNoteContainer.Save();
-
-                            // TODO 最後の一つなら変換テーブル削除
                         }
                     }
                     break;
