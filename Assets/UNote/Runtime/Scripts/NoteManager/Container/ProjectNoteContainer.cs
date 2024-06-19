@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEditor.Playables;
 using UnityEngine;
 
 namespace UNote.Runtime
@@ -21,26 +20,21 @@ namespace UNote.Runtime
 
         #endregion // Define
 
-        #region  Const
+        #region Field
+
+        [SerializeField] private ProjectInternalContainer m_projectNoteContainer;
+        private Dictionary<string, ProjectInternalContainer> m_projectNoteDict = new();
+        private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByTitle = new();
+
+        #endregion // Field
+        
+        #region  Property
 
         protected override string Identifier => "project";
 
         protected override string SubDirectoryName => "Project";
 
-        #endregion // Const
-
-        #region Field
-
-        [SerializeField]
-        private ProjectInternalContainer m_projectNoteContainer;
-
-        private Dictionary<string, ProjectInternalContainer> m_projectNoteDict = new();
-
-        private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByTitle = new();
-
-        public int test;
-
-        #endregion // Field
+        #endregion // Property
 
         public override void Load()
         {
@@ -93,9 +87,9 @@ namespace UNote.Runtime
 
         public List<ProjectLeafNote> GetProjectLeafNoteListByProjectNoteId(string projectNoteId)
         {
-            if (m_projectNoteDictByTitle.ContainsKey(projectNoteId))
+            if (m_projectNoteDictByTitle.TryGetValue(projectNoteId, out var leafNote))
             {
-                return m_projectNoteDictByTitle[projectNoteId];
+                return leafNote;
             }
 
             List<ProjectLeafNote> newList = new(64);
