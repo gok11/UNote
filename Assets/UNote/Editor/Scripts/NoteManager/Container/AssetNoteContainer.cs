@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UNote.Runtime;
 
@@ -50,12 +51,13 @@ namespace UNote.Editor
 
         public override void Save()
         {
-            string authorName = UserConfig.GetUNoteSetting().UserName;
-            Save(GetContainerSafe(authorName));
+            Save(GetContainerSafe());
         }
 
-        private AssetInternalContainer GetContainerSafe(string authorName)
+        private AssetInternalContainer GetContainerSafe(string authorName = null)
         {
+            authorName ??= UserConfig.GetUNoteSetting().UserName;
+            
             if (!m_assetNoteDict.ContainsKey(authorName))
             {
                 m_assetNoteContainer = new AssetInternalContainer();
@@ -65,6 +67,39 @@ namespace UNote.Editor
             return m_assetNoteDict[authorName];
         }
 
+        public List<AssetNote> GetOwnAssetNoteList() => GetContainerSafe().m_assetNoteList;
+        public List<AssetLeafNote> GetOwnAssetLeafNoteList() => GetContainerSafe().m_assetLeafNoteList;
+
+        public IEnumerable<List<AssetNote>> GetAssetNoteListAll() =>
+            m_assetNoteDict.Values.Where(t => t != null).Select(t => t.m_assetNoteList);
+
+        public IEnumerable<List<AssetLeafNote>> GetAssetLeafNoteListAll() =>
+            m_assetNoteDict.Values.Select(t => t.m_assetLeafNoteList);
+
+        public List<AssetLeafNote> GetProjectLeafNoteListByNoteId(string assetNoteId)
+        {
+            if (m_assetNoteDictByTitle.TryGetValue(assetNoteId, out var leafNote))
+            {
+                return leafNote;
+            }
+
+            List<AssetLeafNote> newList = new(64);
+
+            foreach (var noteList in GetAssetLeafNoteListAll())
+            {
+                foreach (var note in noteList)
+                {
+                    if (note.NoteId == assetNoteId)
+                    {
+                        newList.Add(note);
+                    }
+                }
+            }
+
+            m_assetNoteDictByTitle[assetNoteId] = newList;
+            return newList;
+        }
+        
         public override void ClearCache()
         {
             m_assetNoteDictByTitle.Clear();
