@@ -51,12 +51,13 @@ namespace UNote.Runtime
 
         public override void Save()
         {
-            string authorName = UserConfig.GetUNoteSetting().UserName;
-            Save(GetContainerSafe(authorName));
+            Save(GetContainerSafe());
         }
 
-        private ProjectInternalContainer GetContainerSafe(string authorName)
+        private ProjectInternalContainer GetContainerSafe(string authorName = null)
         {
+            authorName ??= UserConfig.GetUNoteSetting().UserName;
+            
             if (!m_projectNoteDict.ContainsKey(authorName))
             {
                 m_projectNoteContainer = new ProjectInternalContainer();
@@ -65,25 +66,15 @@ namespace UNote.Runtime
             return m_projectNoteDict[authorName];
         }
 
-        public List<ProjectNote> GetOwnProjectNoteList()
-        {
-            return GetContainerSafe(UserConfig.GetUNoteSetting().UserName).m_projectNoteList;
-        }
+        public List<ProjectNote> GetOwnProjectNoteList() => GetContainerSafe().m_projectNoteList;
 
-        public List<ProjectLeafNote> GetOwnProjectLeafNoteList()
-        {
-            return GetContainerSafe(UserConfig.GetUNoteSetting().UserName).m_projectLeafNoteList;
-        }
+        public List<ProjectLeafNote> GetOwnProjectLeafNoteList() => GetContainerSafe().m_projectLeafNoteList;
 
-        public IEnumerable<List<ProjectNote>> GetProjectNoteListAll()
-        {
-            return m_projectNoteDict.Values.Where(t => t != null).Select(t => t.m_projectNoteList);
-        }
+        public IEnumerable<List<ProjectNote>> GetProjectNoteListAll() =>
+            m_projectNoteDict.Values.Where(t => t != null).Select(t => t.m_projectNoteList);
 
-        public IEnumerable<List<ProjectLeafNote>> GetProjectLeafNoteListAll()
-        {
-            return m_projectNoteDict.Values.Select(t => t.m_projectLeafNoteList);
-        }
+        public IEnumerable<List<ProjectLeafNote>> GetProjectLeafNoteListAll() =>
+            m_projectNoteDict.Values.Select(t => t.m_projectLeafNoteList);
 
         public List<ProjectLeafNote> GetProjectLeafNoteListByProjectNoteId(string projectNoteId)
         {
