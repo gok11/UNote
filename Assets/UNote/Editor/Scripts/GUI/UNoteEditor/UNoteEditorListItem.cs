@@ -98,6 +98,7 @@ namespace UNote.Editor
             switch (note.NoteType)
             {
                 case NoteType.Project:
+                {
                     ProjectLeafNote leafNote = EditorUNoteManager
                         .GetProjectLeafNoteListByProjectNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
@@ -107,6 +108,20 @@ namespace UNote.Editor
                         ?.NoteContent.Replace("\r", " ")
                         .Replace("\n", " ");
                     break;
+                } 
+
+                case NoteType.Asset:
+                {
+                    AssetLeafNote leafNote = EditorUNoteManager
+                        .GetAssetLeafNoteListByNoteId(note.NoteId)
+                        .OrderByDescending(t => t.CreatedDate)
+                        .FirstOrDefault();
+
+                    m_noteContentLabel.text = leafNote
+                        ?.NoteContent.Replace("\r", " ")
+                        .Replace("\n", " ");
+                    break;
+                }
             }
             Focus();
         }

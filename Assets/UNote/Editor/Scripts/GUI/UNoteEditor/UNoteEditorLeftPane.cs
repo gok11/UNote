@@ -9,6 +9,8 @@ namespace UNote.Editor
 {
     public class UNoteEditorLeftPane : UNoteEditorPaneBase
     {
+        private UNoteEditor m_noteEditor;
+        
         private Dictionary<NoteType, VisualElement> categoryElemDict =
             new Dictionary<NoteType, VisualElement>();
 
@@ -16,6 +18,8 @@ namespace UNote.Editor
         {
             name = nameof(UNoteEditorLeftPane);
 
+            m_noteEditor = noteEditor;
+            
             // Pane
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.UNoteEditorLeftPane
@@ -57,6 +61,11 @@ namespace UNote.Editor
                 categoryElemDict[category.Key].contentContainer.style.backgroundColor =
                     noteType == category.Key ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
             }
+            
+            EditorUNoteManager.SelectCategory(noteType);
+
+            m_noteEditor.CenterPane?.SetupListItems();
+            m_noteEditor.RightPane?.SetupNoteList();
         }
 
         /// <summary>

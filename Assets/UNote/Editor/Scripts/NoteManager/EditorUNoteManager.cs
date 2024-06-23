@@ -8,6 +8,8 @@ using UnityEditor.Playables;
 using UnityEngine;
 using UNote.Runtime;
 
+using Object = UnityEngine.Object;
+
 namespace UNote.Editor
 {
     public class EditorUNoteManager
@@ -19,6 +21,7 @@ namespace UNote.Editor
         private NoteBase m_currentLeafNote;
 
         private ProjectNoteContainer m_projectNoteContainer;
+        private AssetNoteContainer m_assetNoteContainer;
 
         private static EditorUNoteManager s_instance;
 
@@ -44,6 +47,10 @@ namespace UNote.Editor
                     case NoteType.Project:
                         Instance.m_currentRootNote = GetAllProjectNotes()?.FirstOrDefault();
                         break;
+                    
+                    case NoteType.Asset:
+                        Instance.m_currentRootNote = GetAllAssetNotes()?.FirstOrDefault();
+                        break;
                 }
 
                 return Instance.m_currentRootNote;
@@ -59,10 +66,16 @@ namespace UNote.Editor
                     return Instance.m_currentLeafNote;
                 }
 
+                string noteId = CurrentRootNote.NoteId;
+                
                 switch (Instance.m_currentNoteType)
                 {
                     case NoteType.Project:
-                        string noteId = CurrentRootNote.NoteId;
+                        Instance.m_currentLeafNote =
+                            GetProjectLeafNoteListByProjectNoteId(noteId).FirstOrDefault();
+                        break;
+                    
+                    case NoteType.Asset:
                         Instance.m_currentLeafNote =
                             GetProjectLeafNoteListByProjectNoteId(noteId).FirstOrDefault();
                         break;
@@ -84,6 +97,21 @@ namespace UNote.Editor
                 Instance.m_projectNoteContainer = ScriptableObject.CreateInstance<ProjectNoteContainer>();
                 Instance.m_projectNoteContainer.Load();
                 return Instance.m_projectNoteContainer;
+            }
+        }
+
+        private static AssetNoteContainer AssetNoteContainer
+        {
+            get
+            {
+                if (Instance.m_assetNoteContainer)
+                {
+                    return Instance.m_assetNoteContainer;
+                }
+                
+                Instance.m_assetNoteContainer = ScriptableObject.CreateInstance<AssetNoteContainer>();
+                Instance.m_assetNoteContainer.Load();
+                return Instance.m_assetNoteContainer;
             }
         }
         
@@ -112,33 +140,41 @@ namespace UNote.Editor
             Instance.m_currentLeafNote = note;
             Instance.m_currentNoteType = note.NoteType;
 
+            string noteId = note.NoteId;
+
             // Root を探して設定
             switch (note.NoteType)
             {
                 case NoteType.Project:
-                    string projectNoteId = note.NoteId;
                     var projectNotes = GetAllProjectNotes();
                     foreach (var projectNote in projectNotes)
                     {
-                        if (projectNote.NoteId == projectNoteId)
+                        if (projectNote.NoteId == noteId)
                         {
                             Instance.m_currentRootNote = projectNote;
                             break;
                         }
                     }
                     break;
-
+                
+                case NoteType.Asset:
+                    var assetNotes = GetAllAssetNotes();
+                    foreach (var assetNote in assetNotes)
+                    {
+                        if (assetNote.NoteId == noteId)
+                        {
+                            Instance.m_currentRootNote = assetNote;
+                            break;
+                        }
+                    }
+                    break;
+                
                 default:
                     throw new NotImplementedException();
             }
         }
 
         #region Project Note
-
-        public static SerializedObject GetProjectNoteContainerObject()
-        {
-            return new SerializedObject(ProjectNoteContainer);
-        }
 
         public static ProjectNote AddNewProjectNote()
         {
@@ -175,20 +211,15 @@ namespace UNote.Editor
             return newNote;
         }
 
-        public static IEnumerable<ProjectNote> GetAllProjectNotes()
-        {
-            return ProjectNoteContainer.GetProjectNoteListAll().SelectMany(t => t);
-        }
+        public static IEnumerable<ProjectNote> GetAllProjectNotes() =>
+            ProjectNoteContainer.GetProjectNoteListAll().SelectMany(t => t);
 
-        public static IEnumerable<ProjectLeafNote> GetAllProjectLeafNotes()
-        {
-            return ProjectNoteContainer.GetProjectLeafNoteListAll().SelectMany(t => t);
-        }
+        public static IEnumerable<ProjectLeafNote> GetAllProjectLeafNotes() =>
+            ProjectNoteContainer.GetProjectLeafNoteListAll().SelectMany(t => t);
+        
 
-        public static IReadOnlyList<ProjectLeafNote> GetProjectLeafNoteListByProjectNoteId(string noteId)
-        {
-            return ProjectNoteContainer.GetProjectLeafNoteListByProjectNoteId(noteId);
-        }
+        public static IReadOnlyList<ProjectLeafNote> GetProjectLeafNoteListByProjectNoteId(string noteId) =>
+            ProjectNoteContainer.GetProjectLeafNoteListByProjectNoteId(noteId);
 
         public static SerializedObject CreateProjectNoteContainerObject()
         {
@@ -197,6 +228,72 @@ namespace UNote.Editor
 
         #endregion // Project Note
 
+        #region Asset Note
+
+        public static SerializedObject GetAssetNoteContainerObject()
+        {
+            return new SerializedObject(AssetNoteContainer);
+        }
+
+        public static AssetNote AddNewAssetNote(Object asset)
+        {
+            if (!asset)
+            {
+                Debug.LogError("Asset is null");
+                return null;
+            }
+            
+            Undo.RecordObject(AssetNoteContainer, "UNote Add New Asset Note");
+
+            string assetPath = AssetDatabase.GetAssetPath(asset);
+            
+            AssetNote newNote = new AssetNote
+            {
+                Author = UserConfig.GetUNoteSetting().UserName,
+                NoteId = AssetDatabase.AssetPathToGUID(assetPath),
+            };
+
+            newNote.ChangeNoteName(asset.name);
+
+            AssetNoteContainer.GetOwnAssetNoteList().Add(newNote);
+            AssetNoteContainer.Save();
+            
+            return newNote;
+        }
+        
+        public static AssetLeafNote AddNewLeafAssetNote(string guid, string noteContent)
+        {
+            Undo.RecordObject(AssetNoteContainer, "UNote Add New Project Note");
+            
+            AssetLeafNote newNote = new AssetLeafNote
+            {
+                Author = UserConfig.GetUNoteSetting().UserName,
+                NoteContent = noteContent,
+                NoteId = guid
+            };
+
+            AssetNoteContainer.GetOwnAssetLeafNoteList().Add(newNote);
+            AssetNoteContainer.Save();
+            
+            return newNote;
+        }
+
+        public static IEnumerable<AssetNote> GetAllAssetNotes() =>
+            AssetNoteContainer.GetAssetNoteListAll().SelectMany(t => t);
+
+        public static IEnumerable<AssetLeafNote> GetAllAssetLeafNotes() =>
+            AssetNoteContainer.GetAssetLeafNoteListAll().SelectMany(t => t);
+
+        public static IReadOnlyList<AssetLeafNote> GetAssetLeafNoteListByNoteId(string noteId) =>
+            AssetNoteContainer.GetProjectLeafNoteListByNoteId(noteId);
+
+        public static SerializedObject CreateAssetNoteContainerObject()
+        {
+            return new SerializedObject(AssetNoteContainer);
+        }
+        
+        #endregion // Asset Note
+        
         public static void ChangeNoteName(NoteBase note, string noteName)
         {
             switch (note?.NoteType)

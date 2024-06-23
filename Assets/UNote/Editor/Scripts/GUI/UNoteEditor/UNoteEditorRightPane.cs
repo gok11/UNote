@@ -149,6 +149,11 @@ namespace UNote.Editor
         private void EnableChangeTitleMode()
         {
             NoteBase note = EditorUNoteManager.CurrentRootNote;
+            if (note == null)
+            {
+                return;
+            }
+            
             bool isOwnNote = note.Author == UserConfig.GetUNoteSetting().UserName;
 
             if (!isOwnNote)
@@ -194,13 +199,20 @@ namespace UNote.Editor
             SetTitleGUIEditMode(false);
             
             // TODO 外部アセット等を参照するメモならそれを開くボタンを表示
-            
+
+            m_noteTitle.text = "";
+            m_noteList.contentContainer.Clear();
+
+            // メモの情報を設定
             NoteBase note = EditorUNoteManager.CurrentRootNote;
+            if (note == null)
+            {
+                return;
+            }
+            
             m_noteTitle.text = note.NoteName;
 
             // 要素を追加し、その要素までスクロール
-            m_noteList.contentContainer.Clear();
-
             m_noteList.visible = false;
 
             VisualElement footerElem = new VisualElement();
@@ -208,7 +220,7 @@ namespace UNote.Editor
             footerElem.style.height = 0;
             m_noteList.Add(footerElem);
 
-            switch (note?.NoteType)
+            switch (note.NoteType)
             {
                 case NoteType.Project:
                     ProjectNote projectNote = note as ProjectNote;

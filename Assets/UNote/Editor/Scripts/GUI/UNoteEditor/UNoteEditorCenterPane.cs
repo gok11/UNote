@@ -77,6 +77,11 @@ namespace UNote.Editor
                 case NoteType.Project:
                     notes = EditorUNoteManager.GetAllProjectNotes();
                     break;
+
+                case NoteType.Asset:
+                    notes = EditorUNoteManager.GetAllAssetNotes();
+                    break;
+                
                 default:
                     throw new NotImplementedException();
             }
