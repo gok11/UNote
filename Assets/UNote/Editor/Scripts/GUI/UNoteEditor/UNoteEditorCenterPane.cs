@@ -13,6 +13,8 @@ namespace UNote.Editor
     public class UNoteEditorCenterPane : UNoteEditorPaneBase
     {
         private UNoteEditor m_noteEditor;
+
+        private Label m_noteCategoryLabel;
         
         private ScrollView m_noteScroll;
 
@@ -31,6 +33,8 @@ namespace UNote.Editor
             TemplateContainer template = tree.CloneTree();
             contentContainer.Add(template);
 
+            m_noteCategoryLabel = template.Q<Label>("NoteCategoryLabel");
+            
             m_noteScroll = template.Q<ScrollView>("NoteList");
             VisualElement container = m_noteScroll.contentContainer;
 
@@ -75,10 +79,12 @@ namespace UNote.Editor
             switch (EditorUNoteManager.CurrentNoteType)
             {
                 case NoteType.Project:
+                    m_noteCategoryLabel.text = "Project Note";
                     notes = EditorUNoteManager.GetAllProjectNotes();
                     break;
 
                 case NoteType.Asset:
+                    m_noteCategoryLabel.text = "Asset Note";
                     notes = EditorUNoteManager.GetAllAssetNotes();
                     break;
                 

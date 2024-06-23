@@ -1,8 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Label tabindex="-1" text="Project Note (12)" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NoteCategoryLabel" style="margin-left: 6px; margin-top: 4px; font-size: 16px; height: auto; margin-right: 2px; margin-bottom: 4px;" />
-    <ui:VisualElement name="SearchField" style="flex-grow: 1; flex-direction: row; max-height: 32px; height: auto; min-height: 24px;">
-        <ui:VisualElement name="Icon" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/UNote/Editor/Resource/search_icon.png?fileID=2800000&amp;guid=4ac6c24f4fc1f4c44a7b8166bce01b94&amp;type=3#search_icon&quot;); max-width: 16px; width: 16px; height: 16px; margin-top: 4px; margin-right: 2px; margin-bottom: 0; margin-left: 4px; padding-top: 0;" />
-        <ui:TextField picking-mode="Ignore" value="filler text" name="SearchText" style="flex-grow: 1; -unity-background-image-tint-color: rgb(255, 255, 255);" />
-    </ui:VisualElement>
+    <ui:Label tabindex="-1" text="Project Note" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NoteCategoryLabel" style="margin-left: 6px; margin-top: 4px; font-size: 16px; height: auto; margin-right: 2px; margin-bottom: 4px;" />
     <ui:ScrollView name="NoteList" style="padding-top: 4px; flex-grow: 1; flex-shrink: 1;" />
 </ui:UXML>
