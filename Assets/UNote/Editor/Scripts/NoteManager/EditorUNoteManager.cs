@@ -235,7 +235,7 @@ namespace UNote.Editor
             return new SerializedObject(AssetNoteContainer);
         }
 
-        public static AssetNote AddNewAssetNote(Object asset)
+        public static AssetNote AddOrGetAssetNote(Object asset)
         {
             if (!asset)
             {
@@ -243,14 +243,21 @@ namespace UNote.Editor
                 return null;
             }
             
-            Undo.RecordObject(AssetNoteContainer, "UNote Add New Asset Note");
-
             string assetPath = AssetDatabase.GetAssetPath(asset);
+            string guid = AssetDatabase.AssetPathToGUID(assetPath);
+
+            AssetNote note = AssetNoteContainer.GetAssetNoteByGuid(guid);
+            if (note != null)
+            {
+                return note;
+            }
+            
+            Undo.RecordObject(AssetNoteContainer, "UNote Add New Asset Note");
             
             AssetNote newNote = new AssetNote
             {
                 Author = UserConfig.GetUNoteSetting().UserName,
-                NoteId = AssetDatabase.AssetPathToGUID(assetPath),
+                NoteId = guid,
             };
 
             newNote.ChangeNoteName(asset.name);
@@ -261,7 +268,7 @@ namespace UNote.Editor
             return newNote;
         }
         
-        public static AssetLeafNote AddNewLeafAssetNote(string guid, string noteContent)
+        public static AssetLeafNote AddLeafAssetNote(string guid, string noteContent)
         {
             Undo.RecordObject(AssetNoteContainer, "UNote Add New Project Note");
             
@@ -285,7 +292,7 @@ namespace UNote.Editor
             AssetNoteContainer.GetAssetLeafNoteListAll().SelectMany(t => t);
 
         public static IReadOnlyList<AssetLeafNote> GetAssetLeafNoteListByNoteId(string noteId) =>
-            AssetNoteContainer.GetProjectLeafNoteListByNoteId(noteId);
+            AssetNoteContainer.GetAssetLeafNoteListByGuid(noteId);
 
         public static SerializedObject CreateAssetNoteContainerObject()
         {

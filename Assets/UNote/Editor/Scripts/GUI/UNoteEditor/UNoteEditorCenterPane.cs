@@ -7,6 +7,8 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
+using NotImplementedException = System.NotImplementedException;
+using PopupWindow = UnityEditor.PopupWindow;
 
 namespace UNote.Editor
 {
@@ -36,7 +38,6 @@ namespace UNote.Editor
             m_noteCategoryLabel = template.Q<Label>("NoteCategoryLabel");
             
             m_noteScroll = template.Q<ScrollView>("NoteList");
-            VisualElement container = m_noteScroll.contentContainer;
 
             // Setup
             SetupListItems();
@@ -46,26 +47,51 @@ namespace UNote.Editor
             {
                 if (evt.button == 1)
                 {
-                    GenericMenu menu = new GenericMenu();
-                    menu.AddItem(
-                        new GUIContent("New Note"),
-                        false,
-                        () =>
-                        {
-                            // メモ追加
-                            EditorUNoteManager.CreateProjectNoteContainerObject();
-                            ProjectNote newNote = EditorUNoteManager.AddNewProjectNote();
-                            EditorUNoteManager.SelectRoot(newNote);
-
-                            // ビューに反映
-                            UNoteEditorListItem newItem = new UNoteEditorListItem(noteEditor);
-                            container.Add(newItem);
-                            newItem.Setup(newNote);
-                        }
-                    );
-                    menu.ShowAsContext();
+                    ShowContextMenu(evt.mousePosition);
                 }
             });
+        }
+
+        private void ShowContextMenu(Vector2 mousePosition)
+        {
+            GenericMenu menu = new GenericMenu();
+            menu.AddItem(
+                new GUIContent("New Note"),
+                false,
+                () =>
+                {
+                    NoteBase newNote = null;
+                    
+                    // メモ追加
+                    switch (EditorUNoteManager.CurrentNoteType)
+                    {
+                        case NoteType.Project:
+                            newNote = EditorUNoteManager.AddNewProjectNote();
+                            break;
+                        
+                        case NoteType.Asset:
+                            // newNote = EditorUNoteManager.AddNewAssetNote();
+                            
+                            // アセットを設定するポップアップウィンドウ表示
+                            // 既に指定されているアセットならそのメモを選択する
+                            AssetNoteAddWindow addWindow = ScriptableObject.CreateInstance<AssetNoteAddWindow>();
+                            addWindow.ShowUtility();
+                            break;
+                        
+                        default:
+                            throw new NotImplementedException();
+                    }
+
+                    if (newNote != null)
+                    {
+                        EditorUNoteManager.SelectRoot(newNote);
+                    
+                        // ビューに反映
+                        SetupListItems();   
+                    }
+                }
+            );
+            menu.ShowAsContext();
         }
 
         public void SetupListItems()

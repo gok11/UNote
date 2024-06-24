@@ -76,9 +76,25 @@ namespace UNote.Editor
         public IEnumerable<List<AssetLeafNote>> GetAssetLeafNoteListAll() =>
             m_assetNoteDict.Values.Select(t => t.m_assetLeafNoteList);
 
-        public List<AssetLeafNote> GetProjectLeafNoteListByNoteId(string assetNoteId)
+        public AssetNote GetAssetNoteByGuid(string guid)
         {
-            if (m_assetNoteDictByTitle.TryGetValue(assetNoteId, out var leafNote))
+            foreach (var noteList in GetAssetNoteListAll())
+            {
+                foreach (var assetNote in noteList)
+                {
+                    if (assetNote.NoteId == guid)
+                    {
+                        return assetNote;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public List<AssetLeafNote> GetAssetLeafNoteListByGuid(string guid)
+        {
+            if (m_assetNoteDictByTitle.TryGetValue(guid, out var leafNote))
             {
                 return leafNote;
             }
@@ -89,14 +105,14 @@ namespace UNote.Editor
             {
                 foreach (var note in noteList)
                 {
-                    if (note.NoteId == assetNoteId)
+                    if (note.NoteId == guid)
                     {
                         newList.Add(note);
                     }
                 }
             }
 
-            m_assetNoteDictByTitle[assetNoteId] = newList;
+            m_assetNoteDictByTitle[guid] = newList;
             return newList;
         }
         

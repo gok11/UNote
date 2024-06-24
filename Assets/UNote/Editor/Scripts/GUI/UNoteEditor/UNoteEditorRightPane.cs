@@ -73,6 +73,11 @@ namespace UNote.Editor
                 EnableChangeTitleMode();
             });
             
+            m_titleField.RegisterCallback<BlurEvent>(_ =>
+            {
+                SetTitleGUIEditMode(false);
+            });
+            
             // テキストフィールド内のカーソル移動に合わせてスクロールする
             EditorApplication.update += () =>
             {
