@@ -116,7 +116,6 @@ namespace UNote.Editor
                     if (EditorUtility.DisplayDialog("Confirm", "Do you want to delete this note?", "OK", "Cancel"))
                     {
                         EditorUNoteManager.DeleteNote(note);
-                        m_noteEditor.RightPane.SetupNoteList();   
                     }
                 }
             );

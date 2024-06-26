@@ -17,16 +17,18 @@ namespace UNote.Editor
         #region Field
 
         private NoteType m_currentNoteType = NoteType.Project;
-        private NoteBase m_currentRootNote;
+        private NoteBase m_currentNote;
 
         private ProjectNoteContainer m_projectNoteContainer;
         private AssetNoteContainer m_assetNoteContainer;
 
         public delegate void AddNoteHandler(NoteBase note);
 
+        public delegate void SelectNoteHandler(NoteBase note);
         public delegate void DeleteNoteHandler(NoteBase note);
 
         public static event AddNoteHandler OnNoteAdded;
+        public static event SelectNoteHandler OnNoteSelected;
         public static event DeleteNoteHandler OnNoteDeleted;
 
         private static EditorUNoteManager s_instance;
@@ -39,27 +41,27 @@ namespace UNote.Editor
 
         public static NoteType CurrentNoteType => Instance.m_currentNoteType;
 
-        public static NoteBase CurrentRootNote
+        public static NoteBase CurrentNote
         {
             get
             {
-                if (Instance.m_currentRootNote != null)
+                if (Instance.m_currentNote != null)
                 {
-                    return Instance.m_currentRootNote;
+                    return Instance.m_currentNote;
                 }
 
                 switch (Instance.m_currentNoteType)
                 {
                     case NoteType.Project:
-                        Instance.m_currentRootNote = GetAllProjectNotes()?.FirstOrDefault();
+                        Instance.m_currentNote = GetAllProjectNotes()?.FirstOrDefault();
                         break;
                     
                     case NoteType.Asset:
-                        Instance.m_currentRootNote = GetAllAssetNotes()?.FirstOrDefault();
+                        Instance.m_currentNote = GetAllAssetNotes()?.FirstOrDefault();
                         break;
                 }
 
-                return Instance.m_currentRootNote;
+                return Instance.m_currentNote;
             }
         }
 
@@ -99,16 +101,16 @@ namespace UNote.Editor
 
         public static void SelectCategory(NoteType noteType)
         {
-            Instance.m_currentRootNote = null;
-
+            Instance.m_currentNote = null;
             Instance.m_currentNoteType = noteType;
+            OnNoteSelected?.Invoke(null);
         }
 
-        public static void SelectRoot(NoteBase note)
+        public static void SelectNote(NoteBase note)
         {
-            Instance.m_currentRootNote = note;
-
+            Instance.m_currentNote = note;
             Instance.m_currentNoteType = note.NoteType;
+            OnNoteSelected?.Invoke(note);
         }
 
         #region Project Note
@@ -324,6 +326,7 @@ namespace UNote.Editor
                     throw new NotImplementedException();
             }
             
+            Instance.m_currentNote = null;
             OnNoteDeleted?.Invoke(note);
         }
 

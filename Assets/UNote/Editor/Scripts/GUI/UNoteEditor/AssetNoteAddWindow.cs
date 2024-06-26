@@ -26,11 +26,7 @@ namespace UNote.Editor
             addButton.clicked += () =>
             {
                 AssetNote assetNote = EditorUNoteManager.AddOrGetAssetNote(assetField.value);
-                EditorUNoteManager.SelectRoot(assetNote);
-                
-                UNoteEditor noteEditor = GetWindow<UNoteEditor>();
-                noteEditor.CenterPane.SetupListItems();
-                noteEditor.RightPane.SetupNoteList();
+                EditorUNoteManager.SelectNote(assetNote);
                 
                 Close();
             };
