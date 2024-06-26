@@ -28,6 +28,10 @@ namespace UNote.Editor
                 AssetNote assetNote = EditorUNoteManager.AddOrGetAssetNote(assetField.value);
                 EditorUNoteManager.SelectRoot(assetNote);
                 
+                UNoteEditor noteEditor = GetWindow<UNoteEditor>();
+                noteEditor.CenterPane.SetupListItems();
+                noteEditor.RightPane.SetupNoteList();
+                
                 Close();
             };
 

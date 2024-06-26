@@ -18,10 +18,16 @@ namespace UNote.Editor
 
         private NoteType m_currentNoteType = NoteType.Project;
         private NoteBase m_currentRootNote;
-        private NoteBase m_currentLeafNote;
 
         private ProjectNoteContainer m_projectNoteContainer;
         private AssetNoteContainer m_assetNoteContainer;
+
+        public delegate void AddNoteHandler(NoteBase note);
+
+        public delegate void DeleteNoteHandler(NoteBase note);
+
+        public static event AddNoteHandler OnNoteAdded;
+        public static event DeleteNoteHandler OnNoteDeleted;
 
         private static EditorUNoteManager s_instance;
 
@@ -54,34 +60,6 @@ namespace UNote.Editor
                 }
 
                 return Instance.m_currentRootNote;
-            }
-        }
-
-        public static NoteBase CurrentLeafNote
-        {
-            get
-            {
-                if (Instance.m_currentLeafNote != null)
-                {
-                    return Instance.m_currentLeafNote;
-                }
-
-                string noteId = CurrentRootNote.NoteId;
-                
-                switch (Instance.m_currentNoteType)
-                {
-                    case NoteType.Project:
-                        Instance.m_currentLeafNote =
-                            GetProjectLeafNoteListByProjectNoteId(noteId).FirstOrDefault();
-                        break;
-                    
-                    case NoteType.Asset:
-                        Instance.m_currentLeafNote =
-                            GetProjectLeafNoteListByProjectNoteId(noteId).FirstOrDefault();
-                        break;
-                }
-
-                return Instance.m_currentLeafNote;
             }
         }
 
@@ -122,7 +100,6 @@ namespace UNote.Editor
         public static void SelectCategory(NoteType noteType)
         {
             Instance.m_currentRootNote = null;
-            Instance.m_currentLeafNote = null;
 
             Instance.m_currentNoteType = noteType;
         }
@@ -130,48 +107,8 @@ namespace UNote.Editor
         public static void SelectRoot(NoteBase note)
         {
             Instance.m_currentRootNote = note;
-            Instance.m_currentLeafNote = null;
 
             Instance.m_currentNoteType = note.NoteType;
-        }
-
-        public static void SelectLeaf(NoteBase note)
-        {
-            Instance.m_currentLeafNote = note;
-            Instance.m_currentNoteType = note.NoteType;
-
-            string noteId = note.NoteId;
-
-            // Root を探して設定
-            switch (note.NoteType)
-            {
-                case NoteType.Project:
-                    var projectNotes = GetAllProjectNotes();
-                    foreach (var projectNote in projectNotes)
-                    {
-                        if (projectNote.NoteId == noteId)
-                        {
-                            Instance.m_currentRootNote = projectNote;
-                            break;
-                        }
-                    }
-                    break;
-                
-                case NoteType.Asset:
-                    var assetNotes = GetAllAssetNotes();
-                    foreach (var assetNote in assetNotes)
-                    {
-                        if (assetNote.NoteId == noteId)
-                        {
-                            Instance.m_currentRootNote = assetNote;
-                            break;
-                        }
-                    }
-                    break;
-                
-                default:
-                    throw new NotImplementedException();
-            }
         }
 
         #region Project Note
@@ -191,6 +128,8 @@ namespace UNote.Editor
             ProjectNoteContainer.GetOwnProjectNoteList().Add(newNote);
             ProjectNoteContainer.Save();
             
+            OnNoteAdded?.Invoke(newNote);
+            
             return newNote;
         }
 
@@ -207,6 +146,8 @@ namespace UNote.Editor
 
             ProjectNoteContainer.GetOwnProjectLeafNoteList().Add(newNote);
             ProjectNoteContainer.Save();
+            
+            OnNoteAdded?.Invoke(newNote);
             
             return newNote;
         }
@@ -249,6 +190,7 @@ namespace UNote.Editor
             AssetNote note = AssetNoteContainer.GetAssetNoteByGuid(guid);
             if (note != null)
             {
+                OnNoteAdded?.Invoke(note);
                 return note;
             }
             
@@ -264,6 +206,8 @@ namespace UNote.Editor
 
             AssetNoteContainer.GetOwnAssetNoteList().Add(newNote);
             AssetNoteContainer.Save();
+
+            OnNoteAdded?.Invoke(newNote);
             
             return newNote;
         }
@@ -281,6 +225,8 @@ namespace UNote.Editor
 
             AssetNoteContainer.GetOwnAssetLeafNoteList().Add(newNote);
             AssetNoteContainer.Save();
+            
+            OnNoteAdded?.Invoke(newNote);
             
             return newNote;
         }
@@ -331,7 +277,7 @@ namespace UNote.Editor
                         {
                             projectList.Remove(projectNote);
                             ProjectNoteContainer.Save();
-
+                            
                             // TODO 他の所属Leaf削除
                         }
                     }
@@ -347,9 +293,38 @@ namespace UNote.Editor
                     }
                     break;
                 
+                case NoteType.Asset:
+                    Undo.RecordObject(AssetNoteContainer, "Delete Asset Note");
+                    
+                    if (note is AssetNote assetNote)
+                    {
+                        List<AssetNote> assetNoteList =
+                            AssetNoteContainer.GetOwnAssetNoteList();
+                        if (assetNoteList.Contains(assetNote))
+                        {
+                            assetNoteList.Remove(assetNote);
+                            AssetNoteContainer.Save();
+
+                            // TODO 他の所属Leaf削除
+                        }
+                    }
+                    else if (note is AssetLeafNote assetLeafNote)
+                    {
+                        List<AssetLeafNote> assetLeafNoteList =
+                            AssetNoteContainer.GetOwnAssetLeafNoteList();
+                        if (assetLeafNoteList.Contains(assetLeafNote))
+                        {
+                            assetLeafNoteList.Remove(assetLeafNote);
+                            AssetNoteContainer.Save();
+                        }
+                    }
+                    break;
+                
                 default:
                     throw new NotImplementedException();
             }
+            
+            OnNoteDeleted?.Invoke(note);
         }
 
         public static void ToggleArchived(NoteBase note)

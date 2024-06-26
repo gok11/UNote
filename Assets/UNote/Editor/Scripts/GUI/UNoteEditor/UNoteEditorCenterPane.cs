@@ -70,10 +70,6 @@ namespace UNote.Editor
                             break;
                         
                         case NoteType.Asset:
-                            // newNote = EditorUNoteManager.AddNewAssetNote();
-                            
-                            // アセットを設定するポップアップウィンドウ表示
-                            // 既に指定されているアセットならそのメモを選択する
                             AssetNoteAddWindow addWindow = ScriptableObject.CreateInstance<AssetNoteAddWindow>();
                             addWindow.ShowUtility();
                             break;
@@ -87,7 +83,8 @@ namespace UNote.Editor
                         EditorUNoteManager.SelectRoot(newNote);
                     
                         // ビューに反映
-                        SetupListItems();   
+                        SetupListItems();
+                        m_noteEditor.RightPane.SetupNoteList();
                     }
                 }
             );
