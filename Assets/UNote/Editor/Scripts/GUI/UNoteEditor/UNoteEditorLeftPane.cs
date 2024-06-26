@@ -62,10 +62,8 @@ namespace UNote.Editor
                     noteType == category.Key ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
             }
             
-            EditorUNoteManager.SelectCategory(noteType);
-
             m_noteEditor.CenterPane?.SetupListItems();
-            m_noteEditor.RightPane?.SetupNoteList();
+            EditorUNoteManager.SelectCategory(noteType);
         }
 
         /// <summary>

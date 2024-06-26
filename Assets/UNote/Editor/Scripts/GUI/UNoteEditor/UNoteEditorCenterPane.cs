@@ -50,6 +50,11 @@ namespace UNote.Editor
                     ShowContextMenu(evt.mousePosition);
                 }
             });
+            
+            // Register note event
+            EditorUNoteManager.OnNoteAdded += note => SetupListItems();
+            EditorUNoteManager.OnNoteSelected += note => UpdateNoteList();
+            EditorUNoteManager.OnNoteDeleted += note => SetupListItems();
         }
 
         private void ShowContextMenu(Vector2 mousePosition)
@@ -80,11 +85,7 @@ namespace UNote.Editor
 
                     if (newNote != null)
                     {
-                        EditorUNoteManager.SelectRoot(newNote);
-                    
-                        // ビューに反映
-                        SetupListItems();
-                        m_noteEditor.RightPane.SetupNoteList();
+                        EditorUNoteManager.SelectNote(newNote);
                     }
                 }
             );
@@ -133,7 +134,7 @@ namespace UNote.Editor
             // 背景色を更新
             foreach (var item in m_noteScroll.contentContainer.Query<UNoteEditorListItem>().Build())
             {
-                item.SelectItem(item.BindNote == EditorUNoteManager.CurrentRootNote);
+                item.SelectItem(item.BindNote == EditorUNoteManager.CurrentNote);
             }
         }
 

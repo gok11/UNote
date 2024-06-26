@@ -99,6 +99,11 @@ namespace UNote.Editor
             };
 
             contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+            
+            // Register note event
+            EditorUNoteManager.OnNoteAdded += note => SetupNoteList();
+            EditorUNoteManager.OnNoteSelected += note => SetupNoteList();
+            EditorUNoteManager.OnNoteDeleted += note => SetupNoteList();
         }
 
         private void OnKeyDown(KeyDownEvent evt)
@@ -119,8 +124,10 @@ namespace UNote.Editor
             // Undoに乗らないよう一時的にバインド解除
             m_inputText.Unbind();
 
-            NoteBase note = EditorUNoteManager.CurrentRootNote;
+            NoteBase note = EditorUNoteManager.CurrentNote;
             ProjectNote srcNote = note as ProjectNote;
+            
+            // TODO
 
             if (srcNote == null)
             {
@@ -146,14 +153,11 @@ namespace UNote.Editor
             m_noteEditor.Model.ModelObject.ApplyModifiedProperties();
 
             m_inputText.BindProperty(m_noteEditor.Model.EditingText);
-
-            // 中央ペインを更新
-            m_noteEditor.CenterPane.SetupListItems();
         }
 
         private void EnableChangeTitleMode()
         {
-            NoteBase note = EditorUNoteManager.CurrentRootNote;
+            NoteBase note = EditorUNoteManager.CurrentNote;
             if (note == null)
             {
                 return;
@@ -183,7 +187,7 @@ namespace UNote.Editor
                     // 編集を終え、テキスト更新
                     SetTitleGUIEditMode(false);
 
-                    m_noteTitle.text = EditorUNoteManager.CurrentRootNote.NoteName;
+                    m_noteTitle.text = EditorUNoteManager.CurrentNote.NoteName;
                     
                     m_noteEditor.CenterPane.SetupListItems();
                 }
@@ -209,7 +213,7 @@ namespace UNote.Editor
             m_noteList.contentContainer.Clear();
 
             // メモの情報を設定
-            NoteBase note = EditorUNoteManager.CurrentRootNote;
+            NoteBase note = EditorUNoteManager.CurrentNote;
             if (note == null)
             {
                 return;

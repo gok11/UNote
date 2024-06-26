@@ -43,11 +43,9 @@ namespace UNote.Editor
             // Handle mouse event
             contentContainer.RegisterCallback<MouseDownEvent>(evt =>
             {
-                if (EditorUNoteManager.CurrentRootNote != m_note)
+                if (EditorUNoteManager.CurrentNote != m_note)
                 {
-                    EditorUNoteManager.SelectRoot(m_note);
-                    noteEditor.RightPane.SetupNoteList();
-                    noteEditor.CenterPane.UpdateNoteList();
+                    EditorUNoteManager.SelectNote(m_note);
                 }
 
                 bool isOwnNote = m_note.Author == UserConfig.GetUNoteSetting().UserName;
@@ -149,7 +147,6 @@ namespace UNote.Editor
                     if (EditorUtility.DisplayDialog("Confirm", "Do you want to delete this note?", "OK", "Cancel"))
                     {
                         EditorUNoteManager.DeleteNote(m_note);
-                        parent.Remove(this);   
                     }
                 }
             );
