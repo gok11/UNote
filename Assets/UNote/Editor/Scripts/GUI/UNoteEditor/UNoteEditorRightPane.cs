@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,7 @@ namespace UNote.Editor
         private Button m_sendButton;
 
         private float m_lastScrollPosition;
+        private VisualElement m_footerElem;
 
         public UNoteEditorRightPane(UNoteEditor noteEditor)
         {
@@ -45,7 +47,7 @@ namespace UNote.Editor
             );
             contentContainer.Add(tree.Instantiate());
 
-            //
+            // 
             m_noteTitle = contentContainer.Q<Label>("NoteTitle");
             m_titleField = contentContainer.Q<TextField>("TitleField");
             m_openButton = contentContainer.Q<Button>("OpenButton");
@@ -125,26 +127,43 @@ namespace UNote.Editor
             m_inputText.Unbind();
 
             NoteBase note = EditorUNoteManager.CurrentNote;
-            ProjectNote srcNote = note as ProjectNote;
-            
-            // TODO
+            NoteBase newLeafNote = null;
 
-            if (srcNote == null)
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                    if (note is ProjectNote projectNote)
+                    {
+                        newLeafNote = EditorUNoteManager.AddNewLeafProjectNote(
+                            projectNote.NoteId,
+                            m_inputText.value
+                        );   
+                    }
+                    break;
+                
+                case NoteType.Asset:
+                    if (note is AssetNote assetNote)
+                    {
+                        newLeafNote = EditorUNoteManager.AddLeafAssetNote(
+                            assetNote.NoteId,
+                            m_inputText.value
+                        );
+                    }
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+
+            if (newLeafNote == null)
             {
                 return;
             }
 
-            ProjectLeafNote projectLeafNote = EditorUNoteManager.AddNewLeafProjectNote(
-                srcNote.NoteId,
-                m_inputText.value
-            );
-
-            VisualElement newNoteElem = new UNoteEditorContentElem(m_noteEditor, projectLeafNote);
-            m_noteList.Add(newNoteElem);
             EditorApplication.delayCall += () =>
             EditorApplication.delayCall += () =>
             {
-                m_noteList.ScrollTo(newNoteElem);
+                m_noteList.ScrollTo(m_footerElem);
             };
 
             // バインドしなおす前に最新の状態にする
@@ -159,6 +178,11 @@ namespace UNote.Editor
         {
             NoteBase note = EditorUNoteManager.CurrentNote;
             if (note == null)
+            {
+                return;
+            }
+            
+            if (note.NoteType != NoteType.Project)
             {
                 return;
             }
@@ -224,10 +248,10 @@ namespace UNote.Editor
             // 要素を追加し、その要素までスクロール
             m_noteList.visible = false;
 
-            VisualElement footerElem = new VisualElement();
-            footerElem.name = "footer_elem";
-            footerElem.style.height = 0;
-            m_noteList.Add(footerElem);
+            m_footerElem = new VisualElement();
+            m_footerElem.name = "footer_elem";
+            m_footerElem.style.height = 0;
+            m_noteList.Add(m_footerElem);
 
             switch (note.NoteType)
             {
@@ -240,6 +264,19 @@ namespace UNote.Editor
                         m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(m_noteEditor, leafNote));
                     }
                     break;
+                
+                case NoteType.Asset:
+                    AssetNote assetNote = note as AssetNote;
+                    string assetNoteNoteId = assetNote?.NoteId;
+
+                    foreach (var leafNote in EditorUNoteManager.GetAssetLeafNoteListByNoteId(assetNoteNoteId))
+                    {
+                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(m_noteEditor, leafNote));
+                    }
+                    break;
+                
+                default:
+                    throw new NotImplementedException();
             }
             
             // スクロールが正しくできるよう待つ
@@ -248,9 +285,9 @@ namespace UNote.Editor
             {
                 if (m_noteList != null)
                 {
-                    if (m_noteList.Contains(footerElem))
+                    if (m_noteList.Contains(m_footerElem))
                     {
-                        m_noteList.ScrollTo(footerElem);   
+                        m_noteList.ScrollTo(m_footerElem);   
                     }
                     m_noteList.visible = true;   
                 }

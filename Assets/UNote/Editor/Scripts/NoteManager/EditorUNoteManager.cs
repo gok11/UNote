@@ -325,8 +325,11 @@ namespace UNote.Editor
                 default:
                     throw new NotImplementedException();
             }
-            
-            Instance.m_currentNote = null;
+
+            if (note is RootNoteBase)
+            {
+                Instance.m_currentNote = null;   
+            }
             OnNoteDeleted?.Invoke(note);
         }
 
