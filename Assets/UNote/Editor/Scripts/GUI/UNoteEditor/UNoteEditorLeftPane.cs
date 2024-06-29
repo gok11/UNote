@@ -11,14 +11,15 @@ namespace UNote.Editor
     {
         private UNoteEditor m_noteEditor;
         
-        private Dictionary<NoteType, VisualElement> categoryElemDict =
-            new Dictionary<NoteType, VisualElement>();
+        private Dictionary<NoteType, VisualElement> m_categoryElemDict = new();
 
         public UNoteEditorLeftPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorLeftPane);
 
             m_noteEditor = noteEditor;
+
+            style.backgroundColor = new Color(0.17f, 0.17f, 0.17f);
             
             // Pane
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
@@ -38,13 +39,13 @@ namespace UNote.Editor
             VisualElement assetNoteElem = categoryContainer.Q("AssetNoteElem");
 
             // Update color
-            categoryElemDict.Add(NoteType.Project, projectNoteElem);
-            categoryElemDict.Add(NoteType.Asset, assetNoteElem);
+            m_categoryElemDict.Add(NoteType.Project, projectNoteElem);
+            m_categoryElemDict.Add(NoteType.Asset, assetNoteElem);
 
             SelectCategoryElem(EditorUNoteManager.CurrentNoteType);
 
             // Register select event
-            foreach (var category in categoryElemDict)
+            foreach (var category in m_categoryElemDict)
             {
                 category.Value.RegisterCallback<MouseDownEvent>(evt =>
                 {
@@ -56,9 +57,9 @@ namespace UNote.Editor
 
         private void SelectCategoryElem(NoteType noteType)
         {
-            foreach (var category in categoryElemDict)
+            foreach (var category in m_categoryElemDict)
             {
-                categoryElemDict[category.Key].contentContainer.style.backgroundColor =
+                m_categoryElemDict[category.Key].contentContainer.style.backgroundColor =
                     noteType == category.Key ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
             }
             
