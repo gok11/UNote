@@ -45,7 +45,7 @@ namespace UNote.Editor
 
             // Three split pane
             int fixedPaneIndex = 0;
-            float leftPaneInitialWidth = 150f;
+            float leftPaneInitialWidth = 130f;
             float centerPaneInitialWidth = 200f;
             TwoPaneSplitViewOrientation orientation = TwoPaneSplitViewOrientation.Horizontal;
 
