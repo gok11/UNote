@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
 using Button = UnityEngine.UIElements.Button;
+using Object = UnityEngine.Object;
 
 namespace UNote.Editor
 {
@@ -24,7 +25,8 @@ namespace UNote.Editor
 
         private Label m_noteTitle;
         private TextField m_titleField;
-        private Button m_openButton;
+
+        private VisualElement m_subInfoArea;
         
         private ScrollView m_noteList;
         private TextField m_inputText;
@@ -50,7 +52,8 @@ namespace UNote.Editor
             // 
             m_noteTitle = contentContainer.Q<Label>("NoteTitle");
             m_titleField = contentContainer.Q<TextField>("TitleField");
-            m_openButton = contentContainer.Q<Button>("OpenButton");
+
+            m_subInfoArea = contentContainer.Q<VisualElement>("NoteSubInfoArea");
             
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
             m_inputText = contentContainer.Q<TextField>("InputText");
@@ -231,8 +234,6 @@ namespace UNote.Editor
             // メモの表示状態をリセットする
             SetTitleGUIEditMode(false);
             
-            // TODO 外部アセット等を参照するメモならそれを開くボタンを表示
-
             m_noteTitle.text = "";
             m_noteList.contentContainer.Clear();
 
@@ -244,6 +245,27 @@ namespace UNote.Editor
             }
             
             m_noteTitle.text = note.NoteName;
+            
+            // サブ情報の設定
+            m_subInfoArea.Clear();
+            SetSubInfoStyle(false);
+            
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                    break;
+                
+                case NoteType.Asset:
+                    SetSubInfoStyle(true);
+                    
+                    ObjectField assetField = new ObjectField("Reference Asset");
+                    Object referenceAsset =
+                        AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(note.NoteId));
+                    assetField.SetValueWithoutNotify(referenceAsset);
+                    assetField.style.fontSize = 10;
+                    m_subInfoArea.Add(assetField);
+                    break;
+            }
 
             // 要素を追加し、その要素までスクロール
             m_noteList.visible = false;
@@ -308,6 +330,26 @@ namespace UNote.Editor
             }
         }
 
+        private void SetSubInfoStyle(bool enable)
+        {
+            IStyle subInfoStyle = m_subInfoArea.style;
+            
+            if (enable)
+            {
+                subInfoStyle.marginTop = subInfoStyle.marginLeft = subInfoStyle.marginRight= 2;
+                subInfoStyle.borderTopWidth = subInfoStyle.borderBottomWidth =
+                    subInfoStyle.borderLeftWidth = subInfoStyle.borderRightWidth = 1;
+                subInfoStyle.height = 70;
+            }
+            else
+            {
+                subInfoStyle.marginTop = subInfoStyle.marginLeft = subInfoStyle.marginRight= 0;
+                subInfoStyle.borderTopWidth = subInfoStyle.borderBottomWidth =
+                    subInfoStyle.borderLeftWidth = subInfoStyle.borderRightWidth = 0;
+                subInfoStyle.height = 0;
+            }
+        }
+        
         public override void OnUndoRedo(string undoName)
         {
             if (undoName.Contains("UNote Change Project Note Title"))
