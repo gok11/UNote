@@ -2,11 +2,6 @@
     padding: 10px;
 }
 
-Label {
-    font-size: 20px;
-    -unity-font-style: bold;
-}
-
 .noteSelectable:focus {
     background-color: rgba(44, 93, 135, 255);
 }
