@@ -248,7 +248,7 @@ namespace UNote.Editor
             
             // サブ情報の設定
             m_subInfoArea.Clear();
-            SetSubInfoStyle(false);
+            SetSubInfoStyle(-1);
             
             switch (note.NoteType)
             {
@@ -256,13 +256,14 @@ namespace UNote.Editor
                     break;
                 
                 case NoteType.Asset:
-                    SetSubInfoStyle(true);
+                    SetSubInfoStyle(1);
                     
                     ObjectField assetField = new ObjectField("Reference Asset");
                     Object referenceAsset =
                         AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(note.NoteId));
                     assetField.SetValueWithoutNotify(referenceAsset);
                     assetField.style.fontSize = 10;
+                    assetField.SetEnabled(false);
                     m_subInfoArea.Add(assetField);
                     break;
             }
@@ -330,16 +331,16 @@ namespace UNote.Editor
             }
         }
 
-        private void SetSubInfoStyle(bool enable)
+        private void SetSubInfoStyle(int lineCount)
         {
             IStyle subInfoStyle = m_subInfoArea.style;
             
-            if (enable)
+            if (lineCount > 0)
             {
                 subInfoStyle.marginTop = subInfoStyle.marginLeft = subInfoStyle.marginRight= 2;
                 subInfoStyle.borderTopWidth = subInfoStyle.borderBottomWidth =
                     subInfoStyle.borderLeftWidth = subInfoStyle.borderRightWidth = 1;
-                subInfoStyle.height = 70;
+                subInfoStyle.height = 42 * lineCount;
             }
             else
             {
