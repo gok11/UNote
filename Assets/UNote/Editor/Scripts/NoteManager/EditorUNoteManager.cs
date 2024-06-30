@@ -343,6 +343,7 @@ namespace UNote.Editor
         public static void SaveAll()
         {
             ProjectNoteContainer.Save();
+            AssetNoteContainer.Save();
         }
         #endregion // Public Method
 
