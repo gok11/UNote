@@ -29,6 +29,16 @@ namespace UNote.Editor
             return absolutePath.Replace("\\", "/").Replace(Application.dataPath, "Assets");
         }
 
+        public static bool IsNullOrEmpty(this string str)
+        {
+            return string.IsNullOrEmpty(str);
+        }
+        
+        public static bool IsNullOrWhiteSpace(this string str)
+        {
+            return string.IsNullOrWhiteSpace(str);
+        }
+        
         #endregion // Static Method
     }
 }
