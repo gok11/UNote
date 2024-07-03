@@ -35,6 +35,12 @@ namespace UNote.Editor
                     continue;
                 }
 
+                VisualElement inspectorNoteEditor = window.rootVisualElement.Q("InspectorNoteEditor");
+                if (inspectorNoteEditor != null)
+                {
+                    continue;
+                }
+
                 VisualElement editorsList =
                     window.rootVisualElement.Q<VisualElement>(null, "unity-inspector-editors-list");
                 
@@ -56,14 +62,10 @@ namespace UNote.Editor
                     if (PrefabUtility.IsPartOfPrefabAsset(editor.target))
                     {
                         Debug.Log("prafab");
-                        // if (s_elemDict.ContainsKey(window))
-                        // {
-                        //     s_elemDict[window] = CreatePrefabNoteElem(editorsList);
-                        // }
-                        // else
-                        // {
-                        //     s_elemDict.Add(window, CreatePrefabNoteElem(editorsList));
-                        // }
+
+                        inspectorNoteEditor = new InspectorNoteEditor();
+                        inspectorNoteEditor.name = "InspectorNoteEditor";
+                        window.rootVisualElement.Insert(0, inspectorNoteEditor);
 
                         return;
                     }
@@ -75,28 +77,18 @@ namespace UNote.Editor
                     if (editor.target is GameObject)
                     {
                         Debug.Log("game");
-                        // if (s_elemDict.ContainsKey(window))
-                        // {
-                        //     s_elemDict[window] = CreateGameObjectNoteElem(editorsList);
-                        // }
-                        // else
-                        // {
-                        //     s_elemDict.Add(window, CreateGameObjectNoteElem(editorsList));
-                        // }
+                        inspectorNoteEditor = new InspectorNoteEditor();
+                        inspectorNoteEditor.name = "InspectorNoteEditor";
+                        window.rootVisualElement.Insert(0, inspectorNoteEditor);
 
                         return;
                     }
                 }
                 
                 Debug.Log("general");
-                // if (s_elemDict.ContainsKey(window))
-                // {
-                //     s_elemDict[window] = CreateGeneralNoteElem(editorsList);
-                // }
-                // else
-                // {
-                //     s_elemDict.Add(window, CreateGeneralNoteElem(editorsList));
-                // }
+                inspectorNoteEditor = new InspectorNoteEditor();
+                inspectorNoteEditor.name = "InspectorNoteEditor";
+                window.rootVisualElement.Insert(0, inspectorNoteEditor);
             }
             
         }
