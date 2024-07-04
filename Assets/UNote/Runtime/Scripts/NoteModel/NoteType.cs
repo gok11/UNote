@@ -8,6 +8,7 @@ namespace UNote.Runtime
     {
         Project = 0,
         Asset,
+        Sceene,
         Invalid = -1,
     }
 }

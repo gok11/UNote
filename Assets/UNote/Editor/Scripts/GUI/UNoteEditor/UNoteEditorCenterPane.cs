@@ -30,7 +30,7 @@ namespace UNote.Editor
 
             // Instantiate pane
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                UxmlPath.UNoteEditorCenterPane
+                UxmlPath.NoteEditorCenterPane
             );
             TemplateContainer template = tree.CloneTree();
             contentContainer.Add(template);
