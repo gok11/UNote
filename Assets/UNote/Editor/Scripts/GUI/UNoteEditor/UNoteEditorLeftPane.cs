@@ -23,7 +23,7 @@ namespace UNote.Editor
             
             // Pane
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                UxmlPath.UNoteEditorLeftPane
+                UxmlPath.NoteEditorLeftPane
             );
             TemplateContainer paneContainer = tree.Instantiate();
             contentContainer.Add(paneContainer);

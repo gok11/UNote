@@ -45,7 +45,7 @@ namespace UNote.Editor
             m_noteEditor = noteEditor;
 
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                UxmlPath.UNoteEditorRightPane
+                UxmlPath.NoteEditorRightPane
             );
             contentContainer.Add(tree.Instantiate());
 

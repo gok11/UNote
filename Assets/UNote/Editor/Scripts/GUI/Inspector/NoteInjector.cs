@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using UNote.Runtime;
 using Object = UnityEngine.Object;
 
 namespace UNote.Editor
@@ -16,21 +19,39 @@ namespace UNote.Editor
                 .Assembly.GetType("UnityEditor.InspectorWindow")
                 .GetField("m_Tracker", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private static Dictionary<EditorWindow, VisualElement> s_elemDict = new();
+        private static List<Object> s_targetTempList = new(64);
+        private static List<Object> s_removeTempList = new(64);
+
+        private static int s_intervalCounter = 0;
+        private const int Interval = 2;
         
         static NoteInjector()
         {
             EditorApplication.update -= TryInjectNoteElement;
             EditorApplication.update += TryInjectNoteElement;
+
+            s_intervalCounter = Interval;
         }
 
         static void TryInjectNoteElement()
         {
+            s_intervalCounter = Mathf.Max(0, s_intervalCounter - 1);
+            if (s_intervalCounter != 0)
+            {
+                return;
+            }
+            
             var windows = Resources.FindObjectsOfTypeAll<EditorWindow>();
 
             foreach (var window in windows)
             {
                 if (window.GetType().FullName != "UnityEditor.InspectorWindow")
+                {
+                    continue;
+                }
+                
+                VisualElement editorsList = window.rootVisualElement.Q<VisualElement>(null, "unity-inspector-editors-list");
+                if (editorsList == null)
                 {
                     continue;
                 }
@@ -40,9 +61,6 @@ namespace UNote.Editor
                 {
                     continue;
                 }
-
-                VisualElement editorsList =
-                    window.rootVisualElement.Q<VisualElement>(null, "unity-inspector-editors-list");
                 
                 var tracker = s_trackerField.GetValue(window) as ActiveEditorTracker;
                 if (tracker == null)
@@ -56,17 +74,19 @@ namespace UNote.Editor
                     continue;
                 }
                 
+                s_targetTempList.Clear();
+                foreach (var editor in activeEditors)
+                {
+                    s_targetTempList.Add(editor.target);
+                }
+                
                 // プレハブかを最初に判別
                 foreach (var editor in activeEditors)
                 {
                     if (PrefabUtility.IsPartOfPrefabAsset(editor.target))
                     {
-                        Debug.Log("prafab");
-
-                        inspectorNoteEditor = new InspectorNoteEditor();
-                        inspectorNoteEditor.name = "InspectorNoteEditor";
-                        window.rootVisualElement.Insert(0, inspectorNoteEditor);
-
+                        inspectorNoteEditor = new InspectorNoteEditor(NoteType.Asset, editor.target);
+                        editorsList.Insert(1, inspectorNoteEditor);
                         return;
                     }
                 }
@@ -76,51 +96,23 @@ namespace UNote.Editor
                 {
                     if (editor.target is GameObject)
                     {
-                        Debug.Log("game");
-                        inspectorNoteEditor = new InspectorNoteEditor();
-                        inspectorNoteEditor.name = "InspectorNoteEditor";
-                        window.rootVisualElement.Insert(0, inspectorNoteEditor);
-
+                        inspectorNoteEditor = new InspectorNoteEditor(NoteType.Sceene, editor.target);
+                        editorsList.Insert(1, inspectorNoteEditor);
                         return;
                     }
                 }
                 
-                Debug.Log("general");
-                inspectorNoteEditor = new InspectorNoteEditor();
-                inspectorNoteEditor.name = "InspectorNoteEditor";
-                window.rootVisualElement.Insert(0, inspectorNoteEditor);
+                // コンポーネントは除外しつつ登録 (DefaultAsset等)
+                foreach (var editor in activeEditors)
+                {
+                    if (editor.target is not Component)
+                    {
+                        inspectorNoteEditor = new InspectorNoteEditor(NoteType.Asset, editor.target);
+                        editorsList.Insert(1, inspectorNoteEditor);
+                        return;
+                    }
+                }
             }
-            
-        }
-
-        private static VisualElement CreatePrefabNoteElem(VisualElement parent)
-        {
-            VisualElement prefabNoteElem =  new VisualElement()
-            {
-                name = "PrefabElem"
-            };
-            parent.Add(prefabNoteElem);
-            return prefabNoteElem;
-        }
-
-        private static VisualElement CreateGameObjectNoteElem(VisualElement parent)
-        {
-            VisualElement gameObjectNote = new VisualElement()
-            {
-                name = "GoElem"
-            };
-            parent.Add(gameObjectNote);
-            return gameObjectNote;
-        }
-
-        private static VisualElement CreateGeneralNoteElem(VisualElement parent)
-        {
-            VisualElement generalNoteElem = new VisualElement()
-            {
-                name = "GeneralElem"
-            };
-            parent.Add(generalNoteElem);
-            return generalNoteElem;
         }
     }
 }
