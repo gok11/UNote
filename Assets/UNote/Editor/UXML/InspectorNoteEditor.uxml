@@ -1,2 +1,24 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Root" style="flex-grow: 0; border-top-color: rgba(25, 25, 25, 0); border-bottom-color: rgba(25, 25, 25, 0); border-top-width: 0; border-bottom-width: 0; margin-top: 0; margin-right: 0; margin-left: 0; margin-bottom: 0; border-right-width: 0; border-left-width: 0;">
+        <ui:VisualElement name="Header" style="flex-grow: 0; background-color: rgb(62, 62, 62); border-top-color: rgb(25, 25, 25); border-bottom-color: rgb(50, 50, 50); border-top-width: 1px; border-bottom-width: 1px; margin-left: -16px; margin-top: -2px; margin-right: -16px; height: 22px; margin-bottom: 0;">
+            <ui:Foldout text="UNote" name="Foldout" style="background-color: rgba(62, 62, 62, 0); border-top-color: rgba(25, 25, 25, 0); border-top-width: 1px; border-bottom-color: rgba(50, 50, 50, 0); border-bottom-width: 1px; padding-top: 0; padding-bottom: 0; margin-top: 0; -unity-font-style: bold; height: auto; margin-left: 16px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="NoteInputField" style="max-height: none; height: 120px; min-height: auto;">
+            <ui:VisualElement name="NoteInputField" style="flex-grow: 1; height: 200px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(87, 87, 87); border-right-color: rgb(87, 87, 87); border-top-color: rgb(87, 87, 87); border-bottom-color: rgb(87, 87, 87); max-height: none; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; min-height: 120px; background-color: rgba(0, 0, 0, 0);">
+                <ui:VisualElement name="HeaderArea" style="flex-grow: 1;">
+                    <ui:Label tabindex="-1" text="Gok" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Author" style="font-size: 14px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; -unity-font-style: bold; padding-top: 2px;" />
+                </ui:VisualElement>
+                <ui:ScrollView name="TextArea" style="height: 80px;">
+                    <ui:TextField picking-mode="Ignore" multiline="true" name="InputText" style="background-color: rgba(0, 0, 0, 0); opacity: 1; flex-grow: 1; flex-shrink: 0; flex-direction: row; display: flex; visibility: visible; overflow: hidden; height: auto; min-height: 70px; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal;" />
+                </ui:ScrollView>
+                <ui:VisualElement name="FooterArea" style="flex-grow: 0; flex-direction: row; height: 20px;">
+                    <ui:Button text="&gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SendButton" style="height: auto; margin-bottom: 2px;" />
+                    <ui:VisualElement name="Spacer" style="flex-grow: 1;" />
+                    <ui:Label tabindex="-1" text="Shift + Enter to add a new note" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 0; -unity-text-align: upper-left; -unity-font-style: normal; font-size: 9px; white-space: nowrap; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; text-overflow: ellipsis;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:ListView style="min-height: 0;" />
+        <ui:VisualElement name="Footer" style="flex-grow: 1; margin-top: 0; margin-right: -16px; margin-left: -16px; border-bottom-color: rgb(25, 25, 25); border-bottom-width: 1px; margin-bottom: 2px; padding-bottom: 6px; border-top-width: 0; border-right-width: 0; border-left-width: 0;" />
+    </ui:VisualElement>
 </ui:UXML>

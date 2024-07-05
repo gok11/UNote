@@ -50,8 +50,9 @@ namespace UNote.Editor
                     continue;
                 }
                 
-                VisualElement editorsList = window.rootVisualElement.Q<VisualElement>(null, "unity-inspector-editors-list");
-                if (editorsList == null)
+                // VisualElement editorsList = window.rootVisualElement.Q<VisualElement>(null, "unity-inspector-editors-list");
+                VisualElement inspectorElement = window.rootVisualElement.Q<InspectorElement>();
+                if (inspectorElement == null)
                 {
                     continue;
                 }
@@ -86,7 +87,7 @@ namespace UNote.Editor
                     if (PrefabUtility.IsPartOfPrefabAsset(editor.target))
                     {
                         inspectorNoteEditor = new InspectorNoteEditor(NoteType.Asset, editor.target);
-                        editorsList.Insert(1, inspectorNoteEditor);
+                        inspectorElement.Insert(1, inspectorNoteEditor);
                         return;
                     }
                 }
@@ -97,7 +98,7 @@ namespace UNote.Editor
                     if (editor.target is GameObject)
                     {
                         inspectorNoteEditor = new InspectorNoteEditor(NoteType.Sceene, editor.target);
-                        editorsList.Insert(1, inspectorNoteEditor);
+                        inspectorElement.Insert(1, inspectorNoteEditor);
                         return;
                     }
                 }
@@ -108,7 +109,7 @@ namespace UNote.Editor
                     if (editor.target is not Component)
                     {
                         inspectorNoteEditor = new InspectorNoteEditor(NoteType.Asset, editor.target);
-                        editorsList.Insert(1, inspectorNoteEditor);
+                        inspectorElement.Insert(1, inspectorNoteEditor);
                         return;
                     }
                 }
