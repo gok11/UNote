@@ -9,6 +9,7 @@ namespace UNote.Editor
         public static readonly string NoteEditorCenterPane = AssetDatabase.GUIDToAssetPath("5a2bb31080c69ad42811c6de0ec2c8b2");
         public static readonly string NoteEditorLeftPane = AssetDatabase.GUIDToAssetPath("2b2d08b882ec10f4fa1d91efcdc74365");
         public static readonly string NoteEditorRightPane = AssetDatabase.GUIDToAssetPath("a23f05ef4e72fe445825f193e8fadc2b");
+        public static readonly string NoteInputField = AssetDatabase.GUIDToAssetPath("d35f6c66e8051b346870b2fbca9248a3");
         public static readonly string NoteListItem = AssetDatabase.GUIDToAssetPath("89d831667923bd542bf015fb582fd32e");
         public static readonly string NoteTypeItem = AssetDatabase.GUIDToAssetPath("46f56de1c003d7b43b893a3c3f6be94f");
     }
