@@ -3,6 +3,7 @@
         <ui:VisualElement name="Header" style="flex-grow: 0; background-color: rgb(62, 62, 62); border-top-color: rgb(25, 25, 25); border-bottom-color: rgb(50, 50, 50); border-top-width: 1px; border-bottom-width: 1px; margin-left: -16px; margin-top: -2px; margin-right: -16px; height: 22px; margin-bottom: 0;">
             <ui:Foldout text="UNote" name="Foldout" style="background-color: rgba(62, 62, 62, 0); border-top-color: rgba(25, 25, 25, 0); border-top-width: 1px; border-bottom-color: rgba(50, 50, 50, 0); border-bottom-width: 1px; padding-top: 0; padding-bottom: 0; margin-top: 0; -unity-font-style: bold; height: auto; margin-left: 16px;" />
         </ui:VisualElement>
+        <ui:ListView name="NoteList" style="min-height: 0;" />
         <ui:VisualElement name="NoteInputField" style="max-height: none; height: 120px; min-height: auto;">
             <ui:VisualElement name="NoteInputField" style="flex-grow: 1; height: 200px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(87, 87, 87); border-right-color: rgb(87, 87, 87); border-top-color: rgb(87, 87, 87); border-bottom-color: rgb(87, 87, 87); max-height: none; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; min-height: 120px; background-color: rgba(0, 0, 0, 0);">
                 <ui:VisualElement name="HeaderArea" style="flex-grow: 1;">
@@ -18,7 +19,6 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:ListView style="min-height: 0;" />
         <ui:VisualElement name="Footer" style="flex-grow: 1; margin-top: 0; margin-right: -16px; margin-left: -16px; border-bottom-color: rgb(25, 25, 25); border-bottom-width: 1px; margin-bottom: 2px; padding-bottom: 6px; border-top-width: 0; border-right-width: 0; border-left-width: 0;" />
     </ui:VisualElement>
 </ui:UXML>

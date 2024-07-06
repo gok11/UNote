@@ -12,11 +12,14 @@ namespace UNote.Editor
         public InspectorNoteEditor(NoteType noteType, Object target)
         {
             name = nameof(InspectorNoteEditor);
-
+            
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.InspectorNoteEditor
             );
             contentContainer.Add(tree.Instantiate());
+
+            VisualElement noteInputField = contentContainer.Q("NoteInputField");
+            noteInputField.style.marginLeft = 16;
         }
     }
 }
