@@ -50,18 +50,21 @@ namespace UNote.Editor
                     continue;
                 }
                 
+                VisualElement inspectorNoteEditor = window.rootVisualElement.Q("InspectorNoteEditor");
+                if (inspectorNoteEditor != null)
+                {
+                    continue;
+                }
+                
                 // VisualElement editorsList = window.rootVisualElement.Q<VisualElement>(null, "unity-inspector-editors-list");
                 VisualElement inspectorElement = window.rootVisualElement.Q<InspectorElement>();
                 if (inspectorElement == null)
                 {
                     continue;
                 }
-
-                VisualElement inspectorNoteEditor = window.rootVisualElement.Q("InspectorNoteEditor");
-                if (inspectorNoteEditor != null)
-                {
-                    continue;
-                }
+                
+                VisualElement parentElement = inspectorElement.parent;
+                int insertIndex = parentElement.IndexOf(inspectorElement);
                 
                 var tracker = s_trackerField.GetValue(window) as ActiveEditorTracker;
                 if (tracker == null)
@@ -87,7 +90,7 @@ namespace UNote.Editor
                     if (PrefabUtility.IsPartOfPrefabAsset(editor.target))
                     {
                         inspectorNoteEditor = new InspectorNoteEditor(NoteType.Asset, editor.target);
-                        inspectorElement.Insert(1, inspectorNoteEditor);
+                        parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
                 }
@@ -98,7 +101,7 @@ namespace UNote.Editor
                     if (editor.target is GameObject)
                     {
                         inspectorNoteEditor = new InspectorNoteEditor(NoteType.Sceene, editor.target);
-                        inspectorElement.Insert(1, inspectorNoteEditor);
+                        parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
                 }
@@ -109,7 +112,7 @@ namespace UNote.Editor
                     if (editor.target is not Component)
                     {
                         inspectorNoteEditor = new InspectorNoteEditor(NoteType.Asset, editor.target);
-                        inspectorElement.Insert(1, inspectorNoteEditor);
+                        parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
                 }
