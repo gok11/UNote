@@ -340,7 +340,7 @@ namespace UNote.Editor
                 subInfoStyle.marginTop = subInfoStyle.marginLeft = subInfoStyle.marginRight= 2;
                 subInfoStyle.borderTopWidth = subInfoStyle.borderBottomWidth =
                     subInfoStyle.borderLeftWidth = subInfoStyle.borderRightWidth = 1;
-                subInfoStyle.height = 42 * lineCount;
+                subInfoStyle.height = 22 * lineCount;
             }
             else
             {
