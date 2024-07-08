@@ -50,7 +50,7 @@ namespace UNote.Editor
                     continue;
                 }
                 
-                VisualElement inspectorNoteEditor = window.rootVisualElement.Q("InspectorNoteEditor");
+                VisualElement inspectorNoteEditor = window.rootVisualElement.Q(nameof(InspectorNoteEditor));
                 if (inspectorNoteEditor != null)
                 {
                     continue;
@@ -100,8 +100,11 @@ namespace UNote.Editor
                 {
                     if (editor.target is GameObject)
                     {
-                        inspectorNoteEditor = new InspectorNoteEditor(NoteType.Sceene, editor.target);
-                        parentElement.Insert(insertIndex, inspectorNoteEditor);
+                        // Not supported yet
+                        parentElement.Insert(insertIndex, new VisualElement { name = nameof(InspectorNoteEditor) });
+
+                        // inspectorNoteEditor = new InspectorNoteEditor(NoteType.Scene, editor.target);
+                        // parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
                 }

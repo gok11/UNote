@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
 using Object = UnityEngine.Object;
@@ -14,6 +15,7 @@ namespace UNote.Editor
         private VisualElement m_content;
         
         // Note list
+        private VisualElement m_noteListBorder;
         private ScrollView m_noteList;
         private VisualElement m_footerElem;
         
@@ -29,6 +31,7 @@ namespace UNote.Editor
             m_foldout = contentContainer.Q<Foldout>("Foldout");
             m_content = contentContainer.Q("Content");
 
+            m_noteListBorder = contentContainer.Q("NoteListBorder");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
             
             EditorApplication.delayCall += () =>
@@ -39,7 +42,16 @@ namespace UNote.Editor
 
             m_foldout.RegisterValueChangedCallback(opened =>
             {
+                
                 m_content.style.display = opened.newValue ? DisplayStyle.Flex : DisplayStyle.None;
+
+                if (m_footerElem != null && m_noteList.Contains(m_footerElem))
+                {
+                    EditorApplication.delayCall += () =>
+                    {
+                        m_noteList.ScrollTo(m_footerElem);
+                    };
+                }
             });
         }
 
@@ -48,6 +60,7 @@ namespace UNote.Editor
             m_noteList.contentContainer.Clear();
 
             m_noteList.visible = false;
+            m_noteListBorder.style.display = DisplayStyle.None;
             
             m_footerElem = new VisualElement();
             m_footerElem.name = "footer_elem";
@@ -58,7 +71,6 @@ namespace UNote.Editor
             switch (noteType)
             {
                 case NoteType.Asset:
-                {
                     string assetPath = AssetDatabase.GetAssetPath(target);
                     string assetGuid = AssetDatabase.AssetPathToGUID(assetPath);
                     
@@ -66,21 +78,27 @@ namespace UNote.Editor
                     {
                         m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(leafNote));
                     }
-                } 
                     break;
                 
                 default:
                     throw new NotImplementedException();
             }
             
-            // スクロールが正しくできるよう待つ
             if (m_noteList != null)
             {
-                if (m_noteList.Contains(m_footerElem))
+                EditorApplication.delayCall += () =>
                 {
-                    m_noteList.ScrollTo(m_footerElem);   
+                    if (m_noteList.Contains(m_footerElem))
+                    {
+                        m_noteList.ScrollTo(m_footerElem);   
+                    }
+                    m_noteList.visible = true;
+                };
+                
+                if (m_noteList.childCount > 1)
+                {
+                    m_noteListBorder.style.display = DisplayStyle.Flex;
                 }
-                m_noteList.visible = true;   
             }
         }
     }
