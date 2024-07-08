@@ -11,7 +11,6 @@ namespace UNote.Editor
 {
     public class UNoteEditorContentElem : VisualElement
     {
-        private UNoteEditor m_noteEditor;
         private NoteBase m_note;
 
         private Label m_contentText;
@@ -21,9 +20,8 @@ namespace UNote.Editor
         private TextField m_editField;
         private Button m_sendButton;
 
-        public UNoteEditorContentElem(UNoteEditor noteEditor, NoteBase note)
+        public UNoteEditorContentElem(NoteBase note)
         {
-            m_noteEditor = noteEditor;
             m_note = note;
             
             VisualTreeAsset noteContentTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(

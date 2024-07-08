@@ -28,15 +28,17 @@ namespace UNote.Editor
 
         private VisualElement m_subInfoArea;
         
+        // Note list
         private ScrollView m_noteList;
+        private VisualElement m_footerElem;
+        
+        // Note input field
         private TextField m_inputText;
         private ScrollView m_inputScroll;
-
         private Label m_authorLabel;
         private Button m_sendButton;
 
         private float m_lastScrollPosition;
-        private VisualElement m_footerElem;
 
         public UNoteEditorRightPane(UNoteEditor noteEditor)
         {
@@ -256,15 +258,15 @@ namespace UNote.Editor
                     break;
                 
                 case NoteType.Asset:
-                    SetSubInfoStyle(1);
-                    
                     ObjectField assetField = new ObjectField("Reference Asset");
                     Object referenceAsset =
                         AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(note.NoteId));
                     assetField.SetValueWithoutNotify(referenceAsset);
                     assetField.style.fontSize = 10;
                     assetField.SetEnabled(false);
+
                     m_subInfoArea.Add(assetField);
+                    SetSubInfoStyle(1);
                     break;
             }
 
@@ -284,7 +286,7 @@ namespace UNote.Editor
 
                     foreach (var leafNote in EditorUNoteManager.GetProjectLeafNoteListByProjectNoteId(projectNoteId))
                     {
-                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(m_noteEditor, leafNote));
+                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(leafNote));
                     }
                     break;
                 
@@ -294,7 +296,7 @@ namespace UNote.Editor
 
                     foreach (var leafNote in EditorUNoteManager.GetAssetLeafNoteListByNoteId(assetNoteNoteId))
                     {
-                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(m_noteEditor, leafNote));
+                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(leafNote));
                     }
                     break;
                 
