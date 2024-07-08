@@ -4,7 +4,9 @@
             <ui:Foldout text="UNote" name="Foldout" style="background-color: rgba(62, 62, 62, 0); border-top-color: rgba(25, 25, 25, 0); border-top-width: 1px; border-bottom-color: rgba(50, 50, 50, 0); border-bottom-width: 1px; padding-top: 0; padding-bottom: 0; margin-top: 0; -unity-font-style: bold; height: auto; margin-left: 16px;" />
         </ui:VisualElement>
         <ui:VisualElement name="Content" style="flex-grow: 1;">
-            <ui:ScrollView name="NoteList" style="margin-left: 16px; max-height: none;" />
+            <ui:VisualElement name="NoteListBorder" style="flex-grow: 1; margin-right: 2px; margin-left: 18px; border-left-color: rgb(87, 87, 87); border-right-color: rgb(87, 87, 87); border-top-color: rgb(87, 87, 87); border-bottom-color: rgb(87, 87, 87); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; max-height: 200px; min-height: 0; display: none;">
+                <ui:ScrollView name="NoteList" style="margin-left: 0; max-height: none; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+            </ui:VisualElement>
             <ui:VisualElement name="NoteInputField" style="max-height: none; height: 120px; min-height: auto; margin-left: 16px;">
                 <ui:VisualElement name="NoteInputField" style="flex-grow: 1; height: 200px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(87, 87, 87); border-right-color: rgb(87, 87, 87); border-top-color: rgb(87, 87, 87); border-bottom-color: rgb(87, 87, 87); max-height: none; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; min-height: 120px; background-color: rgba(0, 0, 0, 0);">
                     <ui:VisualElement name="HeaderArea" style="flex-grow: 1;">
