@@ -22,6 +22,7 @@ namespace UNote.Editor
 
         #region Field
 
+        public string test;
         [SerializeField] private AssetInternalContainer m_assetNoteContainer;
 
         private Dictionary<string, AssetInternalContainer> m_assetNoteDict = new();

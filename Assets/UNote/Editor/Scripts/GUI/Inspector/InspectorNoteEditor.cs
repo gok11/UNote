@@ -18,6 +18,8 @@ namespace UNote.Editor
         private VisualElement m_noteListBorder;
         private ScrollView m_noteList;
         private VisualElement m_footerElem;
+
+        private NoteInputField m_noteInputField;
         
         public InspectorNoteEditor(NoteType noteType, Object target)
         {
@@ -33,6 +35,9 @@ namespace UNote.Editor
 
             m_noteListBorder = contentContainer.Q("NoteListBorder");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
+
+            m_noteInputField = new NoteInputField();
+            contentContainer.Add(m_noteInputField);
             
             EditorApplication.delayCall += () =>
             EditorApplication.delayCall += () =>
