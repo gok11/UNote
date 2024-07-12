@@ -12,6 +12,8 @@ namespace UNote.Editor
     [Serializable]
     public class NoteInputField : VisualElement
     {
+        private NoteBase m_bindNote;
+        
         [SerializeField]
         private NoteEditorModel m_model;
         
@@ -22,9 +24,11 @@ namespace UNote.Editor
         
         private float m_lastScrollPosition;
         
-        public NoteInputField()
+        public NoteInputField(NoteBase bindNote)
         {
             name = nameof(NoteInputField);
+
+            m_bindNote = bindNote;
 
             m_model = ScriptableObject.CreateInstance<NoteEditorModel>();
             
@@ -86,13 +90,12 @@ namespace UNote.Editor
 
             m_inputText.Unbind();
             
-            NoteBase note = EditorUNoteManager.CurrentNote;
             NoteBase newLeafNote = null;
 
-            switch (note.NoteType)
+            switch (m_bindNote.NoteType)
             {
                 case NoteType.Project:
-                    if (note is ProjectNote projectNote)
+                    if (m_bindNote is ProjectNote projectNote)
                     {
                         newLeafNote = EditorUNoteManager.AddNewLeafProjectNote(
                             projectNote.NoteId,
@@ -102,7 +105,7 @@ namespace UNote.Editor
                     break;
                 
                 case NoteType.Asset:
-                    if (note is AssetNote assetNote)
+                    if (m_bindNote is AssetNote assetNote)
                     {
                         newLeafNote = EditorUNoteManager.AddLeafAssetNote(
                             assetNote.NoteId,
