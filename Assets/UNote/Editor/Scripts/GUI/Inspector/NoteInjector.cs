@@ -89,7 +89,8 @@ namespace UNote.Editor
                 {
                     if (PrefabUtility.IsPartOfPrefabAsset(editor.target))
                     {
-                        inspectorNoteEditor = new InspectorNoteEditor(NoteType.Asset, editor.target);
+                        AssetNote note = EditorUNoteManager.AddOrGetAssetNote(editor.target);
+                        inspectorNoteEditor = new InspectorNoteEditor(note, editor.target);
                         parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
@@ -114,7 +115,8 @@ namespace UNote.Editor
                 {
                     if (editor.target is not Component)
                     {
-                        inspectorNoteEditor = new InspectorNoteEditor(NoteType.Asset, editor.target);
+                        AssetNote note = EditorUNoteManager.AddOrGetAssetNote(editor.target);
+                        inspectorNoteEditor = new InspectorNoteEditor(note, editor.target);
                         parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }

@@ -21,7 +21,7 @@ namespace UNote.Editor
 
         private NoteInputField m_noteInputField;
         
-        public InspectorNoteEditor(NoteType noteType, Object target)
+        public InspectorNoteEditor(NoteBase note, Object target)
         {
             name = nameof(InspectorNoteEditor);
             
@@ -36,13 +36,14 @@ namespace UNote.Editor
             m_noteListBorder = contentContainer.Q("NoteListBorder");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
 
-            m_noteInputField = new NoteInputField();
-            contentContainer.Add(m_noteInputField);
+            m_noteInputField = new NoteInputField(note);
+            m_noteInputField.style.marginLeft = 16;
+            m_content.Add(m_noteInputField);
             
             EditorApplication.delayCall += () =>
             EditorApplication.delayCall += () =>
             {
-                SetupNoteList(noteType, target);
+                SetupNoteList(note.NoteType, target);
             };
 
             m_foldout.RegisterValueChangedCallback(opened =>
@@ -58,6 +59,9 @@ namespace UNote.Editor
                     };
                 }
             });
+
+            EditorUNoteManager.OnNoteAdded += note => SetupNoteList(note.NoteType, target);
+            EditorUNoteManager.OnNoteDeleted += note => SetupNoteList(note.NoteType, target);
         }
 
         private void SetupNoteList(NoteType noteType, Object target)
