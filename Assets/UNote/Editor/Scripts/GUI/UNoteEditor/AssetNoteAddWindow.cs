@@ -25,7 +25,9 @@ namespace UNote.Editor
             addButton.SetEnabled(false);
             addButton.clicked += () =>
             {
-                AssetNote assetNote = EditorUNoteManager.AddOrGetAssetNote(assetField.value);
+                string path = AssetDatabase.GetAssetPath(assetField.value);
+                string guid = AssetDatabase.AssetPathToGUID(path);
+                AssetLeafNote assetNote = EditorUNoteManager.AddNewLeafAssetNote(guid, "");
                 EditorUNoteManager.SelectNote(assetNote);
                 
                 Close();

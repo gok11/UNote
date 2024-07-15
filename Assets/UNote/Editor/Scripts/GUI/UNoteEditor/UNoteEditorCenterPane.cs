@@ -109,7 +109,7 @@ namespace UNote.Editor
 
                 case NoteType.Asset:
                     m_noteCategoryLabel.text = "Asset Note";
-                    notes = EditorUNoteManager.GetAllAssetNotes();
+                    notes = EditorUNoteManager.GetAllAssetLeafNotesDistinct();
                     break;
                 
                 default:

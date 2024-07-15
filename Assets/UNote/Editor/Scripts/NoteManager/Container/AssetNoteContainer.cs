@@ -14,7 +14,6 @@ namespace UNote.Editor
         [Serializable]
         private class AssetInternalContainer
         {
-            public List<AssetNote> m_assetNoteList = new List<AssetNote>();
             public List<AssetLeafNote> m_assetLeafNoteList = new List<AssetLeafNote>();
         }
 
@@ -67,30 +66,10 @@ namespace UNote.Editor
             return m_assetNoteDict[authorName];
         }
 
-        public List<AssetNote> GetOwnAssetNoteList() => GetContainerSafe().m_assetNoteList;
         public List<AssetLeafNote> GetOwnAssetLeafNoteList() => GetContainerSafe().m_assetLeafNoteList;
-
-        public IEnumerable<List<AssetNote>> GetAssetNoteListAll() =>
-            m_assetNoteDict.Values.Where(t => t != null).Select(t => t.m_assetNoteList);
-
+        
         public IEnumerable<List<AssetLeafNote>> GetAssetLeafNoteListAll() =>
             m_assetNoteDict.Values.Select(t => t.m_assetLeafNoteList);
-
-        public AssetNote GetAssetNoteByGuid(string guid)
-        {
-            foreach (var noteList in GetAssetNoteListAll())
-            {
-                foreach (var assetNote in noteList)
-                {
-                    if (assetNote.NoteId == guid)
-                    {
-                        return assetNote;
-                    }
-                }
-            }
-
-            return null;
-        }
 
         public List<AssetLeafNote> GetAssetLeafNoteListByGuid(string guid)
         {
