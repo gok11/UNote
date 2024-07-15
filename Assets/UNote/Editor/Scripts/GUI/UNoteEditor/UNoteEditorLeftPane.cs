@@ -13,6 +13,8 @@ namespace UNote.Editor
         
         private Dictionary<NoteType, VisualElement> m_categoryElemDict = new();
 
+        private NoteType m_currentNoteType = NoteType.Project;
+
         public UNoteEditorLeftPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorLeftPane);
@@ -53,23 +55,33 @@ namespace UNote.Editor
                     SelectCategoryElem(category.Key);
                 });
             }
+
+            EditorUNoteManager.OnNoteSelected += note =>
+            {
+                if (note != null)
+                {
+                    SelectCategoryElem(note.NoteType);   
+                }
+            };
         }
 
         private void SelectCategoryElem(NoteType noteType)
         {
+            // Set background color
             foreach (var category in m_categoryElemDict)
             {
                 m_categoryElemDict[category.Key].contentContainer.style.backgroundColor =
                     noteType == category.Key ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
             }
             
+            // Select internal
+            if (noteType == m_currentNoteType)
+            {
+                return;
+            }
+            
             m_noteEditor.CenterPane?.SetupListItems();
-            EditorUNoteManager.SelectCategory(noteType);
+            m_currentNoteType = noteType;
         }
-
-        /// <summary>
-        /// Toggle fold state
-        /// </summary>
-        public void ToggleFoldState() { }
     }
 }

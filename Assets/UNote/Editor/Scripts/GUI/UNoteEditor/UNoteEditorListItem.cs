@@ -126,14 +126,8 @@ namespace UNote.Editor
 
         public void SelectItem(bool select)
         {
-            if (select)
-            {
-                m_noteListItem.style.backgroundColor = StyleUtil.SelectColor;
-            }
-            else
-            {
-                m_noteListItem.style.backgroundColor = StyleUtil.UnselectColor;
-            }
+            m_noteListItem.style.backgroundColor = select ?
+                StyleUtil.SelectColor : StyleUtil.UnselectColor;
         }
 
         private void ShowContextMenu()
@@ -161,7 +155,8 @@ namespace UNote.Editor
             //         EditorUNoteManager.ToggleArchived(m_note);
             //     }
             // );
-            // menu.ShowAsContext();
+            
+            menu.ShowAsContext();
         }
     }
 }

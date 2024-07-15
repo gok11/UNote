@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,9 +10,10 @@ using Object = UnityEngine.Object;
 
 namespace UNote.Editor
 {
-    public class InspectorNoteEditor : VisualElement
+    public sealed class InspectorNoteEditor : VisualElement
     {
         private Foldout m_foldout;
+        private Button m_openButton;
         private VisualElement m_content;
         
         // Note list
@@ -34,6 +36,7 @@ namespace UNote.Editor
             contentContainer.Add(tree.Instantiate());
 
             m_foldout = contentContainer.Q<Foldout>("Foldout");
+            m_openButton = contentContainer.Q<Button>("OpenButton");
             m_content = contentContainer.Q("Content");
 
             m_noteListBorder = contentContainer.Q("NoteListBorder");
@@ -62,6 +65,25 @@ namespace UNote.Editor
                     };
                 }
             });
+
+            m_openButton.SetEnabled(false);
+            m_openButton.clicked += () =>
+            {
+                EditorUNoteManager.SelectCategory(noteType);
+                
+                switch (noteType)
+                {
+                    case NoteType.Asset:
+                        string assetPath = AssetDatabase.GetAssetPath(target);
+                        string assetGuid = AssetDatabase.AssetPathToGUID(assetPath);
+                        NoteBase note = EditorUNoteManager.GetAssetLeafNoteListByNoteId(assetGuid).First();
+                        EditorUNoteManager.SelectNote(note);
+                        break;
+                    
+                    default:
+                        throw new NotImplementedException();
+                }
+            };
 
             EditorUNoteManager.OnNoteAdded += _ => SetupNoteList(noteType, target);
             EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList(noteType, target);
@@ -98,6 +120,7 @@ namespace UNote.Editor
         private void SetupNoteList(NoteType noteType, Object target)
         {
             m_noteList.contentContainer.Clear();
+            m_openButton.SetEnabled(false);
 
             m_noteList.visible = false;
             m_noteListBorder.style.display = DisplayStyle.None;
@@ -138,6 +161,7 @@ namespace UNote.Editor
                 if (m_noteList.childCount > 1)
                 {
                     m_noteListBorder.style.display = DisplayStyle.Flex;
+                    m_openButton.SetEnabled(true);
                 }
             }
         }
