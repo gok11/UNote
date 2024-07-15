@@ -17,6 +17,7 @@ namespace UNote.Editor
         private UNoteEditor m_noteEditor;
 
         private Label m_noteCategoryLabel;
+        private Button m_noteAddButton;
         
         private ScrollView m_noteScroll;
 
@@ -36,6 +37,7 @@ namespace UNote.Editor
             contentContainer.Add(template);
 
             m_noteCategoryLabel = template.Q<Label>("NoteCategoryLabel");
+            m_noteAddButton = template.Q<Button>("AddButton");
             
             m_noteScroll = template.Q<ScrollView>("NoteList");
 
@@ -50,11 +52,13 @@ namespace UNote.Editor
                     ShowContextMenu(evt.mousePosition);
                 }
             });
+
+            m_noteAddButton.clicked += AddNewNote;
             
             // Register note event
-            EditorUNoteManager.OnNoteAdded += note => SetupListItems();
-            EditorUNoteManager.OnNoteSelected += note => UpdateNoteList();
-            EditorUNoteManager.OnNoteDeleted += note => SetupListItems();
+            EditorUNoteManager.OnNoteAdded += _ => SetupListItems();
+            EditorUNoteManager.OnNoteSelected += _ => UpdateNoteList();
+            EditorUNoteManager.OnNoteDeleted += _ => SetupListItems();
         }
 
         private void ShowContextMenu(Vector2 mousePosition)
@@ -63,33 +67,35 @@ namespace UNote.Editor
             menu.AddItem(
                 new GUIContent("New Note"),
                 false,
-                () =>
-                {
-                    NoteBase newNote = null;
-                    
-                    // メモ追加
-                    switch (EditorUNoteManager.CurrentNoteType)
-                    {
-                        case NoteType.Project:
-                            newNote = EditorUNoteManager.AddNewProjectNote();
-                            break;
-                        
-                        case NoteType.Asset:
-                            AssetNoteAddWindow addWindow = ScriptableObject.CreateInstance<AssetNoteAddWindow>();
-                            addWindow.ShowUtility();
-                            break;
-                        
-                        default:
-                            throw new NotImplementedException();
-                    }
-
-                    if (newNote != null)
-                    {
-                        EditorUNoteManager.SelectNote(newNote);
-                    }
-                }
+                AddNewNote
             );
             menu.ShowAsContext();
+        }
+
+        private void AddNewNote()
+        {
+            NoteBase newNote = null;
+                    
+            // メモ追加
+            switch (EditorUNoteManager.CurrentNoteType)
+            {
+                case NoteType.Project:
+                    newNote = EditorUNoteManager.AddNewProjectNote();
+                    break;
+                        
+                case NoteType.Asset:
+                    AssetNoteAddWindow addWindow = ScriptableObject.CreateInstance<AssetNoteAddWindow>();
+                    addWindow.ShowUtility();
+                    break;
+                        
+                default:
+                    throw new NotImplementedException();
+            }
+
+            if (newNote != null)
+            {
+                EditorUNoteManager.SelectNote(newNote);
+            }
         }
 
         public void SetupListItems()

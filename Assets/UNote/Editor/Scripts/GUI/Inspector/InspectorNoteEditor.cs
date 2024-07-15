@@ -63,8 +63,8 @@ namespace UNote.Editor
                 }
             });
 
-            EditorUNoteManager.OnNoteAdded += note => SetupNoteList(note.NoteType, target);
-            EditorUNoteManager.OnNoteDeleted += note => SetupNoteList(note.NoteType, target);
+            EditorUNoteManager.OnNoteAdded += _ => SetupNoteList(noteType, target);
+            EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList(noteType, target);
         }
 
         private NoteType GetTargetNoteType(Object target)
