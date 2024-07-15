@@ -12,7 +12,8 @@ namespace UNote.Editor
     [Serializable]
     public class NoteInputField : VisualElement
     {
-        private NoteBase m_bindNote;
+        private NoteType m_bindNoteType;
+        private string m_bindId;
         
         [SerializeField]
         private NoteEditorModel m_model;
@@ -24,11 +25,12 @@ namespace UNote.Editor
         
         private float m_lastScrollPosition;
         
-        public NoteInputField(NoteBase bindNote)
+        public NoteInputField(NoteType noteType, string bindId)
         {
             name = nameof(NoteInputField);
 
-            m_bindNote = bindNote;
+            m_bindNoteType = noteType;
+            m_bindId = bindId;
 
             m_model = ScriptableObject.CreateInstance<NoteEditorModel>();
             
@@ -92,26 +94,20 @@ namespace UNote.Editor
             
             NoteBase newLeafNote = null;
 
-            switch (m_bindNote.NoteType)
+            switch (m_bindNoteType)
             {
                 case NoteType.Project:
-                    if (m_bindNote is ProjectNote projectNote)
-                    {
-                        newLeafNote = EditorUNoteManager.AddNewLeafProjectNote(
-                            projectNote.NoteId,
-                            m_inputText.value
-                        );   
-                    }
+                    newLeafNote = EditorUNoteManager.AddNewLeafProjectNote(
+                        m_bindId,
+                        m_inputText.value
+                    );   
                     break;
                 
                 case NoteType.Asset:
-                    if (m_bindNote is AssetNote assetNote)
-                    {
-                        newLeafNote = EditorUNoteManager.AddLeafAssetNote(
-                            assetNote.NoteId,
-                            m_inputText.value
-                        );
-                    }
+                    newLeafNote = EditorUNoteManager.AddLeafAssetNote(
+                        m_bindId,
+                        m_inputText.value
+                    );
                     break;
 
                 default:

@@ -87,10 +87,11 @@ namespace UNote.Editor
                 // プレハブかを最初に判別
                 foreach (var editor in activeEditors)
                 {
-                    if (PrefabUtility.IsPartOfPrefabAsset(editor.target))
+                    Object target = editor.target;
+                    if (PrefabUtility.IsPartOfPrefabAsset(target))
                     {
-                        AssetNote note = EditorUNoteManager.AddOrGetAssetNote(editor.target);
-                        inspectorNoteEditor = new InspectorNoteEditor(note, editor.target);
+                        AssetNote note = EditorUNoteManager.AddOrGetAssetNote(target);
+                        inspectorNoteEditor = new InspectorNoteEditor(target);
                         parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
@@ -99,12 +100,13 @@ namespace UNote.Editor
                 // ゲームオブジェクトかを次に判別
                 foreach (var editor in activeEditors)
                 {
-                    if (editor.target is GameObject)
+                    Object target = editor.target;
+                    if (target is GameObject)
                     {
                         // Not supported yet
                         parentElement.Insert(insertIndex, new VisualElement { name = nameof(InspectorNoteEditor) });
 
-                        // inspectorNoteEditor = new InspectorNoteEditor(NoteType.Scene, editor.target);
+                        // inspectorNoteEditor = new InspectorNoteEditor(NoteType.Scene, target);
                         // parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
@@ -113,10 +115,11 @@ namespace UNote.Editor
                 // コンポーネントは除外しつつ登録 (DefaultAsset等)
                 foreach (var editor in activeEditors)
                 {
-                    if (editor.target is not Component)
+                    Object target = editor.target;
+                    if (target is not Component)
                     {
-                        AssetNote note = EditorUNoteManager.AddOrGetAssetNote(editor.target);
-                        inspectorNoteEditor = new InspectorNoteEditor(note, editor.target);
+                        AssetNote note = EditorUNoteManager.AddOrGetAssetNote(target);
+                        inspectorNoteEditor = new InspectorNoteEditor(target);
                         parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
