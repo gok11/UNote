@@ -21,9 +21,12 @@ namespace UNote.Editor
 
         private NoteInputField m_noteInputField;
         
-        public InspectorNoteEditor(NoteBase note, Object target)
+        public InspectorNoteEditor(Object target)
         {
             name = nameof(InspectorNoteEditor);
+
+            NoteType noteType = GetTargetNoteType(target);
+            string noteId = GetBindId(noteType, target);
             
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.InspectorNoteEditor
@@ -36,14 +39,14 @@ namespace UNote.Editor
             m_noteListBorder = contentContainer.Q("NoteListBorder");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
 
-            m_noteInputField = new NoteInputField(note);
+            m_noteInputField = new NoteInputField(noteType, noteId);
             m_noteInputField.style.marginLeft = 16;
             m_content.Add(m_noteInputField);
             
             EditorApplication.delayCall += () =>
             EditorApplication.delayCall += () =>
             {
-                SetupNoteList(note.NoteType, target);
+                SetupNoteList(noteType, target);
             };
 
             m_foldout.RegisterValueChangedCallback(opened =>
@@ -64,6 +67,34 @@ namespace UNote.Editor
             EditorUNoteManager.OnNoteDeleted += note => SetupNoteList(note.NoteType, target);
         }
 
+        private NoteType GetTargetNoteType(Object target)
+        {
+            if (PrefabUtility.IsPartOfPrefabAsset(target))
+            {
+                return NoteType.Asset;
+            }
+
+            if (target is GameObject)
+            {
+                return NoteType.Scene;
+            }
+
+            return NoteType.Asset;
+        }
+
+        private string GetBindId(NoteType noteType, Object target)
+        {
+            switch (noteType)
+            {
+                case NoteType.Asset:
+                    string path = AssetDatabase.GetAssetPath(target);
+                    return AssetDatabase.AssetPathToGUID(path);
+                
+                default:
+                    return null;
+            }
+        }
+        
         private void SetupNoteList(NoteType noteType, Object target)
         {
             m_noteList.contentContainer.Clear();
