@@ -108,9 +108,9 @@ namespace UNote.Editor
             contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
             
             // Register note event
-            EditorUNoteManager.OnNoteAdded += note => SetupNoteList();
-            EditorUNoteManager.OnNoteSelected += note => SetupNoteList();
-            EditorUNoteManager.OnNoteDeleted += note => SetupNoteList();
+            EditorUNoteManager.OnNoteAdded += _ => SetupNoteList();
+            EditorUNoteManager.OnNoteSelected += _ => SetupNoteList();
+            EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList();
         }
 
         private void OnKeyDown(KeyDownEvent evt)
@@ -339,16 +339,14 @@ namespace UNote.Editor
             
             if (lineCount > 0)
             {
-                subInfoStyle.marginTop = subInfoStyle.marginLeft = subInfoStyle.marginRight= 2;
-                subInfoStyle.borderTopWidth = subInfoStyle.borderBottomWidth =
-                    subInfoStyle.borderLeftWidth = subInfoStyle.borderRightWidth = 1;
+                subInfoStyle.SetMargin(2,0,2,2);
+                subInfoStyle.SetBorderWidth(1);
                 subInfoStyle.height = 22 * lineCount;
             }
             else
             {
-                subInfoStyle.marginTop = subInfoStyle.marginLeft = subInfoStyle.marginRight= 0;
-                subInfoStyle.borderTopWidth = subInfoStyle.borderBottomWidth =
-                    subInfoStyle.borderLeftWidth = subInfoStyle.borderRightWidth = 0;
+                subInfoStyle.SetMargin(0);
+                subInfoStyle.SetBorderWidth(0);
                 subInfoStyle.height = 0;
             }
         }

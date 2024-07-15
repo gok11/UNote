@@ -151,16 +151,17 @@ namespace UNote.Editor
                 }
             );
 
-            string archiveLabel = m_note.Archived ? "Unarchived" : "Archive";
-            menu.AddItem(
-                new GUIContent(archiveLabel),
-                false,
-                () =>
-                {
-                    EditorUNoteManager.ToggleArchived(m_note);
-                }
-            );
-            menu.ShowAsContext();
+            // Note supported yet
+            // string archiveLabel = m_note.Archived ? "Unarchived" : "Archive";
+            // menu.AddItem(
+            //     new GUIContent(archiveLabel),
+            //     false,
+            //     () =>
+            //     {
+            //         EditorUNoteManager.ToggleArchived(m_note);
+            //     }
+            // );
+            // menu.ShowAsContext();
         }
     }
 }

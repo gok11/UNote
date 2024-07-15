@@ -12,8 +12,11 @@ namespace UNote.Editor
     {
         private void CreateGUI()
         {
+            titleContent = new GUIContent("New Asset Note");
+            
             // Label
             Label label = new Label("Bind Asset");
+            label.style.SetMargin(2, 2, 2, 0);
             
             // Bind Asset
             ObjectField assetField = new ObjectField("Target Asset");
