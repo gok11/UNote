@@ -57,7 +57,7 @@ namespace UNote.Editor
                         break;
                     
                     case NoteType.Asset:
-                        Instance.m_currentNote = GetAllAssetNotes()?.FirstOrDefault();
+                        Instance.m_currentNote = GetAllAssetLeafNotes()?.FirstOrDefault();
                         break;
                 }
 
@@ -177,44 +177,8 @@ namespace UNote.Editor
         {
             return new SerializedObject(AssetNoteContainer);
         }
-
-        public static AssetNote AddOrGetAssetNote(Object asset)
-        {
-            if (!asset)
-            {
-                Debug.LogError("Asset is null");
-                return null;
-            }
-            
-            string assetPath = AssetDatabase.GetAssetPath(asset);
-            string guid = AssetDatabase.AssetPathToGUID(assetPath);
-
-            AssetNote note = AssetNoteContainer.GetAssetNoteByGuid(guid);
-            if (note != null)
-            {
-                OnNoteAdded?.Invoke(note);
-                return note;
-            }
-            
-            Undo.RecordObject(AssetNoteContainer, "UNote Add New Asset Note");
-            
-            AssetNote newNote = new AssetNote
-            {
-                Author = UserConfig.GetUNoteSetting().UserName,
-                NoteId = guid,
-            };
-
-            newNote.ChangeNoteName(asset.name);
-
-            AssetNoteContainer.GetOwnAssetNoteList().Add(newNote);
-            AssetNoteContainer.Save();
-
-            OnNoteAdded?.Invoke(newNote);
-            
-            return newNote;
-        }
         
-        public static AssetLeafNote AddLeafAssetNote(string guid, string noteContent)
+        public static AssetLeafNote AddNewLeafAssetNote(string guid, string noteContent)
         {
             Undo.RecordObject(AssetNoteContainer, "UNote Add New Project Note");
             
@@ -233,12 +197,13 @@ namespace UNote.Editor
             return newNote;
         }
 
-        public static IEnumerable<AssetNote> GetAllAssetNotes() =>
-            AssetNoteContainer.GetAssetNoteListAll().SelectMany(t => t);
-
         public static IEnumerable<AssetLeafNote> GetAllAssetLeafNotes() =>
             AssetNoteContainer.GetAssetLeafNoteListAll().SelectMany(t => t);
 
+        public static IEnumerable<AssetLeafNote> GetAllAssetLeafNotesDistinct() =>
+            GetAllAssetLeafNotes().GroupBy(t => t.NoteId)
+                .Select(t => t.OrderBy(t2 => t2.CreatedDate).First());
+        
         public static IReadOnlyList<AssetLeafNote> GetAssetLeafNoteListByNoteId(string noteId) =>
             AssetNoteContainer.GetAssetLeafNoteListByGuid(noteId);
 
@@ -298,19 +263,7 @@ namespace UNote.Editor
                 case NoteType.Asset:
                     Undo.RecordObject(AssetNoteContainer, "Delete Asset Note");
                     
-                    if (note is AssetNote assetNote)
-                    {
-                        List<AssetNote> assetNoteList =
-                            AssetNoteContainer.GetOwnAssetNoteList();
-                        if (assetNoteList.Contains(assetNote))
-                        {
-                            assetNoteList.Remove(assetNote);
-                            AssetNoteContainer.Save();
-
-                            // TODO 他の所属Leaf削除
-                        }
-                    }
-                    else if (note is AssetLeafNote assetLeafNote)
+                    if (note is AssetLeafNote assetLeafNote)
                     {
                         List<AssetLeafNote> assetLeafNoteList =
                             AssetNoteContainer.GetOwnAssetLeafNoteList();

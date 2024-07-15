@@ -104,7 +104,7 @@ namespace UNote.Editor
                     break;
                 
                 case NoteType.Asset:
-                    newLeafNote = EditorUNoteManager.AddLeafAssetNote(
+                    newLeafNote = EditorUNoteManager.AddNewLeafAssetNote(
                         m_bindId,
                         m_inputText.value
                     );
