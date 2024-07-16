@@ -24,5 +24,16 @@ namespace UNote.Runtime
             }
 #endif
         }
+
+#if UNITY_EDITOR
+        [SerializeField, HideInInspector]
+        private bool m_inspectorFoldoutOpened;
+
+        public bool InspectorFoldoutOpened
+        {
+            get => m_inspectorFoldoutOpened;
+            set => m_inspectorFoldoutOpened = value;
+        }
+#endif // UNITY_EDITOR
     }
 }

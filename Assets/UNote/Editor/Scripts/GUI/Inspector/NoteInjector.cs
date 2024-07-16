@@ -102,7 +102,7 @@ namespace UNote.Editor
                     Object target = editor.target;
                     if (target is GameObject)
                     {
-                        // Not supported yet
+                        // TODO Not supported yet
                         parentElement.Insert(insertIndex, new VisualElement { name = nameof(InspectorNoteEditor) });
 
                         // inspectorNoteEditor = new InspectorNoteEditor(NoteType.Scene, target);
