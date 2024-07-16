@@ -54,7 +54,6 @@ namespace UNote.Editor
 
             m_foldout.RegisterValueChangedCallback(opened =>
             {
-                
                 m_content.style.display = opened.newValue ? DisplayStyle.Flex : DisplayStyle.None;
 
                 if (m_footerElem != null && m_noteList.Contains(m_footerElem))
@@ -64,11 +63,19 @@ namespace UNote.Editor
                         m_noteList.ScrollTo(m_footerElem);
                     };
                 }
+
+                UserConfig.GetUNoteSetting().InspectorFoldoutOpened = opened.newValue;
             });
 
+            bool foldout = UserConfig.GetUNoteSetting().InspectorFoldoutOpened;
+            m_foldout.value = foldout;
+            m_content.style.display = foldout ? DisplayStyle.Flex : DisplayStyle.None;
+            
             m_openButton.SetEnabled(false);
             m_openButton.clicked += () =>
             {
+                EditorWindow.GetWindow<UNoteEditor>();
+                
                 EditorUNoteManager.SelectCategory(noteType);
                 
                 switch (noteType)
