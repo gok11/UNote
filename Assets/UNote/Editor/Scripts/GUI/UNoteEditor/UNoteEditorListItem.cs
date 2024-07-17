@@ -39,7 +39,60 @@ namespace UNote.Editor
             m_noteListItem = contentContainer.Q("NoteListItem");
 
             m_contextButton.visible = false;
+            
+            // Handle mouse event
+            contentContainer.RegisterCallback<MouseDownEvent>(evt =>
+            {
+                if (EditorUNoteManager.CurrentNote != m_note)
+                {
+                    EditorUNoteManager.SelectNote(m_note);
+                }
 
+                evt.StopPropagation();
+            });
+        }
+
+        public void Setup(NoteBase note)
+        {
+            m_note = note;
+
+            m_nameLabel.text = note.NoteName;
+
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                {
+                    ProjectLeafNote leafNote = EditorUNoteManager
+                        .GetProjectLeafNoteListByProjectNoteId(note.NoteId)
+                        .OrderByDescending(t => t.CreatedDate)
+                        .FirstOrDefault();
+
+                    m_noteContentLabel.text = leafNote
+                        ?.NoteContent.Replace("\r", " ")
+                        .Replace("\n", " ");
+
+                    RegisterMouseEvent();
+                    break;
+                } 
+
+                case NoteType.Asset:
+                {
+                    AssetLeafNote leafNote = EditorUNoteManager
+                        .GetAssetLeafNoteListByNoteId(note.NoteId)
+                        .OrderByDescending(t => t.CreatedDate)
+                        .FirstOrDefault();
+
+                    m_noteContentLabel.text = leafNote
+                        ?.NoteContent.Replace("\r", " ")
+                        .Replace("\n", " ");
+                    break;
+                }
+            }
+            Focus();
+        }
+
+        private void RegisterMouseEvent()
+        {
             // Handle mouse event
             contentContainer.RegisterCallback<MouseDownEvent>(evt =>
             {
@@ -85,43 +138,6 @@ namespace UNote.Editor
             {
                 ShowContextMenu();
             };
-        }
-
-        public void Setup(NoteBase note)
-        {
-            m_note = note;
-
-            m_nameLabel.text = note.NoteName;
-
-            switch (note.NoteType)
-            {
-                case NoteType.Project:
-                {
-                    ProjectLeafNote leafNote = EditorUNoteManager
-                        .GetProjectLeafNoteListByProjectNoteId(note.NoteId)
-                        .OrderByDescending(t => t.CreatedDate)
-                        .FirstOrDefault();
-
-                    m_noteContentLabel.text = leafNote
-                        ?.NoteContent.Replace("\r", " ")
-                        .Replace("\n", " ");
-                    break;
-                } 
-
-                case NoteType.Asset:
-                {
-                    AssetLeafNote leafNote = EditorUNoteManager
-                        .GetAssetLeafNoteListByNoteId(note.NoteId)
-                        .OrderByDescending(t => t.CreatedDate)
-                        .FirstOrDefault();
-
-                    m_noteContentLabel.text = leafNote
-                        ?.NoteContent.Replace("\r", " ")
-                        .Replace("\n", " ");
-                    break;
-                }
-            }
-            Focus();
         }
 
         public void SelectItem(bool select)

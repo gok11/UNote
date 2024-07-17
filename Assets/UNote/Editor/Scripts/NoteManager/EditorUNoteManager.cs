@@ -244,8 +244,6 @@ namespace UNote.Editor
                         {
                             projectList.Remove(projectNote);
                             ProjectNoteContainer.Save();
-                            
-                            // TODO 他の所属Leaf削除
                         }
                     }
                     else if (note is ProjectLeafNote projectLeafNote)
