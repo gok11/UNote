@@ -178,11 +178,11 @@ namespace UNote.Editor
             return new SerializedObject(AssetNoteContainer);
         }
         
-        public static AssetLeafNote AddNewLeafAssetNote(string guid, string noteContent)
+        public static AssetNote AddNewLeafAssetNote(string guid, string noteContent)
         {
             Undo.RecordObject(AssetNoteContainer, "UNote Add New Project Note");
             
-            AssetLeafNote newNote = new AssetLeafNote
+            AssetNote newNote = new AssetNote
             {
                 Author = UserConfig.GetUNoteSetting().UserName,
                 NoteContent = noteContent,
@@ -197,14 +197,14 @@ namespace UNote.Editor
             return newNote;
         }
 
-        public static IEnumerable<AssetLeafNote> GetAllAssetLeafNotes() =>
+        public static IEnumerable<AssetNote> GetAllAssetLeafNotes() =>
             AssetNoteContainer.GetAssetLeafNoteListAll().SelectMany(t => t);
 
-        public static IEnumerable<AssetLeafNote> GetAllAssetLeafNotesDistinct() =>
+        public static IEnumerable<AssetNote> GetAllAssetLeafNotesDistinct() =>
             GetAllAssetLeafNotes().GroupBy(t => t.NoteId)
                 .Select(t => t.OrderBy(t2 => t2.CreatedDate).First());
         
-        public static IReadOnlyList<AssetLeafNote> GetAssetLeafNoteListByNoteId(string noteId) =>
+        public static IReadOnlyList<AssetNote> GetAssetLeafNoteListByNoteId(string noteId) =>
             AssetNoteContainer.GetAssetLeafNoteListByGuid(noteId);
 
         public static SerializedObject CreateAssetNoteContainerObject()
@@ -261,9 +261,9 @@ namespace UNote.Editor
                 case NoteType.Asset:
                     Undo.RecordObject(AssetNoteContainer, "Delete Asset Note");
                     
-                    if (note is AssetLeafNote assetLeafNote)
+                    if (note is AssetNote assetLeafNote)
                     {
-                        List<AssetLeafNote> assetLeafNoteList =
+                        List<AssetNote> assetLeafNoteList =
                             AssetNoteContainer.GetOwnAssetLeafNoteList();
                         if (assetLeafNoteList.Contains(assetLeafNote))
                         {

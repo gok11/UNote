@@ -30,7 +30,7 @@ namespace UNote.Editor
             {
                 string path = AssetDatabase.GetAssetPath(assetField.value);
                 string guid = AssetDatabase.AssetPathToGUID(path);
-                AssetLeafNote assetNote = EditorUNoteManager.AddNewLeafAssetNote(guid, "");
+                AssetNote assetNote = EditorUNoteManager.AddNewLeafAssetNote(guid, "");
                 EditorUNoteManager.SelectNote(assetNote);
                 
                 Close();

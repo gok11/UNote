@@ -147,7 +147,7 @@ namespace UNote.Editor
                     break;
                 
                 case NoteType.Asset:
-                    if (note is AssetLeafNote assetNote)
+                    if (note is AssetNote assetNote)
                     {
                         newLeafNote = EditorUNoteManager.AddNewLeafAssetNote(
                             assetNote.NoteId,
@@ -291,7 +291,7 @@ namespace UNote.Editor
                     break;
                 
                 case NoteType.Asset:
-                    AssetLeafNote assetNote = note as AssetLeafNote;
+                    AssetNote assetNote = note as AssetNote;
                     string assetNoteNoteId = assetNote?.NoteId;
 
                     foreach (var leafNote in EditorUNoteManager.GetAssetLeafNoteListByNoteId(assetNoteNoteId))
