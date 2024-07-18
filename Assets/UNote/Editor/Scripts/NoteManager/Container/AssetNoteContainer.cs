@@ -14,7 +14,7 @@ namespace UNote.Editor
         [Serializable]
         private class AssetInternalContainer
         {
-            public List<AssetLeafNote> m_assetLeafNoteList = new List<AssetLeafNote>();
+            public List<AssetNote> m_assetLeafNoteList = new List<AssetNote>();
         }
 
         #endregion // Define
@@ -24,7 +24,7 @@ namespace UNote.Editor
         [SerializeField] private AssetInternalContainer m_assetNoteContainer;
 
         private Dictionary<string, AssetInternalContainer> m_assetNoteDict = new();
-        private Dictionary<string, List<AssetLeafNote>> m_assetNoteDictByTitle = new();
+        private Dictionary<string, List<AssetNote>> m_assetNoteDictByTitle = new();
         
         #endregion // Field
         
@@ -66,19 +66,19 @@ namespace UNote.Editor
             return m_assetNoteDict[authorName];
         }
 
-        public List<AssetLeafNote> GetOwnAssetLeafNoteList() => GetContainerSafe().m_assetLeafNoteList;
+        public List<AssetNote> GetOwnAssetLeafNoteList() => GetContainerSafe().m_assetLeafNoteList;
         
-        public IEnumerable<List<AssetLeafNote>> GetAssetLeafNoteListAll() =>
+        public IEnumerable<List<AssetNote>> GetAssetLeafNoteListAll() =>
             m_assetNoteDict.Values.Select(t => t.m_assetLeafNoteList);
 
-        public List<AssetLeafNote> GetAssetLeafNoteListByGuid(string guid)
+        public List<AssetNote> GetAssetLeafNoteListByGuid(string guid)
         {
             if (m_assetNoteDictByTitle.TryGetValue(guid, out var leafNote))
             {
                 return leafNote;
             }
 
-            List<AssetLeafNote> newList = new(64);
+            List<AssetNote> newList = new(64);
 
             foreach (var noteList in GetAssetLeafNoteListAll())
             {

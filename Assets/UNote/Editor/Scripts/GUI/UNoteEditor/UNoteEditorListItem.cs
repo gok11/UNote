@@ -77,7 +77,7 @@ namespace UNote.Editor
 
                 case NoteType.Asset:
                 {
-                    AssetLeafNote leafNote = EditorUNoteManager
+                    AssetNote leafNote = EditorUNoteManager
                         .GetAssetLeafNoteListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
