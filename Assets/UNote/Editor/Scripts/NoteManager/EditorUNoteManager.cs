@@ -117,7 +117,7 @@ namespace UNote.Editor
 
         public static ProjectNote AddNewProjectNote()
         {
-            Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
+            Undo.RegisterCompleteObjectUndo(ProjectNoteContainer, "UNote Add New Project Note");
             
             ProjectNote newNote = new ProjectNote
             {
@@ -137,7 +137,7 @@ namespace UNote.Editor
 
         public static ProjectLeafNote AddNewLeafProjectNote(string guid, string noteContent)
         {
-            Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
+            Undo.RegisterCompleteObjectUndo(ProjectNoteContainer, "UNote Add New Project Note");
             
             ProjectLeafNote newNote = new ProjectLeafNote
             {
@@ -180,7 +180,7 @@ namespace UNote.Editor
         
         public static AssetNote AddNewLeafAssetNote(string guid, string noteContent)
         {
-            Undo.RecordObject(AssetNoteContainer, "UNote Add New Project Note");
+            Undo.RegisterCompleteObjectUndo(AssetNoteContainer, "UNote Add New Project Note");
             
             AssetNote newNote = new AssetNote
             {

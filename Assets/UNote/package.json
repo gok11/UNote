@@ -1,8 +1,9 @@
 {
-  "name": "com.gok.unote",
+  "name": "com.mandarin-box.unote",
   "version": "0.1.0",
   "displayName": "UNote",
   "unity": "2022.3",
+  "description": "Note tool for Unity",
   "keywords": [
     "unity",
     "note"
@@ -10,6 +11,6 @@
   "license": "MIT License",
   "author": {
     "name": "Gok",
-    "url": "https://twitter.com/backlight1144"
+    "url": "https://github.com/gok11"
   }
 }
