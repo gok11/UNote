@@ -23,6 +23,7 @@ namespace UNote.Runtime
         #region Field
 
         [SerializeField] private ProjectInternalContainer m_projectNoteContainer;
+        [SerializeField] public int val;
         private Dictionary<string, ProjectInternalContainer> m_projectNoteDict = new();
         private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByTitle = new();
 
