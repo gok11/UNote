@@ -49,16 +49,16 @@ namespace UNote.Editor
             
             m_inputText.BindProperty(m_model.EditingText);
             
-            // ボタンを押したら新しいメモを作成
+            // create note when button clicked
             m_sendButton.clicked += SendNote;
             
-            // テキストフィールド内のカーソル移動に合わせてスクロールする
+            // scroll text field according to cursor
             EditorApplication.update += () =>
             {
                 float pos = m_inputText.cursorPosition.y;
                 if (Mathf.Abs(pos - m_lastScrollPosition) > 0.1f)
                 {
-                    // Bound の更新を待つため1フレーム待つ
+                    // wait for bounds update
                     EditorApplication.delayCall += () =>
                     {
                         float min = 14.52f;
@@ -119,7 +119,7 @@ namespace UNote.Editor
                 return;
             }
             
-            // バインドしなおす前に最新の状態にする
+            // update state before rebind
             m_model.ModelObject.Update();
             m_model.EditingText.stringValue = "";
             m_model.ModelObject.ApplyModifiedProperties();
