@@ -149,7 +149,7 @@ namespace UNote.Editor
                 case NoteType.Asset:
                     if (note is AssetNote assetNote)
                     {
-                        newLeafNote = EditorUNoteManager.AddNewLeafAssetNote(
+                        newLeafNote = EditorUNoteManager.AddNewAssetNote(
                             assetNote.NoteId,
                             m_inputText.value
                         );

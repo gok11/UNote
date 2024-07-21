@@ -9,8 +9,6 @@ namespace UNote.Runtime
     [InitializeOnLoad]
     public static class RuntimeUNoteManager
     {
-        // TODO scene note
-
         #region Constructor
         static RuntimeUNoteManager()
         {
