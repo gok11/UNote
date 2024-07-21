@@ -178,9 +178,9 @@ namespace UNote.Editor
             return new SerializedObject(AssetNoteContainer);
         }
         
-        public static AssetNote AddNewLeafAssetNote(string guid, string noteContent)
+        public static AssetNote AddNewAssetNote(string guid, string noteContent)
         {
-            Undo.RegisterCompleteObjectUndo(AssetNoteContainer, "UNote Add New Project Note");
+            Undo.RegisterCompleteObjectUndo(AssetNoteContainer, "UNote Add New Asset Note");
             
             AssetNote newNote = new AssetNote
             {
