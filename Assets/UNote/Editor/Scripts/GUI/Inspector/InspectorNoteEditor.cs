@@ -137,7 +137,7 @@ namespace UNote.Editor
             m_footerElem.style.height = 0;
             m_noteList.Add(m_footerElem);
 
-            // ターゲットと紐づくメモ一覧をリスト表示する
+            // Display note list associated with a target
             switch (noteType)
             {
                 case NoteType.Asset:
