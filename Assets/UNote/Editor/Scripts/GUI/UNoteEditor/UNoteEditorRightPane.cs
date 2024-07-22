@@ -68,13 +68,13 @@ namespace UNote.Editor
 
             m_authorLabel.text = UserConfig.GetUNoteSetting().UserName;
 
-            // CurrentNote と同じメモを時系列で並べる
+            // Show note list by created date
             SetupNoteList();
 
-            // ボタンを押したら新しいメモを作成
+            // Create a new note on click button
             m_sendButton.clicked += SendNote;
             
-            // 自分が所有するメモならタイトルクリックで編集モードにする
+            // Enter edit mode on click title label
             m_noteTitle.RegisterCallback<MouseDownEvent>(_ =>
             {
                 EnableChangeTitleMode();
@@ -85,13 +85,13 @@ namespace UNote.Editor
                 SetTitleGUIEditMode(false);
             });
             
-            // テキストフィールド内のカーソル移動に合わせてスクロールする
+            // scroll text field according to cursor
             EditorApplication.update += () =>
             {
                 float pos = m_inputText.cursorPosition.y;
                 if (Mathf.Abs(pos - m_lastScrollPosition) > 0.1f)
                 {
-                    // Bound の更新を待つため1フレーム待つ
+                    // wait for bounds update
                     EditorApplication.delayCall += () =>
                     {
                         float min = 14.52f;
@@ -128,7 +128,6 @@ namespace UNote.Editor
                 return;
             }
 
-            // Undoに乗らないよう一時的にバインド解除
             m_inputText.Unbind();
 
             NoteBase note = EditorUNoteManager.CurrentNote;
@@ -213,7 +212,7 @@ namespace UNote.Editor
                 {
                     EditorUNoteManager.ChangeNoteName(note, m_titleField.value);
                     
-                    // 編集を終え、テキスト更新
+                    // finish editing title
                     SetTitleGUIEditMode(false);
 
                     m_noteTitle.text = EditorUNoteManager.CurrentNote.NoteName;
@@ -233,13 +232,13 @@ namespace UNote.Editor
         
         public void SetupNoteList()
         {
-            // メモの表示状態をリセットする
+            // disable to edit title
             SetTitleGUIEditMode(false);
             
             m_noteTitle.text = "";
             m_noteList.contentContainer.Clear();
 
-            // メモの情報を設定
+            // set note info
             NoteBase note = EditorUNoteManager.CurrentNote;
             if (note == null)
             {
@@ -248,7 +247,7 @@ namespace UNote.Editor
             
             m_noteTitle.text = note.NoteName;
             
-            // サブ情報の設定
+            // set sub info
             m_subInfoArea.Clear();
             SetSubInfoStyle(-1);
             
@@ -270,7 +269,7 @@ namespace UNote.Editor
                     break;
             }
 
-            // 要素を追加し、その要素までスクロール
+            // scroll to new elem
             m_noteList.visible = false;
 
             m_footerElem = new VisualElement();
@@ -304,7 +303,7 @@ namespace UNote.Editor
                     throw new NotImplementedException();
             }
             
-            // スクロールが正しくできるよう待つ
+            // wait and scroll
             EditorApplication.delayCall += () =>
             EditorApplication.delayCall += () =>
             {

@@ -76,7 +76,7 @@ namespace UNote.Editor
         {
             NoteBase newNote = null;
                     
-            // メモ追加
+            // Add note
             switch (EditorUNoteManager.CurrentNoteType)
             {
                 case NoteType.Project:
@@ -135,9 +135,9 @@ namespace UNote.Editor
 
         public void UpdateNoteList()
         {
-            // TODO 検索内容に応じてメモを絞る
+            // TODO filter notes
 
-            // 背景色を更新
+            // Update background color
             foreach (var item in m_noteScroll.contentContainer.Query<UNoteEditorListItem>().Build())
             {
                 item.SelectItem(item.BindNote == EditorUNoteManager.CurrentNote);

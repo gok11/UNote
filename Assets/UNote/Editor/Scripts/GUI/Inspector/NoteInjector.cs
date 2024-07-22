@@ -56,7 +56,6 @@ namespace UNote.Editor
                     continue;
                 }
                 
-                // VisualElement editorsList = window.rootVisualElement.Q<VisualElement>(null, "unity-inspector-editors-list");
                 VisualElement inspectorElement = window.rootVisualElement.Q<InspectorElement>();
                 if (inspectorElement == null)
                 {
@@ -84,7 +83,7 @@ namespace UNote.Editor
                     s_targetTempList.Add(editor.target);
                 }
                 
-                // プレハブかを最初に判別
+                // Determine if this is prefab
                 foreach (var editor in activeEditors)
                 {
                     Object target = editor.target;
@@ -96,7 +95,7 @@ namespace UNote.Editor
                     }
                 }
                 
-                // ゲームオブジェクトかを次に判別
+                // Determine if this is gameobject
                 foreach (var editor in activeEditors)
                 {
                     Object target = editor.target;
@@ -111,7 +110,7 @@ namespace UNote.Editor
                     }
                 }
                 
-                // コンポーネントは除外しつつ登録 (DefaultAsset等)
+                // register objects except component
                 foreach (var editor in activeEditors)
                 {
                     Object target = editor.target;

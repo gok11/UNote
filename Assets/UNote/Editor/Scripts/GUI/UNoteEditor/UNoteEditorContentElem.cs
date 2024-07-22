@@ -51,13 +51,13 @@ namespace UNote.Editor
 
             bool isOwnNote = note.Author == UserConfig.GetUNoteSetting().UserName;
 
-            // コンテキストボタンイベント
+            // register context button event
             m_contextButton.clicked += () =>
             {
                 ShowContextMenu(note);
             };
             
-            // 編集イベント
+            // edit event
             m_sendButton.clicked += FinishEditText;
             RegisterCallback<KeyDownEvent>(evt =>
             {
@@ -72,7 +72,7 @@ namespace UNote.Editor
                 }
             }, TrickleDown.TrickleDown);
 
-            // 自分のメモなら編集等のメニューを出す
+            // show menu if this is an own note
             if (isOwnNote)
             {
                 noteElement.RegisterCallback<MouseEnterEvent>(_ =>
@@ -101,10 +101,7 @@ namespace UNote.Editor
             menu.AddItem(
                 new GUIContent("Edit"),
                 false,
-                () =>
-                {
-                    EnableEditText();
-                });
+                EnableEditText);
             
             menu.AddItem(
                 new GUIContent("Delete"),

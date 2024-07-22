@@ -75,8 +75,6 @@ namespace UNote.Editor
             noteIconRect.y += 2;
             noteIconRect.width = noteIconRect.height = 10;
             GUI.DrawTexture(noteIconRect, NoteIcon);
-            
-            // TODO: tooltip
         }
 
         private static void DrawCountAtLeftTop(IReadOnlyList<AssetNote> noteList, Rect rect)
@@ -96,8 +94,6 @@ namespace UNote.Editor
             noteIconRect.y += 2;
             noteIconRect.width = noteIconRect.height = 10;
             GUI.DrawTexture(noteIconRect, NoteIcon);
-            
-            // TODO: tooltip
         }
     }
 }
