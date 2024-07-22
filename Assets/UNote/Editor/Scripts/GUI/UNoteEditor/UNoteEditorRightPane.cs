@@ -33,10 +33,7 @@ namespace UNote.Editor
         private VisualElement m_footerElem;
         
         // Note input field
-        private TextField m_inputText;
-        private ScrollView m_inputScroll;
-        private Label m_authorLabel;
-        private Button m_sendButton;
+        private NoteInputField m_noteInputField;
 
         private float m_lastScrollPosition;
 
@@ -58,22 +55,15 @@ namespace UNote.Editor
             m_subInfoArea = contentContainer.Q<VisualElement>("NoteSubInfoArea");
             
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
-            m_inputText = contentContainer.Q<TextField>("InputText");
-            m_inputScroll = contentContainer.Q<ScrollView>("TextArea");
 
-            m_inputText.BindProperty(m_noteEditor.Model.EditingText);
-
-            m_authorLabel = contentContainer.Q<Label>("Author");
-            m_sendButton = contentContainer.Q<Button>("SendButton");
-
-            m_authorLabel.text = UserConfig.GetUNoteSetting().UserName;
-
+            NoteBase currentNote = EditorUNoteManager.CurrentNote;
+            m_noteInputField = new NoteInputField(currentNote.NoteType, currentNote.NoteId);
+            m_noteInputField.style.flexShrink = 0;
+            contentContainer.Q<TemplateContainer>().Add(m_noteInputField);
+            
             // Show note list by created date
             SetupNoteList();
 
-            // Create a new note on click button
-            m_sendButton.clicked += SendNote;
-            
             // Enter edit mode on click title label
             m_noteTitle.RegisterCallback<MouseDownEvent>(_ =>
             {
@@ -84,98 +74,17 @@ namespace UNote.Editor
             {
                 SetTitleGUIEditMode(false);
             });
-            
-            // scroll text field according to cursor
-            EditorApplication.update += () =>
-            {
-                float pos = m_inputText.cursorPosition.y;
-                if (Mathf.Abs(pos - m_lastScrollPosition) > 0.1f)
-                {
-                    // wait for bounds update
-                    EditorApplication.delayCall += () =>
-                    {
-                        float min = 14.52f;
-                        float max = m_inputText.worldBound.height - 4;
 
-                        float rate = (pos - min) / (max - min);
-                        float scrollMax = m_inputScroll.verticalScroller.highValue;
-                        m_inputScroll.verticalScroller.value = rate * scrollMax;
-                    };
-                    m_lastScrollPosition = pos;
-                }
-            };
-
-            contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
-            
             // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupNoteList();
-            EditorUNoteManager.OnNoteSelected += _ => SetupNoteList();
             EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList();
-        }
-
-        private void OnKeyDown(KeyDownEvent evt)
-        {
-            if (evt.keyCode == KeyCode.Return && evt.shiftKey)
+            
+            EditorUNoteManager.OnNoteSelected += n =>
             {
-                SendNote();
-            }
-        }
-
-        private void SendNote()
-        {
-            if (string.IsNullOrWhiteSpace(m_inputText.value))
-            {
-                return;
-            }
-
-            m_inputText.Unbind();
-
-            NoteBase note = EditorUNoteManager.CurrentNote;
-            NoteBase newLeafNote = null;
-
-            switch (note.NoteType)
-            {
-                case NoteType.Project:
-                    if (note is ProjectNote projectNote)
-                    {
-                        newLeafNote = EditorUNoteManager.AddNewLeafProjectNote(
-                            projectNote.NoteId,
-                            m_inputText.value
-                        );   
-                    }
-                    break;
-                
-                case NoteType.Asset:
-                    if (note is AssetNote assetNote)
-                    {
-                        newLeafNote = EditorUNoteManager.AddNewAssetNote(
-                            assetNote.NoteId,
-                            m_inputText.value
-                        );
-                    }
-                    break;
-
-                default:
-                    throw new NotImplementedException();
-            }
-
-            if (newLeafNote == null)
-            {
-                return;
-            }
-
-            EditorApplication.delayCall += () =>
-            EditorApplication.delayCall += () =>
-            {
-                m_noteList.ScrollTo(m_footerElem);
+                NoteBase note = n ?? EditorUNoteManager.CurrentNote;
+                m_noteInputField.SetNoteInfo(note.NoteType, note.NoteId);
+                SetupNoteList();
             };
-
-            // バインドしなおす前に最新の状態にする
-            m_noteEditor.Model.ModelObject.Update();
-            m_noteEditor.Model.EditingText.stringValue = "";
-            m_noteEditor.Model.ModelObject.ApplyModifiedProperties();
-
-            m_inputText.BindProperty(m_noteEditor.Model.EditingText);
         }
 
         private void EnableChangeTitleMode()

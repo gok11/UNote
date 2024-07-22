@@ -29,8 +29,7 @@ namespace UNote.Editor
         {
             name = nameof(NoteInputField);
 
-            m_bindNoteType = noteType;
-            m_bindId = bindId;
+            SetNoteInfo(noteType, bindId);
 
             m_model = ScriptableObject.CreateInstance<NoteEditorModel>();
             
@@ -73,6 +72,12 @@ namespace UNote.Editor
             };
             
             contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+        }
+
+        public void SetNoteInfo(NoteType noteType, string bindId)
+        {
+            m_bindNoteType = noteType;
+            m_bindId = bindId;
         }
         
         private void OnKeyDown(KeyDownEvent evt)
