@@ -140,7 +140,7 @@ namespace UNote.Editor
             // Update background color
             foreach (var item in m_noteScroll.contentContainer.Query<UNoteEditorListItem>().Build())
             {
-                item.SelectItem(item.BindNote == EditorUNoteManager.CurrentNote);
+                item.SetBackgroundColor(item.BindNote == EditorUNoteManager.CurrentNote);
             }
         }
 

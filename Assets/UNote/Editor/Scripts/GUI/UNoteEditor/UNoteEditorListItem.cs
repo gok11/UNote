@@ -140,7 +140,7 @@ namespace UNote.Editor
             };
         }
 
-        public void SelectItem(bool select)
+        public void SetBackgroundColor(bool select)
         {
             m_noteListItem.style.backgroundColor = select ?
                 StyleUtil.SelectColor : StyleUtil.UnselectColor;
