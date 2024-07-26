@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace UNote.Runtime
@@ -23,10 +24,11 @@ namespace UNote.Runtime
         #region Field
 
         [SerializeField] private ProjectInternalContainer m_projectNoteContainer;
-        [SerializeField] public int val;
         private Dictionary<string, ProjectInternalContainer> m_projectNoteDict = new();
         private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByTitle = new();
 
+        [SerializeField] private List<ProjectNote> m_tempList = new List<ProjectNote>();
+        
         #endregion // Field
         
         #region  Property
@@ -55,9 +57,9 @@ namespace UNote.Runtime
             Save(GetContainerSafe());
         }
 
-        private ProjectInternalContainer GetContainerSafe(string authorName = null)
+        private ProjectInternalContainer GetContainerSafe()
         {
-            authorName ??= UserConfig.GetUNoteSetting().UserName;
+            string authorName = UserConfig.GetUNoteSetting().UserName;
             
             if (!m_projectNoteDict.ContainsKey(authorName))
             {
@@ -66,7 +68,7 @@ namespace UNote.Runtime
             }
             return m_projectNoteDict[authorName];
         }
-
+        
         public List<ProjectNote> GetOwnProjectNoteList() => GetContainerSafe().m_projectNoteList;
 
         public List<ProjectLeafNote> GetOwnProjectLeafNoteList() => GetContainerSafe().m_projectLeafNoteList;

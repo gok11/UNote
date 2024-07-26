@@ -114,10 +114,15 @@ namespace UNote.Editor
         }
 
         #region Project Note
+        
+        public static SerializedObject GetProjectNoteContainerObject()
+        {
+            return new SerializedObject(ProjectNoteContainer);
+        }
 
         public static ProjectNote AddNewProjectNote()
         {
-            Undo.RegisterCompleteObjectUndo(ProjectNoteContainer, "UNote Add New Project Note");
+            Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
             
             ProjectNote newNote = new ProjectNote
             {
@@ -126,10 +131,9 @@ namespace UNote.Editor
 
             string uniqueName = GenerateUniqueName(NoteType.Project);
             newNote.ChangeNoteName(uniqueName);
-
+            
             ProjectNoteContainer.GetOwnProjectNoteList().Add(newNote);
             ProjectNoteContainer.Save();
-            
             OnNoteAdded?.Invoke(newNote);
             
             return newNote;
