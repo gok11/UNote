@@ -110,12 +110,12 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                     m_noteCategoryLabel.text = "Project Note";
-                    notes = EditorUNoteManager.GetAllProjectNotes();
+                    notes = EditorUNoteManager.GetAllProjectNotes().OrderBy(t => t.CreatedDate);
                     break;
 
                 case NoteType.Asset:
                     m_noteCategoryLabel.text = "Asset Note";
-                    notes = EditorUNoteManager.GetAllAssetLeafNotesDistinct();
+                    notes = EditorUNoteManager.GetAllAssetLeafNotesDistinct().OrderBy(t => t.CreatedDate);
                     break;
                 
                 default:
