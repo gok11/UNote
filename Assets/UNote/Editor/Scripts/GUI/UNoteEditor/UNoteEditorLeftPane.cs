@@ -30,12 +30,14 @@ namespace UNote.Editor
             TemplateContainer paneContainer = tree.Instantiate();
             contentContainer.Add(paneContainer);
 
+            VisualElement presetViewElem = paneContainer.Q("PresetViews");
+
             // Category
             VisualTreeAsset categoryTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteTypeItem
             );
             TemplateContainer categoryContainer = categoryTree.Instantiate();
-            paneContainer.Add(categoryContainer);
+            presetViewElem.Add(categoryContainer);
 
             VisualElement projectNoteElem = categoryContainer.Q("ProjectNoteElem");
             VisualElement assetNoteElem = categoryContainer.Q("AssetNoteElem");
