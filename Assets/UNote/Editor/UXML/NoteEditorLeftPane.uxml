@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Label name="title" text="UNote" style="margin-left: 4px; margin-top: 3px; -unity-font-style: bold; font-size: 18px; margin-bottom: 4px;" />
-    <ui:Label tabindex="-1" text="Preset View" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 16px; padding-left: 8px;" />
+    <ui:Label tabindex="-1" text="Preset View" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; padding-left: 8px;" />
     <ui:VisualElement name="PresetViews" style="flex-grow: 1; margin-top: 4px; margin-bottom: 4px;" />
 </ui:UXML>

@@ -55,6 +55,7 @@ namespace UNote.Editor
                 {
                     EditorUNoteManager.SelectCategory(category.Key);
                     SelectCategoryElem(category.Key);
+                    evt.StopPropagation();
                 });
             }
 
