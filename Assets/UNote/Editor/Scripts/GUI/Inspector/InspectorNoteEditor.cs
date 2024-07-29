@@ -103,10 +103,10 @@ namespace UNote.Editor
                 return NoteType.Asset;
             }
 
-            if (target is GameObject)
-            {
-                return NoteType.Scene;
-            }
+            // if (target is GameObject)
+            // {
+            //     return NoteType.Scene;
+            // }
 
             return NoteType.Asset;
         }

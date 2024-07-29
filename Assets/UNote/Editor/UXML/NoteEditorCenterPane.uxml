@@ -1,7 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="Header" style="flex-grow: 0; flex-direction: row;">
         <ui:Label tabindex="-1" text="Project Note" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NoteCategoryLabel" style="margin-left: 6px; margin-top: 4px; font-size: 16px; height: auto; margin-right: 2px; margin-bottom: 0; -unity-font-style: bold; flex-grow: 1;" />
-        <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddButton" style="margin-top: 4px; margin-bottom: 0; margin-right: 4px; margin-left: 4px; -unity-font-style: normal; font-size: 14px; padding-right: 5px; padding-left: 5px; width: 20px; height: 20px;" />
     </ui:VisualElement>
     <ui:ScrollView name="NoteList" style="padding-top: 4px; flex-grow: 1; flex-shrink: 1;" />
 </ui:UXML>

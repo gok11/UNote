@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -10,6 +11,7 @@ namespace UNote.Editor
     public class UNoteEditorLeftPane : UNoteEditorPaneBase
     {
         private UNoteEditor m_noteEditor;
+        private Button m_noteAddButton;
         
         private Dictionary<NoteType, VisualElement> m_categoryElemDict = new();
 
@@ -29,9 +31,15 @@ namespace UNote.Editor
             );
             TemplateContainer paneContainer = tree.Instantiate();
             contentContainer.Add(paneContainer);
+            
+            paneContainer.StretchToParentSize();
 
             VisualElement presetViewElem = paneContainer.Q("PresetViews");
 
+            m_noteAddButton = paneContainer.Q<Button>("AddNoteButton");
+
+            paneContainer.Q("Spacer").style.flexGrow = 1;
+            
             // Category
             VisualTreeAsset categoryTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteTypeItem
@@ -58,6 +66,8 @@ namespace UNote.Editor
                     evt.StopPropagation();
                 });
             }
+            
+            m_noteAddButton.clicked += ShowAddWindow;
 
             EditorUNoteManager.OnNoteSelected += note =>
             {
@@ -85,6 +95,12 @@ namespace UNote.Editor
             
             m_noteEditor.CenterPane?.SetupListItems();
             m_currentNoteType = noteType;
+        }
+        
+        private void ShowAddWindow()
+        {
+            NoteAddWindow addWindow = ScriptableObject.CreateInstance<NoteAddWindow>();
+            addWindow.ShowUtility();
         }
     }
 }
