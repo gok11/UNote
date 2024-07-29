@@ -8,7 +8,6 @@ namespace UNote.Runtime
     {
         Project = 0,
         Asset,
-        Scene,
-        Invalid = -1,
+        // Scene, // TODO
     }
 }

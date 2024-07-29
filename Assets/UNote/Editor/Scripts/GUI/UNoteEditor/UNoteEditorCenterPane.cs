@@ -17,7 +17,6 @@ namespace UNote.Editor
         private UNoteEditor m_noteEditor;
 
         private Label m_noteCategoryLabel;
-        private Button m_noteAddButton;
         
         private ScrollView m_noteScroll;
 
@@ -37,65 +36,16 @@ namespace UNote.Editor
             contentContainer.Add(template);
 
             m_noteCategoryLabel = template.Q<Label>("NoteCategoryLabel");
-            m_noteAddButton = template.Q<Button>("AddButton");
             
             m_noteScroll = template.Q<ScrollView>("NoteList");
 
             // Setup
             SetupListItems();
-
-            // Handle mouse event
-            contentContainer.RegisterCallback<MouseDownEvent>(evt =>
-            {
-                if (evt.button == 1)
-                {
-                    ShowContextMenu(evt.mousePosition);
-                }
-            });
-
-            m_noteAddButton.clicked += AddNewNote;
             
             // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupListItems();
             EditorUNoteManager.OnNoteSelected += _ => UpdateNoteList();
             EditorUNoteManager.OnNoteDeleted += _ => SetupListItems();
-        }
-
-        private void ShowContextMenu(Vector2 mousePosition)
-        {
-            GenericMenu menu = new GenericMenu();
-            menu.AddItem(
-                new GUIContent("New Note"),
-                false,
-                AddNewNote
-            );
-            menu.ShowAsContext();
-        }
-
-        private void AddNewNote()
-        {
-            NoteBase newNote = null;
-                    
-            // Add note
-            switch (EditorUNoteManager.CurrentNoteType)
-            {
-                case NoteType.Project:
-                    newNote = EditorUNoteManager.AddNewProjectNote();
-                    break;
-                        
-                case NoteType.Asset:
-                    AssetNoteAddWindow addWindow = ScriptableObject.CreateInstance<AssetNoteAddWindow>();
-                    addWindow.ShowUtility();
-                    break;
-                        
-                default:
-                    throw new NotImplementedException();
-            }
-
-            if (newNote != null)
-            {
-                EditorUNoteManager.SelectNote(newNote);
-            }
         }
 
         public void SetupListItems()

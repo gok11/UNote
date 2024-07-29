@@ -12,7 +12,7 @@ namespace UNote.Runtime
 
         #endregion
         
-        public override NoteType NoteType => NoteType.Invalid;
+        public override NoteType NoteType => NoteType.Project;
         
         public override string NoteName => m_noteName;
         
