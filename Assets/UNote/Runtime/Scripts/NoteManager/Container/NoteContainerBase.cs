@@ -22,7 +22,7 @@ namespace UNote.Runtime
             }
         }
 
-        protected virtual string OwnFileName => $"{UserConfig.GetUNoteSetting().UserName}_{Identifier}.json";
+        protected virtual string OwnFileName => $"{UNoteSetting.UserName}_{Identifier}.json";
 
         protected virtual string OwnFileFullPath => Path.Combine(FileDirectory, OwnFileName);
 
@@ -32,7 +32,7 @@ namespace UNote.Runtime
         
         protected void Load<T>() where T : class
         {
-            string authorName = UserConfig.GetUNoteSetting().UserName;
+            string authorName = UNoteSetting.UserName;
 
             if (File.Exists(OwnFileFullPath))
             {

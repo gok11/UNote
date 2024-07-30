@@ -59,7 +59,7 @@ namespace UNote.Runtime
 
         private ProjectInternalContainer GetContainerSafe()
         {
-            string authorName = UserConfig.GetUNoteSetting().UserName;
+            string authorName = UNoteSetting.UserName;
             
             if (!m_projectNoteDict.ContainsKey(authorName))
             {

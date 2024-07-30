@@ -101,7 +101,7 @@ namespace UNote.Editor
                     EditorUNoteManager.SelectNote(m_note);
                 }
 
-                bool isOwnNote = m_note.Author == UserConfig.GetUNoteSetting().UserName;
+                bool isOwnNote = m_note.Author == UNoteSetting.UserName;
                 if (isOwnNote)
                 {
                     switch (evt.button)
@@ -117,7 +117,7 @@ namespace UNote.Editor
 
             contentContainer.RegisterCallback<MouseEnterEvent>(_ =>
             {
-                bool isOwnNote = m_note.Author == UserConfig.GetUNoteSetting().UserName;
+                bool isOwnNote = m_note.Author == UNoteSetting.UserName;
                 if (isOwnNote)
                 {
                     m_contextButton.visible = true;
@@ -126,7 +126,7 @@ namespace UNote.Editor
 
             contentContainer.RegisterCallback<MouseLeaveEvent>(_ =>
             {
-                bool isOwnNote = m_note.Author == UserConfig.GetUNoteSetting().UserName;
+                bool isOwnNote = m_note.Author == UNoteSetting.UserName;
                 if (isOwnNote)
                 {
                     m_contextButton.visible = false;

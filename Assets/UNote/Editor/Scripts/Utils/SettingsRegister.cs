@@ -20,11 +20,10 @@ namespace UNote.Editor
                 {
                     ++EditorGUI.indentLevel;
 
-                    UNoteSetting setting = UserConfig.GetUNoteSetting();
-                    setting.UserName = EditorGUILayout.TextField("Editor Name", setting.UserName);
-                    if (string.IsNullOrEmpty(setting.UserName))
+                    UNoteSetting.UserName = EditorGUILayout.TextField("Editor Name", UNoteSetting.UserName);
+                    if (string.IsNullOrEmpty(UNoteSetting.UserName))
                     {
-                        setting.UserName = Environment.UserName;
+                        UNoteSetting.UserName = Environment.UserName;
                     }
 
                     --EditorGUI.indentLevel;

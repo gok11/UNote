@@ -100,7 +100,7 @@ namespace UNote.Editor
                 return;
             }
             
-            bool isOwnNote = note.Author == UserConfig.GetUNoteSetting().UserName;
+            bool isOwnNote = note.Author == UNoteSetting.UserName;
 
             if (!isOwnNote)
             {

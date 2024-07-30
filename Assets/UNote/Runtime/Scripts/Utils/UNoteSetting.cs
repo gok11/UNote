@@ -2,38 +2,59 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace UNote.Runtime
 {
-    public class UNoteSetting : ScriptableObject
+    [Serializable]
+    public class UNoteSetting
     {
-        [SerializeField, HideInInspector]
+        private const string SettingKey = "UNote.UNoteSetting";
+        
+        [SerializeField]
         private string m_userName;
 
-        public string UserName
+        [SerializeField]
+        private bool m_inspectorFoldoutOpened;
+        
+        public static string UserName
         {
-            get => m_userName;
-#if UNITY_EDITOR
+            get => Load().m_userName;
             set
             {
-                if (m_userName != value)
-                {
-                    m_userName = value;
-                }
+                var uns = Load();
+                uns.m_userName = value;
+                Save(uns);
             }
-#endif
         }
 
-#if UNITY_EDITOR
-        [SerializeField, HideInInspector]
-        private bool m_inspectorFoldoutOpened;
-
-        public bool InspectorFoldoutOpened
+        public static bool InspectorFoldoutOpened
         {
-            get => m_inspectorFoldoutOpened;
-            set => m_inspectorFoldoutOpened = value;
+            get => Load().m_inspectorFoldoutOpened;
+            set
+            {
+                var uns = Load();
+                uns.m_inspectorFoldoutOpened = value;
+                Save(uns);
+            }
         }
-#endif // UNITY_EDITOR
+
+        private static UNoteSetting Load()
+        {
+            string value = EditorUserSettings.GetConfigValue(SettingKey);
+            if (string.IsNullOrEmpty(value))
+            {
+                return new UNoteSetting();
+            }
+
+            return JsonUtility.FromJson<UNoteSetting>(value);
+        }
+
+        private static void Save(UNoteSetting uns)
+        {
+            string json = JsonUtility.ToJson(uns);
+            EditorUserSettings.SetConfigValue(SettingKey, json);
+        }
     }
 }

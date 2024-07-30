@@ -44,7 +44,7 @@ namespace UNote.Editor
             m_authorLabel = contentContainer.Q<Label>("Author");
             m_sendButton = contentContainer.Q<Button>("SendButton");
             
-            m_authorLabel.text = UserConfig.GetUNoteSetting().UserName;
+            m_authorLabel.text = UNoteSetting.UserName;
             
             m_inputText.BindProperty(m_model.EditingText);
             
