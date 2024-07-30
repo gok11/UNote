@@ -26,6 +26,7 @@ namespace UNote.Editor
             noteTypeField.style.SetMargin(4, 2, 4, 4);
             
             m_container = new VisualElement();
+            m_container.style.flexGrow = 1;
             
             noteTypeField.RegisterValueChangedCallback(t =>
             {
@@ -66,6 +67,7 @@ namespace UNote.Editor
                 Close();
             };
             
+            m_container.AddSpacer();
             m_container.Add(addButton);
         }
 
@@ -97,6 +99,7 @@ namespace UNote.Editor
             });
             
             m_container.Add(assetField);
+            m_container.AddSpacer();
             m_container.Add(addButton);
         }
     }
