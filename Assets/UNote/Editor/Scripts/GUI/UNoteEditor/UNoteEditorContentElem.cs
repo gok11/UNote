@@ -49,7 +49,7 @@ namespace UNote.Editor
                 m_contentText.text += CreateEditedText();
             }
 
-            bool isOwnNote = note.Author == UserConfig.GetUNoteSetting().UserName;
+            bool isOwnNote = note.Author == UNoteSetting.UserName;
 
             // register context button event
             m_contextButton.clicked += () =>

@@ -126,7 +126,7 @@ namespace UNote.Editor
             
             ProjectNote newNote = new ProjectNote
             {
-                Author = UserConfig.GetUNoteSetting().UserName
+                Author = UNoteSetting.UserName
             };
 
             string uniqueName = GenerateUniqueName(NoteType.Project);
@@ -145,7 +145,7 @@ namespace UNote.Editor
             
             ProjectLeafNote newNote = new ProjectLeafNote
             {
-                Author = UserConfig.GetUNoteSetting().UserName,
+                Author = UNoteSetting.UserName,
                 NoteContent = noteContent,
                 NoteId = guid
             };
@@ -188,7 +188,7 @@ namespace UNote.Editor
             
             AssetNote newNote = new AssetNote
             {
-                Author = UserConfig.GetUNoteSetting().UserName,
+                Author = UNoteSetting.UserName,
                 NoteContent = noteContent,
                 NoteId = guid
             };

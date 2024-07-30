@@ -64,10 +64,10 @@ namespace UNote.Editor
                     };
                 }
 
-                UserConfig.GetUNoteSetting().InspectorFoldoutOpened = opened.newValue;
+                UNoteSetting.InspectorFoldoutOpened = opened.newValue;
             });
 
-            bool foldout = UserConfig.GetUNoteSetting().InspectorFoldoutOpened;
+            bool foldout = UNoteSetting.InspectorFoldoutOpened;
             m_foldout.value = foldout;
             m_content.style.display = foldout ? DisplayStyle.Flex : DisplayStyle.None;
             

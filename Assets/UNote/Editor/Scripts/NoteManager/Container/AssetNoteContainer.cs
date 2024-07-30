@@ -55,7 +55,7 @@ namespace UNote.Editor
 
         private AssetInternalContainer GetContainerSafe()
         {
-            string authorName = UserConfig.GetUNoteSetting().UserName;
+            string authorName = UNoteSetting.UserName;
             
             if (!m_assetNoteDict.ContainsKey(authorName))
             {
