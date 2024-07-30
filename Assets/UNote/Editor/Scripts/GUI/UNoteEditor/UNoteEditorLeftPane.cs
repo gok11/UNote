@@ -99,6 +99,11 @@ namespace UNote.Editor
         
         private void ShowAddWindow()
         {
+            if (EditorWindow.HasOpenInstances<NoteAddWindow>())
+            {
+                return;
+            }
+            
             NoteAddWindow addWindow = ScriptableObject.CreateInstance<NoteAddWindow>();
             addWindow.ShowUtility();
         }
