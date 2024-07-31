@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace UNote.Editor
 {
-    public class EditorUNoteManager
+    public partial class EditorUNoteManager
     {
         #region Field
 
@@ -157,16 +157,6 @@ namespace UNote.Editor
             
             return newNote;
         }
-
-        public static IEnumerable<ProjectNote> GetAllProjectNotes() =>
-            ProjectNoteContainer.GetProjectNoteListAll().SelectMany(t => t);
-
-        public static IEnumerable<ProjectLeafNote> GetAllProjectLeafNotes() =>
-            ProjectNoteContainer.GetProjectLeafNoteListAll().SelectMany(t => t);
-        
-
-        public static IReadOnlyList<ProjectLeafNote> GetProjectLeafNoteListByProjectNoteId(string noteId) =>
-            ProjectNoteContainer.GetProjectLeafNoteListByProjectNoteId(noteId);
 
         public static SerializedObject CreateProjectNoteContainerObject()
         {
