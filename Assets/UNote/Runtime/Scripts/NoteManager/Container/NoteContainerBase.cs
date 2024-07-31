@@ -22,62 +22,12 @@ namespace UNote.Runtime
             }
         }
 
-        protected virtual string OwnFileName => $"{UNoteSetting.UserName}_{Identifier}.json";
+        protected virtual string OwnFileName => $"{UNoteSetting.UserName}_{Identifier}.asset";
 
         protected virtual string OwnFileFullPath => Path.Combine(FileDirectory, OwnFileName);
 
         #endregion // Property
 
-        public abstract void Load();
-        
-        protected void Load<T>() where T : class
-        {
-            string authorName = UNoteSetting.UserName;
-
-            if (File.Exists(OwnFileFullPath))
-            {
-                string json = File.ReadAllText(OwnFileFullPath);
-                var container = JsonUtility.FromJson<T>(json);
-                LoadData(container, authorName);
-            }
-            else
-            {
-                Save();
-            }
-
-            // Load all notes including other users
-            string[] filePaths = Directory.GetFiles(FileDirectory, "*.json");
-            foreach (var projectNotePath in filePaths)
-            {
-                if (projectNotePath == OwnFileFullPath)
-                {
-                    continue;
-                }
-
-                string otherAuthorName = Path.GetFileNameWithoutExtension(projectNotePath);
-                string otherJson = File.ReadAllText(projectNotePath);
-                var container = JsonUtility.FromJson<T>(otherJson);
-                LoadData(container, otherAuthorName);
-            }
-        }
-        
-        protected abstract void LoadData<T>(T container, string authorName) where T : class;
-
         public abstract void Save();
-        
-        protected void Save<T>(T container) where T : class
-        {
-            if (!Directory.Exists(FileDirectory))
-            {
-                Directory.CreateDirectory(FileDirectory);
-            }
-            
-            string json = JsonUtility.ToJson(container);
-            File.WriteAllText(OwnFileFullPath, json);
-
-            ClearCache();
-        }
-
-        public abstract void ClearCache();
     }
 }
