@@ -9,7 +9,7 @@ using UNote.Runtime;
 namespace UNote.Editor
 {
     [Serializable]
-    public class AssetNote : NoteBase
+    public class AssetNote : RootNoteBase
     {
         #region Property
 

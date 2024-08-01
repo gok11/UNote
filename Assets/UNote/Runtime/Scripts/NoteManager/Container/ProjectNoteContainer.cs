@@ -14,21 +14,32 @@ namespace UNote.Runtime
         
         [SerializeField] private List<ProjectNote> m_projectNoteList = new List<ProjectNote>();
         [SerializeField] private List<ProjectLeafNote> m_projectLeafNoteList = new List<ProjectLeafNote>();
+
+        private static ProjectNoteContainer s_instance;
         
         #endregion // Field
         
-        #region  Property
-
-        protected override string Identifier => "project";
-
-        protected override string SubDirectoryName => "Project";
-
-        #endregion // Property
-
-        public override void Save()
+        public static ProjectNoteContainer GetContainer()
         {
-            AssetDatabase.SaveAssetIfDirty(this);
+            if (s_instance)
+            {
+                return s_instance;
+            }
+            
+            string filePath = Path.Combine(FileDirectory, "Project", $"{UNoteSetting.UserName}_project.asset");
+            ProjectNoteContainer container = AssetDatabase.LoadAssetAtPath<ProjectNoteContainer>(filePath);
+
+            if (container)
+            {
+                s_instance = container;
+                return container;
+            }
+
+            s_instance = CreateInstance<ProjectNoteContainer>();
+            AssetDatabase.CreateAsset(s_instance, filePath);
+            return s_instance;
         }
+        
         
         public List<ProjectNote> GetProjectNoteList() => m_projectNoteList;
 
