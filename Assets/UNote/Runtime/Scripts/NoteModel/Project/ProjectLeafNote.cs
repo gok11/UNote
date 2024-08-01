@@ -6,7 +6,7 @@ using UnityEngine;
 namespace UNote.Runtime
 {
     [Serializable]
-    public sealed class ProjectLeafNote : NoteBase
+    public sealed class ProjectLeafNote : LeafNoteBase
     {
         #region Property
 

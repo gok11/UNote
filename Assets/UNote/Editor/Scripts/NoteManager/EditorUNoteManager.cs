@@ -53,11 +53,11 @@ namespace UNote.Editor
                 switch (Instance.m_currentNoteType)
                 {
                     case NoteType.Project:
-                        Instance.m_currentNote = GetAllProjectNotes()?.FirstOrDefault();
+                        Instance.m_currentNote = GetProjectNoteAll()?.FirstOrDefault();
                         break;
                     
                     case NoteType.Asset:
-                        Instance.m_currentNote = GetAllAssetLeafNotes()?.FirstOrDefault();
+                        Instance.m_currentNote = GetAssetNoteAll()?.FirstOrDefault();
                         break;
                 }
 
@@ -65,35 +65,35 @@ namespace UNote.Editor
             }
         }
 
-        private static ProjectNoteContainer ProjectNoteContainer
-        {
-            get
-            {
-                if (Instance.m_projectNoteContainer)
-                {
-                    return Instance.m_projectNoteContainer;
-                }
-                
-                Instance.m_projectNoteContainer = ScriptableObject.CreateInstance<ProjectNoteContainer>();
-                Instance.m_projectNoteContainer.Load();
-                return Instance.m_projectNoteContainer;
-            }
-        }
+        // private static ProjectNoteContainer ProjectNoteContainer
+        // {
+        //     get
+        //     {
+        //         if (Instance.m_projectNoteContainer)
+        //         {
+        //             return Instance.m_projectNoteContainer;
+        //         }
+        //         
+        //         Instance.m_projectNoteContainer = ScriptableObject.CreateInstance<ProjectNoteContainer>();
+        //         Instance.m_projectNoteContainer.Load();
+        //         return Instance.m_projectNoteContainer;
+        //     }
+        // }
 
-        private static AssetNoteContainer AssetNoteContainer
-        {
-            get
-            {
-                if (Instance.m_assetNoteContainer)
-                {
-                    return Instance.m_assetNoteContainer;
-                }
-                
-                Instance.m_assetNoteContainer = ScriptableObject.CreateInstance<AssetNoteContainer>();
-                Instance.m_assetNoteContainer.Load();
-                return Instance.m_assetNoteContainer;
-            }
-        }
+        // private static AssetNoteContainer AssetNoteContainer
+        // {
+        //     get
+        //     {
+        //         if (Instance.m_assetNoteContainer)
+        //         {
+        //             return Instance.m_assetNoteContainer;
+        //         }
+        //         
+        //         Instance.m_assetNoteContainer = ScriptableObject.CreateInstance<AssetNoteContainer>();
+        //         Instance.m_assetNoteContainer.Load();
+        //         return Instance.m_assetNoteContainer;
+        //     }
+        // }
         
         #endregion // Property
 
@@ -114,15 +114,12 @@ namespace UNote.Editor
         }
 
         #region Project Note
-        
-        public static SerializedObject GetProjectNoteContainerObject()
-        {
-            return new SerializedObject(ProjectNoteContainer);
-        }
 
         public static ProjectNote AddNewProjectNote()
         {
-            Undo.RecordObject(ProjectNoteContainer, "UNote Add New Project Note");
+            ProjectNoteContainer container = ProjectNoteContainer.GetContainer();
+            
+            Undo.RecordObject(container, "UNote Add New Project Note");
             
             ProjectNote newNote = new ProjectNote
             {
@@ -132,8 +129,9 @@ namespace UNote.Editor
             string uniqueName = GenerateUniqueName(NoteType.Project);
             newNote.ChangeNoteName(uniqueName);
             
-            ProjectNoteContainer.GetOwnProjectNoteList().Add(newNote);
-            ProjectNoteContainer.Save();
+            container.GetProjectNoteList().Add(newNote);
+            container.Save();
+
             OnNoteAdded?.Invoke(newNote);
             
             return newNote;
@@ -141,7 +139,9 @@ namespace UNote.Editor
 
         public static ProjectLeafNote AddNewLeafProjectNote(string guid, string noteContent)
         {
-            Undo.RegisterCompleteObjectUndo(ProjectNoteContainer, "UNote Add New Project Note");
+            ProjectNoteContainer container = ProjectNoteContainer.GetContainer();
+            
+            Undo.RegisterCompleteObjectUndo(container, "UNote Add New Project Note");
             
             ProjectLeafNote newNote = new ProjectLeafNote
             {
@@ -150,31 +150,23 @@ namespace UNote.Editor
                 NoteId = guid
             };
 
-            ProjectNoteContainer.GetOwnProjectLeafNoteList().Add(newNote);
-            ProjectNoteContainer.Save();
+            container.GetProjectLeafNoteList().Add(newNote);
+            container.Save();
             
             OnNoteAdded?.Invoke(newNote);
             
             return newNote;
         }
 
-        public static SerializedObject CreateProjectNoteContainerObject()
-        {
-            return new SerializedObject(ProjectNoteContainer);
-        }
-
         #endregion // Project Note
 
         #region Asset Note
-
-        public static SerializedObject GetAssetNoteContainerObject()
-        {
-            return new SerializedObject(AssetNoteContainer);
-        }
         
         public static AssetNote AddNewAssetNote(string guid, string noteContent)
         {
-            Undo.RegisterCompleteObjectUndo(AssetNoteContainer, "UNote Add New Asset Note");
+            AssetNoteContainer container = AssetNoteContainer.GetContainer();
+            
+            Undo.RegisterCompleteObjectUndo(container, "UNote Add New Asset Note");
             
             AssetNote newNote = new AssetNote
             {
@@ -183,27 +175,12 @@ namespace UNote.Editor
                 NoteId = guid
             };
 
-            AssetNoteContainer.GetOwnAssetLeafNoteList().Add(newNote);
-            AssetNoteContainer.Save();
+            container.GetAssetNoteList().Add(newNote);
+            container.Save();
             
             OnNoteAdded?.Invoke(newNote);
             
             return newNote;
-        }
-
-        public static IEnumerable<AssetNote> GetAllAssetLeafNotes() =>
-            AssetNoteContainer.GetAssetLeafNoteListAll().SelectMany(t => t);
-
-        public static IEnumerable<AssetNote> GetAllAssetLeafNotesDistinct() =>
-            GetAllAssetLeafNotes().GroupBy(t => t.NoteId)
-                .Select(t => t.OrderBy(t2 => t2.CreatedDate).First());
-        
-        public static IReadOnlyList<AssetNote> GetAssetLeafNoteListByNoteId(string noteId) =>
-            AssetNoteContainer.GetAssetLeafNoteListByGuid(noteId);
-
-        public static SerializedObject CreateAssetNoteContainerObject()
-        {
-            return new SerializedObject(AssetNoteContainer);
         }
         
         #endregion // Asset Note
@@ -215,9 +192,10 @@ namespace UNote.Editor
                 case NoteType.Project:
                     if (note is ProjectNote projectNote)
                     {
-                        Undo.RecordObject(ProjectNoteContainer, "UNote Change Project Note Title");
+                        ProjectNoteContainer container = ProjectNoteContainer.GetContainer();
+                        Undo.RecordObject(container, "UNote Change Project Note Title");
                         projectNote.ChangeNoteName(noteName);
-                        ProjectNoteContainer.Save();
+                        container.Save();
                     }
                     break;
             }
@@ -228,41 +206,49 @@ namespace UNote.Editor
             switch (note.NoteType)
             {
                 case NoteType.Project:
-                    Undo.RecordObject(ProjectNoteContainer, "Delete Project Note");
+                    ProjectNoteContainer projContainer = ProjectNoteContainer.GetContainer();
+                    Undo.RecordObject(projContainer, "Delete Project Note");
                     
                     if (note is ProjectNote projectNote)
                     {
-                        List<ProjectNote> projectList =
-                            ProjectNoteContainer.GetOwnProjectNoteList();
+                        List<ProjectNote> projectList = projContainer.GetProjectNoteList();
                         if (projectList.Contains(projectNote))
                         {
                             projectList.Remove(projectNote);
-                            ProjectNoteContainer.Save();
+                            projContainer.Save();
                         }
                     }
                     else if (note is ProjectLeafNote projectLeafNote)
                     {
-                        List<ProjectLeafNote> projectList =
-                            ProjectNoteContainer.GetOwnProjectLeafNoteList();
+                        List<ProjectLeafNote> projectList = projContainer.GetProjectLeafNoteList();
                         if (projectList.Contains(projectLeafNote))
                         {
                             projectList.Remove(projectLeafNote);
-                            ProjectNoteContainer.Save();
+                            projContainer.Save();
                         }
                     }
                     break;
                 
                 case NoteType.Asset:
-                    Undo.RecordObject(AssetNoteContainer, "Delete Asset Note");
+                    AssetNoteContainer astContainer = AssetNoteContainer.GetContainer();
+                    Undo.RecordObject(astContainer, "Delete Asset Note");
                     
-                    if (note is AssetNote assetLeafNote)
+                    if (note is AssetNote assetNote)
                     {
-                        List<AssetNote> assetLeafNoteList =
-                            AssetNoteContainer.GetOwnAssetLeafNoteList();
+                        List<AssetNote> assetNoteList = astContainer.GetAssetNoteList();
+                        if (assetNoteList.Contains(assetNote))
+                        {
+                            assetNoteList.Remove(assetNote);
+                            astContainer.Save();
+                        }
+                    }
+                    else if (note is AssetLeafNote assetLeafNote)
+                    {
+                        List<AssetLeafNote> assetLeafNoteList = astContainer.GetAssetLeafNoteList();
                         if (assetLeafNoteList.Contains(assetLeafNote))
                         {
                             assetLeafNoteList.Remove(assetLeafNote);
-                            AssetNoteContainer.Save();
+                            astContainer.Save();
                         }
                     }
                     break;
@@ -273,6 +259,7 @@ namespace UNote.Editor
 
             if (note is RootNoteBase)
             {
+                // Reset note selection
                 Instance.m_currentNote = null;   
             }
             OnNoteDeleted?.Invoke(note);
@@ -287,8 +274,8 @@ namespace UNote.Editor
 
         public static void SaveAll()
         {
-            ProjectNoteContainer.Save();
-            AssetNoteContainer.Save();
+            ProjectNoteContainer.GetContainer().Save();
+            AssetNoteContainer.GetContainer().Save();
         }
         #endregion // Public Method
 
@@ -303,7 +290,7 @@ namespace UNote.Editor
                 case NoteType.Project:
                     string noteName = baseName;
                     int id = 0;
-                    var notes = GetAllProjectNotes();
+                    var notes = GetProjectNoteAll();
                     while (true)
                     {
                         bool isOverlap = false;

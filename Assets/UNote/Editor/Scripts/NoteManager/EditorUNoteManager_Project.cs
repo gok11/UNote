@@ -9,26 +9,26 @@ namespace UNote.Editor
     {
         #region Field
 
-        private static List<ProjectNote> s_projectNoteList = new();
-        private static List<ProjectLeafNote> s_projectLeafNoteList = new();
+        private List<ProjectNote> m_projectNoteList = null;
+        private List<ProjectLeafNote> m_projectLeafNoteList = null;
 
-        private static Dictionary<string, ProjectNote> s_projectNoteDict = new();
-        private static Dictionary<string, List<ProjectLeafNote>> s_projectNoteDictByTitle = new();
+        private Dictionary<string, ProjectNote> m_projectNoteDict = new();
+        private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByTitle = new();
         
         #endregion
         
-        private static IEnumerable<ProjectNote> GetProjectNoteListAll() => s_projectNoteDict.Values;
+        private static IEnumerable<ProjectNote> GetProjectNoteAll() => Instance.m_projectNoteDict.Values;
         
         public static List<ProjectLeafNote> GetProjectLeafNoteListByProjectNoteId(string projectNoteId)
         {
-            if (s_projectNoteDictByTitle.TryGetValue(projectNoteId, out var leafNoteList))
+            if (Instance.m_projectNoteDictByTitle.TryGetValue(projectNoteId, out var leafNoteList))
             {
                 return leafNoteList;
             }
 
             List<ProjectLeafNote> newList = new(64);
 
-            foreach (var note in s_projectLeafNoteList)
+            foreach (var note in Instance.m_projectLeafNoteList)
             {
                 if (note.NoteId == projectNoteId)
                 {
@@ -36,16 +36,16 @@ namespace UNote.Editor
                 }
             }
 
-            s_projectNoteDictByTitle.Add(projectNoteId, newList);
+            Instance.m_projectNoteDictByTitle.Add(projectNoteId, newList);
             return newList;
         }
 
         public static void ClearProjectCache()
         {
-            s_projectNoteList.Clear();
-            s_projectLeafNoteList.Clear();
-            s_projectNoteDict.Clear();
-            s_projectNoteDictByTitle.Clear();
+            Instance.m_projectNoteList.Clear();
+            Instance.m_projectLeafNoteList.Clear();
+            Instance.m_projectNoteDict.Clear();
+            Instance.m_projectNoteDictByTitle.Clear();
         }
     }
 }

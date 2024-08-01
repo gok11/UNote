@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace UNote.Runtime
@@ -8,26 +9,21 @@ namespace UNote.Runtime
     public abstract class NoteContainerBase : ScriptableObject
     {
         #region Property
-        
-        protected abstract string Identifier { get; }
 
-        protected abstract string SubDirectoryName { get; }
-
-        protected virtual string FileDirectory
+        protected static string FileDirectory
         {
             get
             {
                 string streamingAssets = Application.streamingAssetsPath;
-                return Path.Combine(streamingAssets, "UNote", SubDirectoryName);
+                return Path.Combine(streamingAssets, "UNote");
             }
         }
-
-        protected virtual string OwnFileName => $"{UNoteSetting.UserName}_{Identifier}.asset";
-
-        protected virtual string OwnFileFullPath => Path.Combine(FileDirectory, OwnFileName);
-
+        
         #endregion // Property
 
-        public abstract void Save();
+        public virtual void Save()
+        {
+            AssetDatabase.SaveAssetIfDirty(this);
+        }
     }
 }
