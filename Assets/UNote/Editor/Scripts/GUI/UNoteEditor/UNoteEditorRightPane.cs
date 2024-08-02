@@ -192,7 +192,7 @@ namespace UNote.Editor
                     ProjectNote projectNote = note as ProjectNote;
                     string projectNoteId = projectNote?.NoteId;
 
-                    foreach (var leafNote in EditorUNoteManager.GetProjectLeafNoteListByProjectNoteId(projectNoteId))
+                    foreach (var leafNote in EditorUNoteManager.GetProjectLeafNoteListByNoteId(projectNoteId))
                     {
                         m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(leafNote));
                     }

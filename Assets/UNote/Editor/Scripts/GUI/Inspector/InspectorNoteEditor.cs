@@ -83,8 +83,8 @@ namespace UNote.Editor
                     case NoteType.Asset:
                         string assetPath = AssetDatabase.GetAssetPath(target);
                         string assetGuid = AssetDatabase.AssetPathToGUID(assetPath);
-                        NoteBase note = EditorUNoteManager.GetAssetLeafNoteListByNoteId(assetGuid).First();
-                        EditorUNoteManager.SelectNote(note);
+                        List<AssetNote> noteList = EditorUNoteManager.GetAssetNoteListByGUID(assetGuid);
+                        EditorUNoteManager.SelectNote(noteList.FirstOrDefault());
                         break;
                     
                     default:

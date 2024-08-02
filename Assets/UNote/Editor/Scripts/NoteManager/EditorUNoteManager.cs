@@ -53,11 +53,11 @@ namespace UNote.Editor
                 switch (Instance.m_currentNoteType)
                 {
                     case NoteType.Project:
-                        Instance.m_currentNote = GetProjectNoteAll()?.FirstOrDefault();
+                        Instance.m_currentNote = GetProjectNoteAllList()?.FirstOrDefault();
                         break;
                     
                     case NoteType.Asset:
-                        Instance.m_currentNote = GetAssetNoteAll()?.FirstOrDefault();
+                        Instance.m_currentNote = GetAssetNoteAllList()?.FirstOrDefault();
                         break;
                 }
 
@@ -290,7 +290,7 @@ namespace UNote.Editor
                 case NoteType.Project:
                     string noteName = baseName;
                     int id = 0;
-                    var notes = GetProjectNoteAll();
+                    var notes = GetProjectNoteAllList();
                     while (true)
                     {
                         bool isOverlap = false;
