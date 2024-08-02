@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,8 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
-    public class AssetLeafNote : LeafNoteBase
+    [Serializable]
+    public sealed class AssetLeafNote : LeafNoteBase
     {
         #region Property
 

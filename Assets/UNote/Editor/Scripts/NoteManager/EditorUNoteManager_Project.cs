@@ -13,15 +13,16 @@ namespace UNote.Editor
         private List<ProjectLeafNote> m_projectLeafNoteList = null;
 
         private Dictionary<string, ProjectNote> m_projectNoteDict = new();
-        private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByTitle = new();
+        private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByGUID = new();
         
         #endregion
         
-        private static IEnumerable<ProjectNote> GetProjectNoteAll() => Instance.m_projectNoteDict.Values;
+        internal static IReadOnlyList<ProjectNote> GetProjectNoteAllList() => Instance.m_projectNoteList;
+        internal static IReadOnlyList<ProjectLeafNote> GetProjectLeafNoteAllList() => Instance.m_projectLeafNoteList;
         
-        public static List<ProjectLeafNote> GetProjectLeafNoteListByProjectNoteId(string projectNoteId)
+        public static List<ProjectLeafNote> GetProjectLeafNoteListByNoteId(string projectNoteId)
         {
-            if (Instance.m_projectNoteDictByTitle.TryGetValue(projectNoteId, out var leafNoteList))
+            if (Instance.m_projectNoteDictByGUID.TryGetValue(projectNoteId, out var leafNoteList))
             {
                 return leafNoteList;
             }
@@ -30,13 +31,13 @@ namespace UNote.Editor
 
             foreach (var note in Instance.m_projectLeafNoteList)
             {
-                if (note.NoteId == projectNoteId)
+                if (note.ReferenceNoteId == projectNoteId)
                 {
                     newList.Add(note);
                 }
             }
 
-            Instance.m_projectNoteDictByTitle.Add(projectNoteId, newList);
+            Instance.m_projectNoteDictByGUID.Add(projectNoteId, newList);
             return newList;
         }
 
@@ -45,7 +46,7 @@ namespace UNote.Editor
             Instance.m_projectNoteList.Clear();
             Instance.m_projectLeafNoteList.Clear();
             Instance.m_projectNoteDict.Clear();
-            Instance.m_projectNoteDictByTitle.Clear();
+            Instance.m_projectNoteDictByGUID.Clear();
         }
     }
 }
