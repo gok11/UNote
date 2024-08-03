@@ -17,6 +17,8 @@ namespace UNote.Editor
         private List<AssetNote> m_assetNoteList = new();
         private List<AssetLeafNote> m_assetLeafNoteList = new();
 
+        private List<AssetNote> m_assetNoteListDistinct = new();
+
         private Dictionary<string, List<AssetNote>> m_assetNoteDict = new();
         private Dictionary<string, List<AssetLeafNote>> m_assetLeafNoteDict = new();
 
@@ -87,6 +89,8 @@ namespace UNote.Editor
             container.GetAssetNoteList().Add(newNote);
             container.Save();
             
+            ReloadAssetNotes();
+            
             OnNoteAdded?.Invoke(newNote);
             
             return newNote;
@@ -107,6 +111,8 @@ namespace UNote.Editor
 
             container.GetAssetLeafNoteList().Add(newNote);
             container.Save();
+            
+            ReloadAssetNotes();
             
             OnNoteAdded?.Invoke(newNote);
             
@@ -140,18 +146,24 @@ namespace UNote.Editor
 
         public static IEnumerable<AssetNote> GetAllAssetNotesIdDistinct()
         {
-            List<AssetNote> tempList = new List<AssetNote>();
-            
-            foreach (var key in Instance.m_assetNoteDict.Keys)
+            if (Instance.m_assetNoteListDistinct.Count > 0)
             {
-                AssetNote note = GetAssetNoteListByGuid(key).FirstOrDefault();
-                if (note != null)
-                {
-                    tempList.Add(note);   
-                }
+                return Instance.m_assetNoteListDistinct;
             }
 
-            return tempList;
+            foreach (var note in Instance.m_assetNoteList)
+            {
+                bool existBindNote = Instance.m_assetNoteListDistinct
+                    .FindIndex(t => t.BindAssetId == note.BindAssetId) > 0;
+                if (existBindNote)
+                {
+                    continue;
+                }
+
+                Instance.m_assetNoteListDistinct.Add(note);
+            }
+
+            return Instance.m_assetNoteListDistinct;
         }
 
         public static List<AssetLeafNote> GetAssetLeafNoteListByNoteId(string assetNoteId)
@@ -202,6 +214,8 @@ namespace UNote.Editor
                     astContainer.Save();
                 }
             }
+            
+            ReloadAssetNotes();
         }
 
         #endregion
@@ -212,6 +226,7 @@ namespace UNote.Editor
         {
             Instance.m_assetNoteList.Clear();
             Instance.m_assetLeafNoteList.Clear();
+            Instance.m_assetNoteListDistinct.Clear();
             Instance.m_assetNoteDict.Clear();
             Instance.m_assetLeafNoteDict.Clear();
         }

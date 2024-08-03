@@ -12,5 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d68639d51ce0c6b48846f13e97a682d0, type: 3}
   m_Name: hiroki_asset
   m_EditorClassIdentifier: 
-  m_assetNoteList: []
-  m_assetLeafNoteList: []
+  m_assetNoteList:
+  - m_noteId: 7a298a03-59b8-430e-ab85-8cfa8e0266aa
+    m_author: hiroki
+    m_noteContent: 
+    m_createdDate: 08/03/2024 13:25:50
+    m_updatedDate: 08/03/2024 13:25:50
+    m_archived: 0
+    m_noteName: 
+    m_bindAssetId: 415609af05c686441be9a413142a1b7f
+  m_assetLeafNoteList:
+  - m_noteId: ab0ffd84-1f12-40f2-8e0e-24d1b4cc1fe3
+    m_author: hiroki
+    m_noteContent: test
+    m_createdDate: 08/03/2024 22:38:04
+    m_updatedDate: 08/03/2024 22:38:04
+    m_archived: 0
+    m_referenceNoteId: 7a298a03-59b8-430e-ab85-8cfa8e0266aa
+  - m_noteId: 1c5ad81c-e9db-4b20-a9eb-e66f4cf47b68
+    m_author: hiroki
+    m_noteContent: testtest
+    m_createdDate: 08/03/2024 22:47:53
+    m_updatedDate: 08/03/2024 22:47:53
+    m_archived: 0
+    m_referenceNoteId: 7a298a03-59b8-430e-ab85-8cfa8e0266aa
