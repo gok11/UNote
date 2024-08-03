@@ -146,10 +146,15 @@ namespace UNote.Editor
                 case NoteType.Asset:
                     string assetPath = AssetDatabase.GetAssetPath(target);
                     string assetGuid = AssetDatabase.AssetPathToGUID(assetPath);
-                    
-                    foreach (var leafNote in EditorUNoteManager.GetAssetLeafNoteListByNoteId(assetGuid))
+
+                    // TODO
+                    AssetNote assetNote = EditorUNoteManager.GetAssetNoteListByGuid(assetGuid).FirstOrDefault();
+                    if (assetNote != null)
                     {
-                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(leafNote));
+                        foreach (var leafNote in EditorUNoteManager.GetAssetLeafNoteListByNoteId(assetNote.NoteId))
+                        {
+                            m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(leafNote));
+                        }   
                     }
                     break;
                 
