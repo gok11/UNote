@@ -57,9 +57,12 @@ namespace UNote.Editor
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
 
             NoteBase currentNote = EditorUNoteManager.CurrentNote;
-            m_noteInputField = new NoteInputField(currentNote.NoteType, currentNote.NoteId);
-            m_noteInputField.style.flexShrink = 0;
-            contentContainer.Q<TemplateContainer>().Add(m_noteInputField);
+            if (currentNote != null)
+            {
+                m_noteInputField = new NoteInputField(currentNote.NoteType, currentNote.NoteId);
+                m_noteInputField.style.flexShrink = 0;
+                contentContainer.Q<TemplateContainer>().Add(m_noteInputField);   
+            }
             
             // Show note list by created date
             SetupNoteList();
@@ -82,8 +85,16 @@ namespace UNote.Editor
             EditorUNoteManager.OnNoteSelected += n =>
             {
                 NoteBase note = n ?? EditorUNoteManager.CurrentNote;
-                m_noteInputField.SetNoteInfo(note.NoteType, note.NoteId);
-                SetupNoteList();
+                if (note != null)
+                {
+                    m_noteInputField?.SetNoteInfo(note.NoteType, note.NoteId);
+                    SetupNoteList();   
+                }
+                else
+                {
+                    m_noteTitle.text = "";
+                    m_noteList.contentContainer.Clear();
+                }
             };
         }
 
@@ -138,8 +149,8 @@ namespace UNote.Editor
                 }
             }
         }
-        
-        public void SetupNoteList()
+
+        private void SetupNoteList()
         {
             // disable to edit title
             SetTitleGUIEditMode(false);
@@ -265,6 +276,18 @@ namespace UNote.Editor
             {
                 m_noteEditor.CenterPane.OnUndoRedo(undoName);
             }
+
+            switch (EditorUNoteManager.CurrentNoteType)
+            {
+                case NoteType.Project:
+                    EditorUNoteManager.ReloadProjectNotes();
+                    break;
+                
+                case NoteType.Asset:
+                    EditorUNoteManager.ReloadAssetNotes();
+                    break;
+            }
+            
             SetupNoteList();
         }
     }
