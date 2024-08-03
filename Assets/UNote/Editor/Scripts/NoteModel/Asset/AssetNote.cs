@@ -25,7 +25,7 @@ namespace UNote.Editor
         {
             get
             {
-                string path = AssetDatabase.GUIDToAssetPath(NoteId);
+                string path = AssetDatabase.GUIDToAssetPath(BindAssetId);
                 return Path.GetFileName(path);
             }
         }

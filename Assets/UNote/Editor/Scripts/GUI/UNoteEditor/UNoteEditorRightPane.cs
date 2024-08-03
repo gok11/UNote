@@ -177,9 +177,10 @@ namespace UNote.Editor
                     break;
                 
                 case NoteType.Asset:
+                    AssetNote assetNote = note as AssetNote;
                     ObjectField assetField = new ObjectField("Reference Asset");
                     Object referenceAsset =
-                        AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(note.NoteId));
+                        AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(assetNote.BindAssetId));
                     assetField.SetValueWithoutNotify(referenceAsset);
                     assetField.style.fontSize = 10;
                     assetField.SetEnabled(false);

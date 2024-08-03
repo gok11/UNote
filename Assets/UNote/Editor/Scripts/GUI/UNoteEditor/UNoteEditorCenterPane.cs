@@ -16,7 +16,7 @@ namespace UNote.Editor
     {
         private UNoteEditor m_noteEditor;
 
-        private Label m_noteCategoryLabel;
+        private Label m_noteQueryLabel;
         
         private ScrollView m_noteScroll;
 
@@ -35,7 +35,7 @@ namespace UNote.Editor
             TemplateContainer template = tree.CloneTree();
             contentContainer.Add(template);
 
-            m_noteCategoryLabel = template.Q<Label>("NoteCategoryLabel");
+            m_noteQueryLabel = template.Q<Label>("NoteCategoryLabel");
             
             m_noteScroll = template.Q<ScrollView>("NoteList");
 
@@ -59,12 +59,12 @@ namespace UNote.Editor
             switch (EditorUNoteManager.CurrentNoteType)
             {
                 case NoteType.Project:
-                    m_noteCategoryLabel.text = "Project Note";
+                    m_noteQueryLabel.text = "Project Note";
                     notes = EditorUNoteManager.GetProjectNoteAllList().OrderBy(t => t.CreatedDate);
                     break;
 
                 case NoteType.Asset:
-                    m_noteCategoryLabel.text = "Asset Note";
+                    m_noteQueryLabel.text = "Asset Note";
                     notes = EditorUNoteManager.GetAllAssetNotesIdDistinct().OrderBy(t => t.CreatedDate);
                     break;
                 

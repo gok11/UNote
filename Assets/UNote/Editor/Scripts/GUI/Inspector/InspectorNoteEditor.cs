@@ -119,7 +119,7 @@ namespace UNote.Editor
                     string path = AssetDatabase.GetAssetPath(target);
                     string guid = AssetDatabase.AssetPathToGUID(path);
                     // TODO
-                    string noteId = EditorUNoteManager.GetAssetNoteListByGuid(guid).First().NoteId;
+                    string noteId = EditorUNoteManager.GetAssetNoteListByGuid(guid).FirstOrDefault()?.NoteId;
                     return noteId;
                 
                 default:
