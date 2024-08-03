@@ -83,7 +83,7 @@ namespace UNote.Editor
                     case NoteType.Asset:
                         string assetPath = AssetDatabase.GetAssetPath(target);
                         string assetGuid = AssetDatabase.AssetPathToGUID(assetPath);
-                        List<AssetNote> noteList = EditorUNoteManager.GetAssetNoteListByGUID(assetGuid);
+                        List<AssetNote> noteList = EditorUNoteManager.GetAssetNoteListByGuid(assetGuid);
                         EditorUNoteManager.SelectNote(noteList.FirstOrDefault());
                         break;
                     
@@ -117,7 +117,10 @@ namespace UNote.Editor
             {
                 case NoteType.Asset:
                     string path = AssetDatabase.GetAssetPath(target);
-                    return AssetDatabase.AssetPathToGUID(path);
+                    string guid = AssetDatabase.AssetPathToGUID(path);
+                    // TODO
+                    string noteId = EditorUNoteManager.GetAssetNoteListByGuid(guid).First().NoteId;
+                    return noteId;
                 
                 default:
                     return null;
