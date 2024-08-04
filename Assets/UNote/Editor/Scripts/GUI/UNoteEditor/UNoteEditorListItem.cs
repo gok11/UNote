@@ -85,6 +85,9 @@ namespace UNote.Editor
                     m_noteContentLabel.text = leafNote
                         ?.NoteContent.Replace("\r", " ")
                         .Replace("\n", " ");
+                    
+                    // TODO
+                    RegisterMouseEvent();
                     break;
                 }
             }

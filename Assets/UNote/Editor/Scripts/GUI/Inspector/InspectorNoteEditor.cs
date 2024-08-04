@@ -28,7 +28,7 @@ namespace UNote.Editor
             name = nameof(InspectorNoteEditor);
 
             NoteType noteType = GetTargetNoteType(target);
-            string noteId = GetBindId(noteType, target);
+            (string, string) ids = GetBindId(noteType, target);
             
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.InspectorNoteEditor
@@ -42,7 +42,7 @@ namespace UNote.Editor
             m_noteListBorder = contentContainer.Q("NoteListBorder");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
 
-            m_noteInputField = new NoteInputField(noteType, noteId);
+            m_noteInputField = new NoteInputField(noteType, ids.Item1, ids.Item2);
             m_noteInputField.style.marginLeft = 16;
             m_content.Add(m_noteInputField);
             
@@ -111,19 +111,18 @@ namespace UNote.Editor
             return NoteType.Asset;
         }
 
-        private string GetBindId(NoteType noteType, Object target)
+        private (string, string) GetBindId(NoteType noteType, Object target)
         {
             switch (noteType)
             {
                 case NoteType.Asset:
                     string path = AssetDatabase.GetAssetPath(target);
                     string guid = AssetDatabase.AssetPathToGUID(path);
-                    // TODO
                     string noteId = EditorUNoteManager.GetAssetNoteListByGuid(guid).FirstOrDefault()?.NoteId;
-                    return noteId;
+                    return (noteId, guid);
                 
                 default:
-                    return null;
+                    return (null, null);
             }
         }
         

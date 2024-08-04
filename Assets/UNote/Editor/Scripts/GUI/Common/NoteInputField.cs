@@ -14,6 +14,7 @@ namespace UNote.Editor
     {
         private NoteType m_bindNoteType;
         private string m_bindId;
+        private string m_objectId;
         
         [SerializeField]
         private NoteEditorModel m_model;
@@ -25,11 +26,11 @@ namespace UNote.Editor
         
         private float m_lastScrollPosition;
         
-        public NoteInputField(NoteType noteType, string bindId)
+        public NoteInputField(NoteType noteType, string bindId, string objectId = null)
         {
             name = nameof(NoteInputField);
 
-            SetNoteInfo(noteType, bindId);
+            SetNoteInfo(noteType, bindId, objectId);
 
             m_model = ScriptableObject.CreateInstance<NoteEditorModel>();
             
@@ -74,10 +75,11 @@ namespace UNote.Editor
             contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
         }
 
-        public void SetNoteInfo(NoteType noteType, string bindId)
+        public void SetNoteInfo(NoteType noteType, string bindId, string objectId = null)
         {
             m_bindNoteType = noteType;
             m_bindId = bindId;
+            m_objectId = objectId;
         }
         
         private void OnKeyDown(KeyDownEvent evt)
@@ -109,6 +111,15 @@ namespace UNote.Editor
                     break;
                 
                 case NoteType.Asset:
+                    // TODO
+                    // Add parent note if needed
+                    if (m_bindId.IsNullOrEmpty())
+                    {
+                        AssetNote newNote = EditorUNoteManager.AddNewAssetNote(m_objectId, "");
+                        m_bindId = newNote.NoteId;
+                    }
+                    
+                    // Add leaf note
                     newLeafNote = EditorUNoteManager.AddNewAssetLeafNote(
                         m_bindId,
                         m_inputText.value
