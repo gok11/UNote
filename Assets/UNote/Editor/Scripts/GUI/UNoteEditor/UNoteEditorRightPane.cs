@@ -27,6 +27,8 @@ namespace UNote.Editor
         private TextField m_titleField;
 
         private VisualElement m_subInfoArea;
+
+        private ScrollView m_tabList;
         
         // Note list
         private ScrollView m_noteList;
@@ -53,7 +55,8 @@ namespace UNote.Editor
             m_titleField = contentContainer.Q<TextField>("TitleField");
 
             m_subInfoArea = contentContainer.Q<VisualElement>("NoteSubInfoArea");
-            
+
+            m_tabList = contentContainer.Q<ScrollView>("TabList");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
 
             NoteBase currentNote = EditorUNoteManager.CurrentNote;
@@ -270,7 +273,9 @@ namespace UNote.Editor
                 subInfoStyle.height = 0;
             }
         }
-        
+
+        #region Undo
+
         public override void OnUndoRedo(string undoName)
         {
             if (undoName.Contains("UNote Change Project Note Title"))
@@ -291,5 +296,8 @@ namespace UNote.Editor
             
             SetupNoteList();
         }
+
+        #endregion // Undo
+        
     }
 }
