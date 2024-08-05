@@ -20,6 +20,8 @@ namespace UNote.Editor
         
         private ScrollView m_noteScroll;
 
+        private NoteQuery m_noteQuery;
+
         public UNoteEditorCenterPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorCenterPane);
