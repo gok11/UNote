@@ -27,6 +27,7 @@ namespace UNote.Editor
         public NoteQuery(string queryName, string searchText,
             string[] searchTags, bool showArchive, bool showFavoriteFirst)
         {
+            QueryName = queryName;
             NoteTypeFilter = NoteTypeFilter.All;
             QueryId = Guid.NewGuid().ToString();
         }

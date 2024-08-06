@@ -7,13 +7,12 @@ using UnityEngine;
 namespace UNote.Editor
 {
     [Serializable]
-    public class ProjectNoteQuery : NoteQuery
+    public class ProjectNotesQuery : NoteQuery
     {
-        public ProjectNoteQuery(string queryName, string searchText,
-            string[] searchTags, bool showArchive, bool showFavoriteFirst)
-            : base(queryName, searchText, searchTags, showArchive, showFavoriteFirst)
+        public ProjectNotesQuery(string searchText = null,
+            string[] searchTags = null, bool showArchive = true, bool showFavoriteFirst = true)
+            : base("Project Notes", searchText, searchTags, showArchive, showFavoriteFirst)
         {
-            QueryName = "Project Note";
             NoteTypeFilter = NoteTypeFilter.Project;
         }
     }

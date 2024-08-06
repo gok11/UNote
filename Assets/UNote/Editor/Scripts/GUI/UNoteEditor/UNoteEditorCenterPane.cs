@@ -20,8 +20,6 @@ namespace UNote.Editor
         
         private ScrollView m_noteScroll;
 
-        private NoteQuery m_noteQuery;
-
         public UNoteEditorCenterPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorCenterPane);
@@ -46,33 +44,30 @@ namespace UNote.Editor
             
             // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupListItems();
-            EditorUNoteManager.OnNoteSelected += _ => UpdateNoteList();
+            EditorUNoteManager.OnNoteSelected += _ => UpdateNoteBackground();
             EditorUNoteManager.OnNoteDeleted += _ => SetupListItems();
+            EditorUNoteManager.OnNoteQueryUpdated += _ => SetupListItems();
         }
 
         public void SetupListItems()
         {
+            NoteQuery noteQuery = EditorUNoteManager.CurrentNoteQuery;
+            
+            if (noteQuery == null)
+            {
+                return;
+            }
+            
             VisualElement container = m_noteScroll.contentContainer;
             container.Clear();
-
+            
             // Prepare item
-            IEnumerable<NoteBase> notes = null;
-
-            switch (EditorUNoteManager.CurrentNoteType)
-            {
-                case NoteType.Project:
-                    m_noteQueryLabel.text = "Project Note";
-                    notes = EditorUNoteManager.GetProjectNoteAllList().OrderBy(t => t.CreatedDate);
-                    break;
-
-                case NoteType.Asset:
-                    m_noteQueryLabel.text = "Asset Note";
-                    notes = EditorUNoteManager.GetAllAssetNotesIdDistinct().OrderBy(t => t.CreatedDate);
-                    break;
-                
-                default:
-                    throw new NotImplementedException();
-            }
+            m_noteQueryLabel.text = noteQuery.QueryName;
+            IEnumerable<NoteBase> notes = EditorUNoteManager.GetFilteredNotes(noteQuery);
+            
+            // TODO favorite first setting
+            
+            notes = notes.OrderBy(t => t.CreatedDate);
 
             // Add content to list
             foreach (var note in notes)
@@ -82,13 +77,11 @@ namespace UNote.Editor
                 item.Setup(note);
             }
 
-            UpdateNoteList();
+            UpdateNoteBackground();
         }
 
-        public void UpdateNoteList()
+        private void UpdateNoteBackground()
         {
-            // TODO filter notes
-
             // Update background color
             foreach (var item in m_noteScroll.contentContainer.Query<UNoteEditorListItem>().Build())
             {

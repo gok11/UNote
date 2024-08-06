@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace UNote.Editor
 {
-    public class AllNoteQuery : NoteQuery
+    public class AllNotesQuery : NoteQuery
     {
-        public AllNoteQuery(string queryName, string searchText,
-            string[] searchTags, bool showArchive, bool showFavoriteFirst)
-            : base(queryName, searchText, searchTags, showArchive, showFavoriteFirst)
+        public AllNotesQuery(string searchText = null,
+            string[] searchTags = null, bool showArchive = true, bool showFavoriteFirst = true)
+            : base("All Notes", searchText, searchTags, showArchive, showFavoriteFirst)
         {
             NoteTypeFilter = NoteTypeFilter.All;
         }
