@@ -18,17 +18,20 @@ namespace UNote.Editor
 
         private NoteType m_currentNoteType = NoteType.Project;
         private NoteBase m_currentNote;
-
+        private NoteQuery m_noteQuery;
+        
         private ProjectNoteContainer m_projectNoteContainer;
         private AssetNoteContainer m_assetNoteContainer;
 
         public delegate void AddNoteHandler(NoteBase note);
-
         public delegate void SelectNoteHandler(NoteBase note);
+
+        public delegate void SelectQueryHandler(NoteQuery query);
         public delegate void DeleteNoteHandler(NoteBase note);
 
         public static event AddNoteHandler OnNoteAdded;
         public static event SelectNoteHandler OnNoteSelected;
+        public static event SelectQueryHandler OnNoteQueryUpdated;
         public static event DeleteNoteHandler OnNoteDeleted;
 
         private static EditorUNoteManager s_instance;
@@ -41,12 +44,20 @@ namespace UNote.Editor
 
         public static NoteType CurrentNoteType => Instance.m_currentNoteType;
 
+        public static NoteQuery CurrentNoteQuery => Instance.m_noteQuery ?? (Instance.m_noteQuery = new AllNotesQuery());
+
         public static NoteBase CurrentNote
         {
             get
             {
                 if (Instance.m_currentNote != null)
                 {
+                    return Instance.m_currentNote;
+                }
+
+                if (Instance.m_noteQuery != null)
+                {
+                    Instance.m_currentNote = GetFilteredNotes(Instance.m_noteQuery)?.FirstOrDefault();
                     return Instance.m_currentNote;
                 }
 
@@ -90,11 +101,48 @@ namespace UNote.Editor
             OnNoteSelected?.Invoke(null);
         }
 
+        public static void SetNoteQuery(NoteQuery noteQuery)
+        {
+            Instance.m_currentNote = null;
+            Instance.m_noteQuery = noteQuery;
+            OnNoteQueryUpdated?.Invoke(noteQuery);
+        }
+
+        public static void CallUpdateNoteQuery()
+        {
+            OnNoteQueryUpdated?.Invoke(Instance.m_noteQuery);
+        }
+
         public static void SelectNote(NoteBase note)
         {
             Instance.m_currentNote = note;
             Instance.m_currentNoteType = note.NoteType;
             OnNoteSelected?.Invoke(note);
+        }
+
+        public static IEnumerable<NoteBase> GetFilteredNotes(NoteQuery noteQuery)
+        {
+            List<NoteBase> noteList = new List<NoteBase>();
+
+            switch (noteQuery.NoteTypeFilter)
+            {
+                case NoteTypeFilter.All:
+                    noteList.AddRange(GetProjectNoteAllList());
+                    noteList.AddRange(GetAllAssetNotesIdDistinct());
+                    break;
+                
+                case NoteTypeFilter.Project:
+                    noteList.AddRange(GetProjectNoteAllList());
+                    break;
+                
+                case NoteTypeFilter.Asset:
+                    noteList.AddRange(GetAllAssetNotesIdDistinct());
+                    break;
+            }
+            
+            // TODO
+            
+            return noteList;
         }
         
         public static void ChangeNoteName(NoteBase note, string noteName)

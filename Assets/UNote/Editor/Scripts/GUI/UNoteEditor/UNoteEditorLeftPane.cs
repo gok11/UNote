@@ -12,10 +12,10 @@ namespace UNote.Editor
     {
         private UNoteEditor m_noteEditor;
         private Button m_noteAddButton;
-        
-        private Dictionary<NoteType, VisualElement> m_categoryElemDict = new();
 
-        private NoteType m_currentNoteType = NoteType.Project;
+        private NoteQuery m_currentQuery;
+        
+        private Dictionary<NoteQuery, VisualElement> m_queryElemDict = new();
 
         public UNoteEditorLeftPane(UNoteEditor noteEditor)
         {
@@ -47,54 +47,49 @@ namespace UNote.Editor
             TemplateContainer categoryContainer = categoryTree.Instantiate();
             presetViewElem.Add(categoryContainer);
 
+            VisualElement allNoteElem = categoryContainer.Q("AllNoteElem");
             VisualElement projectNoteElem = categoryContainer.Q("ProjectNoteElem");
             VisualElement assetNoteElem = categoryContainer.Q("AssetNoteElem");
 
             // Update color
-            m_categoryElemDict.Add(NoteType.Project, projectNoteElem);
-            m_categoryElemDict.Add(NoteType.Asset, assetNoteElem);
+            AllNotesQuery initQuery = new AllNotesQuery();
+            m_queryElemDict.Add(initQuery, allNoteElem);
+            m_queryElemDict.Add(new ProjectNotesQuery(), projectNoteElem);
+            m_queryElemDict.Add(new AssetNotesQuery(), assetNoteElem);
 
-            SelectCategoryElem(EditorUNoteManager.CurrentNoteType);
+            SelectQueryElem(initQuery);
 
             // Register select event
-            foreach (var category in m_categoryElemDict)
+            foreach (var pair in m_queryElemDict)
             {
-                category.Value.RegisterCallback<MouseDownEvent>(evt =>
+                pair.Value.RegisterCallback<MouseDownEvent>(evt =>
                 {
-                    EditorUNoteManager.SelectCategory(category.Key);
-                    SelectCategoryElem(category.Key);
+                    EditorUNoteManager.SetNoteQuery(pair.Key);
+                    SelectQueryElem(pair.Key);
                     evt.StopPropagation();
                 });
             }
             
             m_noteAddButton.clicked += ShowAddWindow;
-
-            EditorUNoteManager.OnNoteSelected += note =>
-            {
-                if (note != null)
-                {
-                    SelectCategoryElem(note.NoteType);   
-                }
-            };
         }
 
-        private void SelectCategoryElem(NoteType noteType)
+        private void SelectQueryElem(NoteQuery noteQuery)
         {
             // Set background color
-            foreach (var category in m_categoryElemDict)
+            foreach (var category in m_queryElemDict)
             {
-                m_categoryElemDict[category.Key].contentContainer.style.backgroundColor =
-                    noteType == category.Key ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
+                m_queryElemDict[category.Key].contentContainer.style.backgroundColor =
+                    noteQuery == category.Key ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
             }
             
             // Select internal
-            if (noteType == m_currentNoteType)
+            if (noteQuery == m_currentQuery)
             {
                 return;
             }
             
             m_noteEditor.CenterPane?.SetupListItems();
-            m_currentNoteType = noteType;
+            m_currentQuery = noteQuery;
         }
         
         private void ShowAddWindow()

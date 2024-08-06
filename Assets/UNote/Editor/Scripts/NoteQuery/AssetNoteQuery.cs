@@ -4,13 +4,12 @@ using UnityEngine;
 
 namespace UNote.Editor
 {
-    public class AssetNoteQuery : NoteQuery
+    public class AssetNotesQuery : NoteQuery
     {
-        public AssetNoteQuery(string queryName, string searchText,
-            string[] searchTags, bool showArchive, bool showFavoriteFirst)
-            : base(queryName, searchText, searchTags, showArchive, showFavoriteFirst)
+        public AssetNotesQuery(string searchText = null, string[] searchTags = null,
+            bool showArchive = true, bool showFavoriteFirst = true)
+            : base("Asset Notes", searchText, searchTags, showArchive, showFavoriteFirst)
         {
-            QueryName = "Asset Note";
             NoteTypeFilter = NoteTypeFilter.Asset;
         }
     }
