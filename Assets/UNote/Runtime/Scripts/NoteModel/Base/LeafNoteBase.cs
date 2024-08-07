@@ -10,12 +10,16 @@ namespace UNote.Runtime
 
         [SerializeField] private string m_referenceNoteId;
 
-        #endregion
+        #endregion // Field
+
+        #region Property
 
         public string ReferenceNoteId
         {
             get => m_referenceNoteId;
             set => m_referenceNoteId = value;
         }
+
+        #endregion // Property
     }
 }

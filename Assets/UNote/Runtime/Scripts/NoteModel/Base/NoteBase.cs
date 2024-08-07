@@ -74,10 +74,14 @@ namespace UNote.Runtime
 
         #endregion // Property
 
-        public NoteBase()
+        #region Contructor
+
+        protected NoteBase()
         {
             m_noteId = Guid.NewGuid().ToString();
             m_createdDate = m_updatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
         }
+
+        #endregion
     }
 }

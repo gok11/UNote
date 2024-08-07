@@ -1,14 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.Playables;
-using UnityEngine;
 using UNote.Runtime;
-
-using Object = UnityEngine.Object;
 
 namespace UNote.Editor
 {
@@ -80,6 +75,8 @@ namespace UNote.Editor
 
         #endregion // Property
 
+        #region Initialize
+
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
@@ -91,6 +88,8 @@ namespace UNote.Editor
             ReloadProjectNotes();
             ReloadAssetNotes();
         }
+
+        #endregion // Initialize
 
         #region Public Method
 

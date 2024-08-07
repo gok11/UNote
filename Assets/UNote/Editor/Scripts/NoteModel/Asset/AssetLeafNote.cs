@@ -15,6 +15,6 @@ namespace UNote.Editor
 
         public override NoteType NoteType => NoteType.Asset;
 
-        #endregion
+        #endregion // Property
     }
 }
