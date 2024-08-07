@@ -15,7 +15,7 @@ namespace UNote.Editor
 
         [SerializeField] private string m_bindAssetId;
 
-        #endregion
+        #endregion // Field
         
         #region Property
 
