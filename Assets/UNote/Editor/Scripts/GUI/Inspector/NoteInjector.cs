@@ -20,27 +20,15 @@ namespace UNote.Editor
                 .GetField("m_Tracker", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private static List<Object> s_targetTempList = new(64);
-        private static List<Object> s_removeTempList = new(64);
-
-        private static int s_intervalCounter = 0;
-        private const int Interval = 2;
         
         static NoteInjector()
         {
             EditorApplication.update -= TryInjectNoteElement;
             EditorApplication.update += TryInjectNoteElement;
-
-            s_intervalCounter = Interval;
         }
 
-        static void TryInjectNoteElement()
+        private static void TryInjectNoteElement()
         {
-            s_intervalCounter = Mathf.Max(0, s_intervalCounter - 1);
-            if (s_intervalCounter != 0)
-            {
-                return;
-            }
-            
             var windows = Resources.FindObjectsOfTypeAll<EditorWindow>();
 
             foreach (var window in windows)

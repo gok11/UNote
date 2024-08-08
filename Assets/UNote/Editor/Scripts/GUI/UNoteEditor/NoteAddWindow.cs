@@ -11,10 +11,15 @@ namespace UNote.Editor
 {
     public class NoteAddWindow : EditorWindow
     {
-        private NoteType m_noteType;
+        #region Field
+
         private VisualElement m_container;
-        
-        private void OnEnable()
+
+        #endregion // Field
+
+        #region Private Method
+
+                private void OnEnable()
         {
             titleContent = new GUIContent("New Note");   
         }
@@ -30,8 +35,6 @@ namespace UNote.Editor
             
             noteTypeField.RegisterValueChangedCallback(t =>
             {
-                m_noteType = (NoteType)t.newValue;
-
                 m_container.Clear();
                 
                 switch ((NoteType)t.newValue)
@@ -102,5 +105,9 @@ namespace UNote.Editor
             m_container.AddSpacer();
             m_container.Add(addButton);
         }
+
+        #endregion // Private Method
+        
+
     }
 }
