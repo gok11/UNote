@@ -12,12 +12,13 @@ namespace UNote.Editor
     [Serializable]
     public class NoteInputField : VisualElement
     {
+        #region Field
+
         private NoteType m_bindNoteType;
         private string m_bindId;
         private string m_objectId;
         
-        [SerializeField]
-        private NoteEditorModel m_model;
+        [SerializeField] private NoteEditorModel m_model;
         
         private TextField m_inputText;
         private ScrollView m_inputScroll;
@@ -25,7 +26,11 @@ namespace UNote.Editor
         private Button m_sendButton;
         
         private float m_lastScrollPosition;
-        
+
+        #endregion // Field
+
+        #region Constructor
+
         public NoteInputField(NoteType noteType, string bindId, string objectId = null)
         {
             name = nameof(NoteInputField);
@@ -75,13 +80,21 @@ namespace UNote.Editor
             contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
         }
 
+        #endregion // Constructor
+
+        #region Public Methods
+
         public void SetNoteInfo(NoteType noteType, string bindId, string objectId = null)
         {
             m_bindNoteType = noteType;
             m_bindId = bindId;
             m_objectId = objectId;
         }
-        
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         private void OnKeyDown(KeyDownEvent evt)
         {
             if (evt.keyCode == KeyCode.Return && evt.shiftKey)
@@ -142,5 +155,7 @@ namespace UNote.Editor
 
             m_inputText.BindProperty(m_model.EditingText);
         }
+
+        #endregion // Private Methods
     }
 }

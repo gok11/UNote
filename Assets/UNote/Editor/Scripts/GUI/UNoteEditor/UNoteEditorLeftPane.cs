@@ -10,6 +10,8 @@ namespace UNote.Editor
 {
     public class UNoteEditorLeftPane : UNoteEditorPaneBase
     {
+        #region Field
+
         private UNoteEditor m_noteEditor;
         private Button m_noteAddButton;
 
@@ -17,7 +19,11 @@ namespace UNote.Editor
         
         private Dictionary<NoteQuery, VisualElement> m_queryElemDict = new();
 
-        public UNoteEditorLeftPane(UNoteEditor noteEditor)
+        #endregion // Field
+
+        #region Constructor
+
+                internal UNoteEditorLeftPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorLeftPane);
 
@@ -73,6 +79,10 @@ namespace UNote.Editor
             m_noteAddButton.clicked += ShowAddWindow;
         }
 
+        #endregion // Constructor
+
+        #region Private Method
+
         private void SelectQueryElem(NoteQuery noteQuery)
         {
             // Set background color
@@ -102,5 +112,7 @@ namespace UNote.Editor
             NoteAddWindow addWindow = ScriptableObject.CreateInstance<NoteAddWindow>();
             addWindow.ShowUtility();
         }
+
+        #endregion // Private Method
     }
 }

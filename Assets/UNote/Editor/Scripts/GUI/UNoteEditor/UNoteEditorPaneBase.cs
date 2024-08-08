@@ -7,6 +7,6 @@ namespace UNote.Editor
 {
     public abstract class UNoteEditorPaneBase : VisualElement
     {
-        public virtual void OnUndoRedo(string undoName) { }
+        internal virtual void OnUndoRedo(string undoName) { }
     }
 }

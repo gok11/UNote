@@ -14,13 +14,19 @@ namespace UNote.Editor
 {
     public class UNoteEditorCenterPane : UNoteEditorPaneBase
     {
+        #region Field
+
         private UNoteEditor m_noteEditor;
 
         private Label m_noteQueryLabel;
         
         private ScrollView m_noteScroll;
 
-        public UNoteEditorCenterPane(UNoteEditor noteEditor)
+        #endregion
+
+        #region Constructor
+
+        internal UNoteEditorCenterPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorCenterPane);
 
@@ -49,7 +55,11 @@ namespace UNote.Editor
             EditorUNoteManager.OnNoteQueryUpdated += _ => SetupListItems();
         }
 
-        public void SetupListItems()
+        #endregion // Constructor
+
+        #region Internal Method
+
+        internal void SetupListItems()
         {
             NoteQuery noteQuery = EditorUNoteManager.CurrentNoteQuery;
             
@@ -80,6 +90,15 @@ namespace UNote.Editor
             UpdateNoteBackground();
         }
 
+        internal override void OnUndoRedo(string undoRedoName)
+        {
+            SetupListItems();
+        }
+
+        #endregion
+
+        #region Private Method
+
         private void UpdateNoteBackground()
         {
             // Update background color
@@ -89,9 +108,6 @@ namespace UNote.Editor
             }
         }
 
-        public override void OnUndoRedo(string undoRedoName)
-        {
-            SetupListItems();
-        }
+        #endregion // Private Method
     }
 }
