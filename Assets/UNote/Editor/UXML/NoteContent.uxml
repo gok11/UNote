@@ -11,7 +11,7 @@
             <ui:VisualElement name="FooterElem" style="flex-grow: 1; flex-direction: row; display: flex;">
                 <ui:Button text="&gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SendButton" />
                 <ui:VisualElement name="Spacing" style="flex-grow: 1;" />
-                <ui:Label tabindex="-1" text="Shift + Enter to edit this note" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Description" style="font-size: 9px; -unity-font-style: normal; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 4px; margin-bottom: 0; margin-left: 0; -unity-text-align: middle-left;" />
+                <ui:Label tabindex="-1" text="Ctrl / Cmd + Enter to edit this note" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Description" style="font-size: 9px; -unity-font-style: normal; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 4px; margin-bottom: 0; margin-left: 0; -unity-text-align: middle-left;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

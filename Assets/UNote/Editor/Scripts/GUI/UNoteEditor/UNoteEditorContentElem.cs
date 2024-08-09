@@ -61,7 +61,7 @@ namespace UNote.Editor
             m_sendButton.clicked += FinishEditText;
             RegisterCallback<KeyDownEvent>(evt =>
             {
-                if (evt.keyCode == KeyCode.Return && evt.shiftKey)
+                if (evt.keyCode == KeyCode.Return && (evt.ctrlKey || evt.commandKey))
                 {
                     FinishEditText();
                 }
