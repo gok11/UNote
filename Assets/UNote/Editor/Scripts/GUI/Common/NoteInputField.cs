@@ -97,7 +97,7 @@ namespace UNote.Editor
 
         private void OnKeyDown(KeyDownEvent evt)
         {
-            if (evt.keyCode == KeyCode.Return && evt.shiftKey)
+            if (evt.keyCode == KeyCode.Return && (evt.ctrlKey || evt.commandKey))
             {
                 SendNote();
             }
