@@ -78,6 +78,11 @@ namespace UNote.Editor
             };
             
             contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+
+            EditorUNoteManager.OnNoteSelected += note =>
+            {
+                SetNoteInfo(note.NoteType, note.NoteId);
+            };
         }
 
         #endregion // Constructor

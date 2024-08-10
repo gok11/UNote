@@ -10,11 +10,20 @@ namespace UNote.Editor
     [Serializable]
     public class UNoteSetting
     {
+
+        #region Const
+        
         private const string SettingKey = "UNote.UNoteSetting";
         
+        #endregion // Const
+
+        #region Field
+
         [SerializeField] private string m_userName;
         [SerializeField] private bool m_inspectorFoldoutOpened;
         [SerializeField] private List<NoteQuery> m_noteQueryList;
+
+        #endregion // Field
 
         #region Property
 
