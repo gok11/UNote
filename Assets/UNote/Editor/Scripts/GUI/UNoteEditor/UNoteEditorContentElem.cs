@@ -146,7 +146,9 @@ namespace UNote.Editor
 
                 m_note.NoteContent = m_editField.value;
                 m_note.UpdatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                EditorUNoteManager.SaveAll();   
+                EditorUNoteManager.SaveAll();
+                    
+                EditorWindow.GetWindow<UNoteEditor>().CenterPane?.SetupListItems();
             }
         }
 
