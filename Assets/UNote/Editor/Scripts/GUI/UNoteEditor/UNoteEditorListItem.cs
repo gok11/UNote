@@ -152,6 +152,19 @@ namespace UNote.Editor
         private void ShowContextMenu()
         {
             GenericMenu menu = new GenericMenu();
+
+            if (m_note.NoteType == NoteType.Project)
+            {
+                menu.AddItem(
+                    new GUIContent("Rename"),
+                    false,
+                    () =>
+                    {
+                        EditorWindow.GetWindow<UNoteEditor>().RightPane.EnableChangeTitleMode();
+                    }
+                );
+            }
+            
             menu.AddItem(
                 new GUIContent("Delete"),
                 false,
