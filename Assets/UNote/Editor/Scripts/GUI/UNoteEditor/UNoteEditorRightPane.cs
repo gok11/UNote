@@ -107,9 +107,9 @@ namespace UNote.Editor
         }
         #endregion // Constructor
 
-        #region Private Method
+        #region Public Method
 
-        private void EnableChangeTitleMode()
+        public void EnableChangeTitleMode()
         {
             NoteBase note = EditorUNoteManager.CurrentNote;
             if (note == null)
@@ -159,7 +159,11 @@ namespace UNote.Editor
                     SetTitleGUIEditMode(false);
                 }
             }
-        }
+        }        
+
+        #endregion // Public Method
+
+        #region Private Method
 
         private void SetupNoteList()
         {
