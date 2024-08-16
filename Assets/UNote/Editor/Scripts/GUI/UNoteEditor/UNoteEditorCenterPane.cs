@@ -22,7 +22,7 @@ namespace UNote.Editor
         
         private ScrollView m_noteScroll;
 
-        #endregion
+        #endregion // Field
 
         #region Constructor
 
