@@ -11,6 +11,8 @@ namespace UNote.Editor
 {
     public class UNoteEditorContentElem : VisualElement
     {
+        #region Field
+
         private NoteBase m_note;
 
         private Label m_contentText;
@@ -20,7 +22,11 @@ namespace UNote.Editor
         private TextField m_editField;
         private Button m_sendButton;
 
-        public UNoteEditorContentElem(NoteBase note)
+        #endregion // Field
+
+        #region Constructor
+
+        internal UNoteEditorContentElem(NoteBase note)
         {
             m_note = note;
             
@@ -94,6 +100,10 @@ namespace UNote.Editor
                 });
             }
         }
+
+        #endregion // Constructor
+        
+        #region Private Method
         
         private void ShowContextMenu(NoteBase note)
         {
@@ -153,5 +163,7 @@ namespace UNote.Editor
         }
 
         private string CreateEditedText() => "<size=10><color=#999999> (edited)</color></size>";
+        
+        #endregion // Private Method
     }
 }

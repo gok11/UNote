@@ -28,11 +28,15 @@ namespace UNote.Editor
 
         #endregion // Property
 
+        #region OpenWindow
+
         [MenuItem("UNote/Note Editor")]
         private static void OpenWindow()
         {
             GetWindow<UNoteEditor>("UNote Editor");
         }
+
+        #endregion OpenWindow
 
         #region Private Method
 
@@ -75,7 +79,7 @@ namespace UNote.Editor
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath.UNoteEditor);
             root.styleSheets.Add(styleSheet);
 
-            // Undo Setup
+            // Undo event
             Undo.undoRedoEvent += (in UndoRedoInfo info) =>
             {
                 LeftPane.OnUndoRedo(info.undoName);
