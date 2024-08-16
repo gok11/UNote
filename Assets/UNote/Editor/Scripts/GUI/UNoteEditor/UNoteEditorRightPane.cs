@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
-using Button = UnityEngine.UIElements.Button;
 using Object = UnityEngine.Object;
 
 namespace UNote.Editor
