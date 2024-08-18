@@ -8,8 +8,8 @@ namespace UNote.Editor
     {
         #region Field
 
-        [SerializeField] private List<AssetNote> m_assetNoteList;
-        [SerializeField] private List<AssetLeafNote> m_assetLeafNoteList;
+        [SerializeField] private List<AssetNote> m_assetNoteList = new();
+        [SerializeField] private List<AssetLeafNote> m_assetLeafNoteList = new();
         
         #endregion // Field
 

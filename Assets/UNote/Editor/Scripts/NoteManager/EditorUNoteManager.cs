@@ -80,13 +80,17 @@ namespace UNote.Editor
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
-            // Initialize own container
-            GetOwnProjectNoteContainer();
-            GetOwnAssetNoteContainer();
-            
-            // Load all notes
-            ReloadProjectNotes();
-            ReloadAssetNotes();
+            EditorApplication.delayCall += () =>
+            EditorApplication.delayCall += () =>
+            {
+                // Initialize own container
+                GetOwnProjectNoteContainer();
+                GetOwnAssetNoteContainer();
+
+                // Load all notes
+                ReloadProjectNotes();
+                ReloadAssetNotes();
+            };
         }
 
         #endregion // Initialize

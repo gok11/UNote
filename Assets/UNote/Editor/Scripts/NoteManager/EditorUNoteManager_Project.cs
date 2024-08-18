@@ -49,6 +49,7 @@ namespace UNote.Editor
             
             s_projectNoteInstance = ScriptableObject.CreateInstance<ProjectNoteContainer>();
             AssetDatabase.CreateAsset(s_projectNoteInstance, filePath);
+            AssetDatabase.Refresh();
             return s_projectNoteInstance;
         }
         
