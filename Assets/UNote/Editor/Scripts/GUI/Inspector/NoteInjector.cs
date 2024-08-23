@@ -20,11 +20,7 @@ namespace UNote.Editor
         static NoteInjector()
         {
             EditorApplication.update -= TryInjectNoteElement;
-
-            EditorApplication.delayCall += () =>
-            {
-                EditorApplication.update += TryInjectNoteElement;
-            };
+            EditorApplication.update += TryInjectNoteElement;
         }
 
         private static void TryInjectNoteElement()

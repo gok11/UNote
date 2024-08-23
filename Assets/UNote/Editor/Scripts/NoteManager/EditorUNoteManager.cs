@@ -81,7 +81,6 @@ namespace UNote.Editor
         private static void Initialize()
         {
             EditorApplication.delayCall += () =>
-            EditorApplication.delayCall += () =>
             {
                 // Initialize own container
                 GetOwnProjectNoteContainer();
