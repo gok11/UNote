@@ -23,6 +23,15 @@ namespace UNote.Editor
 
         #endregion // Field
 
+        #region Constructor
+
+        internal UNoteSetting()
+        {
+            m_userName = Environment.UserName;
+        }
+
+        #endregion
+
         #region Property
 
         public static string UserName
