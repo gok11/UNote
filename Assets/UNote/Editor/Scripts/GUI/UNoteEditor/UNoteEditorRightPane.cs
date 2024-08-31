@@ -60,46 +60,7 @@ namespace UNote.Editor
             m_tabList = contentContainer.Q<ScrollView>("TabList");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
 
-            NoteBase currentNote = EditorUNoteManager.CurrentNote;
-            if (currentNote != null)
-            {
-                m_noteInputField = new NoteInputField(currentNote.NoteType, currentNote.NoteId);
-                m_noteInputField.style.flexShrink = 0;
-                contentContainer.Q<TemplateContainer>().Add(m_noteInputField);   
-            }
-            
-            // Show note list by created date
-            SetupNoteList();
-
-            // Enter edit mode on click title label
-            m_noteTitle.RegisterCallback<MouseDownEvent>(_ =>
-            {
-                EnableChangeTitleMode();
-            });
-            
-            m_titleField.RegisterCallback<BlurEvent>(_ =>
-            {
-                SetTitleGUIEditMode(false);
-            });
-
-            // Register note event
-            EditorUNoteManager.OnNoteAdded += _ => SetupNoteList();
-            EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList();
-            
-            EditorUNoteManager.OnNoteSelected += n =>
-            {
-                NoteBase note = n ?? EditorUNoteManager.CurrentNote;
-                if (note != null)
-                {
-                    m_noteInputField?.SetNoteInfo(note.NoteType, note.NoteId);
-                    SetupNoteList();   
-                }
-                else
-                {
-                    m_noteTitle.text = "";
-                    m_noteList.contentContainer.Clear();
-                }
-            };
+            EditorApplication.delayCall += Initialize;
         }
         #endregion // Constructor
 
@@ -160,6 +121,56 @@ namespace UNote.Editor
         #endregion // Public Method
 
         #region Private Method
+
+        private void Initialize()
+        {
+            NoteBase currentNote = EditorUNoteManager.CurrentNote;
+            if (currentNote != null)
+            {
+                m_noteInputField = new NoteInputField(currentNote.NoteType, currentNote.NoteId);
+            }
+            else
+            {
+                m_noteInputField = new NoteInputField(NoteType.Project, "");
+            }
+            
+            m_noteInputField.style.flexShrink = 0;
+            contentContainer.Q<TemplateContainer>().Add(m_noteInputField);   
+            m_noteInputField.SetEnabled(currentNote != null);
+            
+            // Show note list by created date
+            SetupNoteList();
+
+            // Enter edit mode on click title label
+            m_noteTitle.RegisterCallback<MouseDownEvent>(_ =>
+            {
+                EnableChangeTitleMode();
+            });
+            
+            m_titleField.RegisterCallback<BlurEvent>(_ =>
+            {
+                SetTitleGUIEditMode(false);
+            });
+
+            // Register note event
+            EditorUNoteManager.OnNoteAdded += _ => SetupNoteList();
+            EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList();
+            
+            EditorUNoteManager.OnNoteSelected += n =>
+            {
+                NoteBase note = n ?? EditorUNoteManager.CurrentNote;
+                if (note != null)
+                {
+                    m_noteInputField?.SetNoteInfo(note.NoteType, note.NoteId);
+                    SetupNoteList();   
+                }
+                else
+                {
+                    m_noteTitle.text = "";
+                    m_noteList.contentContainer.Clear();
+                }
+            };
+        }
 
         private void SetupNoteList()
         {

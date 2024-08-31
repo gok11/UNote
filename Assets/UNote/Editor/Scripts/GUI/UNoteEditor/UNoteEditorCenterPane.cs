@@ -40,7 +40,7 @@ namespace UNote.Editor
             m_noteScroll = template.Q<ScrollView>("NoteList");
 
             // Setup
-            SetupListItems();
+            EditorApplication.delayCall += SetupListItems;
             
             // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupListItems();
