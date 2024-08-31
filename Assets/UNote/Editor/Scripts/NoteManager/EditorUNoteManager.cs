@@ -118,7 +118,10 @@ namespace UNote.Editor
         public static void SelectNote(NoteBase note)
         {
             Instance.m_currentNote = note;
-            Instance.m_currentNoteType = note.NoteType;
+            if (note != null)
+            {
+                Instance.m_currentNoteType = note.NoteType;   
+            }
             OnNoteSelected?.Invoke(note);
         }
 

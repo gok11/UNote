@@ -79,7 +79,12 @@ namespace UNote.Editor
 
             EditorUNoteManager.OnNoteSelected += note =>
             {
-                SetNoteInfo(note.NoteType, note.NoteId);
+                if (note != null)
+                {
+                    SetNoteInfo(note.NoteType, note.NoteId);   
+                }
+                
+                SetEnabled(note != null);
             };
         }
 

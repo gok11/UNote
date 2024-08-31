@@ -80,6 +80,10 @@ namespace UNote.Editor
                 container.Add(item);
                 item.Setup(note);
             }
+            
+            // Select first found note
+            NoteBase firstNote = notes.FirstOrDefault();
+            EditorUNoteManager.SelectNote(firstNote);   
 
             UpdateNoteBackground();
         }
