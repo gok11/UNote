@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UNote.Runtime;
@@ -130,7 +131,8 @@ namespace UNote.Editor
 
             List<ProjectLeafNote> newList = new(64);
 
-            foreach (var note in Instance.m_projectLeafNoteList)
+            // sort by created date
+            foreach (var note in Instance.m_projectLeafNoteList.OrderBy(t => t.CreatedDate))
             {
                 if (note.ReferenceNoteId == projectNoteId)
                 {
