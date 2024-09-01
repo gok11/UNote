@@ -7,6 +7,7 @@ namespace UNote.Runtime
     {
         public virtual void Save()
         {
+            EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssetIfDirty(this);
         }
     }

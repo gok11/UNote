@@ -125,6 +125,9 @@ namespace UNote.Editor
             OnNoteSelected?.Invoke(note);
         }
 
+        /// <summary>
+        /// Get notes filtered by a query
+        /// </summary>
         public static IEnumerable<NoteBase> GetFilteredNotes(NoteQuery noteQuery)
         {
             List<NoteBase> noteList = new List<NoteBase>();
