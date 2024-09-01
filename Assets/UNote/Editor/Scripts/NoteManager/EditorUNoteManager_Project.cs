@@ -7,6 +7,9 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Note manager for ProjectNote
+    /// </summary>
     public partial class EditorUNoteManager
     {
         #region Field

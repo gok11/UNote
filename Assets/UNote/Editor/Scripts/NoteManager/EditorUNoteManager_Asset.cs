@@ -7,6 +7,9 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Note manager for AssetNote
+    /// </summary>
     public partial class EditorUNoteManager
     {
         #region Field
@@ -68,7 +71,7 @@ namespace UNote.Editor
             }
         }
 
-        #endregion
+        #endregion // Initialize
 
         #region Add Note
 

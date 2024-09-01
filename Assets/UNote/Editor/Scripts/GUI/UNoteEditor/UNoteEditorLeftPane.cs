@@ -20,7 +20,7 @@ namespace UNote.Editor
 
         #region Constructor
 
-                internal UNoteEditorLeftPane(UNoteEditor noteEditor)
+        internal UNoteEditorLeftPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorLeftPane);
 

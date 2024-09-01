@@ -8,20 +8,31 @@ using Object = UnityEngine.Object;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Inject note elements in inspector
+    /// </summary>
     [InitializeOnLoad]
     public static class NoteInjector
     {
-        private static FieldInfo s_trackerField = typeof(UnityEditor.Editor)
-                .Assembly.GetType("UnityEditor.InspectorWindow")
-                .GetField("m_Tracker", BindingFlags.NonPublic | BindingFlags.Instance);
+        #region Field
 
-        private static List<Object> s_targetTempList = new(64);
-        
+        private static FieldInfo s_trackerField = typeof(UnityEditor.Editor)
+            .Assembly.GetType("UnityEditor.InspectorWindow")
+            .GetField("m_Tracker", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        #endregion // Field
+
+        #region Constructor
+
         static NoteInjector()
         {
             EditorApplication.update -= TryInjectNoteElement;
             EditorApplication.update += TryInjectNoteElement;
         }
+
+        #endregion // Constructor
+
+        #region Private Static Method
 
         private static void TryInjectNoteElement()
         {
@@ -59,12 +70,6 @@ namespace UNote.Editor
                 if (activeEditors == null || activeEditors.Length == 0)
                 {
                     continue;
-                }
-                
-                s_targetTempList.Clear();
-                foreach (var editor in activeEditors)
-                {
-                    s_targetTempList.Add(editor.target);
                 }
                 
                 // Determine if this is prefab
@@ -107,5 +112,7 @@ namespace UNote.Editor
                 }
             }
         }
+
+        #endregion // Private Static Method
     }
 }

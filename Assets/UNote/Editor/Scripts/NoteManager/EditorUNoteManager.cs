@@ -7,6 +7,9 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Note manager in Unity Editor
+    /// </summary>
     public partial class EditorUNoteManager
     {
         #region Field
@@ -209,6 +212,9 @@ namespace UNote.Editor
 
         #region Private Method
 
+        /// <summary>
+        /// Generate unique note name for specified note type
+        /// </summary>
         private static string GenerateUniqueName(NoteType noteType)
         {
             const string baseName = "New Note";
