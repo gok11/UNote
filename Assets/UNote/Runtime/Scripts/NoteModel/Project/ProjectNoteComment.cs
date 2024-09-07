@@ -3,7 +3,7 @@ using System;
 namespace UNote.Runtime
 {
     [Serializable]
-    public sealed class ProjectLeafNote : LeafNoteBase
+    public sealed class ProjectNoteComment : NoteCommentBase
     {
         #region Property
 

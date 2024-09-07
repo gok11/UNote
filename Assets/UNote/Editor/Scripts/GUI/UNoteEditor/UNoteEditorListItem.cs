@@ -58,7 +58,7 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                 {
-                    ProjectLeafNote leafNote = EditorUNoteManager
+                    ProjectNoteComment leafNote = EditorUNoteManager
                         .GetProjectLeafNoteListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
@@ -73,7 +73,7 @@ namespace UNote.Editor
 
                 case NoteType.Asset:
                 {
-                    AssetLeafNote leafNote = EditorUNoteManager
+                    AssetNoteComment leafNote = EditorUNoteManager
                         .GetAssetLeafNoteListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();

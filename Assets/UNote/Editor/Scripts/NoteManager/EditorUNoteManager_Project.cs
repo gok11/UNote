@@ -17,15 +17,15 @@ namespace UNote.Editor
         private static ProjectNoteContainer s_projectNoteInstance;
         
         private List<ProjectNote> m_projectNoteList = new();
-        private List<ProjectLeafNote> m_projectLeafNoteList = new();
+        private List<ProjectNoteComment> m_projectLeafNoteList = new();
 
         private Dictionary<string, ProjectNote> m_projectNoteDict = new();
-        private Dictionary<string, List<ProjectLeafNote>> m_projectNoteDictByGUID = new();
+        private Dictionary<string, List<ProjectNoteComment>> m_projectNoteDictByGUID = new();
         
         #endregion
         
         internal static IReadOnlyList<ProjectNote> GetProjectNoteAllList() => Instance.m_projectNoteList;
-        internal static IReadOnlyList<ProjectLeafNote> GetProjectLeafNoteAllList() => Instance.m_projectLeafNoteList;
+        internal static IReadOnlyList<ProjectNoteComment> GetProjectLeafNoteAllList() => Instance.m_projectLeafNoteList;
 
         #region Initialize
 
@@ -98,13 +98,13 @@ namespace UNote.Editor
             return newNote;
         }
         
-        public static ProjectLeafNote AddNewLeafProjectNote(string guid, string noteContent)
+        public static ProjectNoteComment AddNewLeafProjectNote(string guid, string noteContent)
         {
             ProjectNoteContainer container =GetOwnProjectNoteContainer();
             
             Undo.RegisterCompleteObjectUndo(container, "UNote Add New Project Note");
             
-            ProjectLeafNote newNote = new ProjectLeafNote
+            ProjectNoteComment newNote = new ProjectNoteComment
             {
                 Author = UNoteSetting.UserName,
                 NoteContent = noteContent,
@@ -125,14 +125,14 @@ namespace UNote.Editor
 
         #region Get Note
 
-        public static List<ProjectLeafNote> GetProjectLeafNoteListByNoteId(string projectNoteId)
+        public static List<ProjectNoteComment> GetProjectLeafNoteListByNoteId(string projectNoteId)
         {
             if (Instance.m_projectNoteDictByGUID.TryGetValue(projectNoteId, out var leafNoteList))
             {
                 return leafNoteList;
             }
 
-            List<ProjectLeafNote> newList = new(64);
+            List<ProjectNoteComment> newList = new(64);
 
             // sort by created date
             foreach (var note in Instance.m_projectLeafNoteList.OrderBy(t => t.CreatedDate))
@@ -165,9 +165,9 @@ namespace UNote.Editor
                     projContainer.Save();
                 }
             }
-            else if (note is ProjectLeafNote projectLeafNote)
+            else if (note is ProjectNoteComment projectLeafNote)
             {
-                List<ProjectLeafNote> projectList = projContainer.GetProjectLeafNoteList();
+                List<ProjectNoteComment> projectList = projContainer.GetProjectLeafNoteList();
                 if (projectList.Contains(projectLeafNote))
                 {
                     projectList.Remove(projectLeafNote);

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UNote.Runtime
 {
-    public abstract class LeafNoteBase : NoteBase
+    public abstract class NoteCommentBase : NoteBase
     {
         #region Field
 

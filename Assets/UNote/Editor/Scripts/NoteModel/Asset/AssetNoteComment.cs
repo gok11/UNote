@@ -4,7 +4,7 @@ using UNote.Runtime;
 namespace UNote.Editor
 {
     [Serializable]
-    public sealed class AssetLeafNote : LeafNoteBase
+    public sealed class AssetNoteComment : NoteCommentBase
     {
         #region Property
 
