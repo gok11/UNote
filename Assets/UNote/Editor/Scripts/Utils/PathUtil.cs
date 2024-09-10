@@ -9,14 +9,32 @@ using UnityEngine;
 
 namespace UNote.Editor
 {
-    public static class PathUtil
+    public static partial class PathUtil
     {
-        private static bool s_initializeCompleted = false;
-        private static bool s_isPackage = false;
+        #region Field
+
+        private static bool s_initialized = false;
+        private static bool s_isInstalledAsPackage = false;
+
+        #endregion // Field
+
+        #region Const
+
+        private const string PackageIdentity = "com.mandarin-box.unote";
+
+        #endregion // Const
+
+        #region Property
+
+        internal static bool Initialized => s_initialized;
+        internal static bool IsInstalledAsPackage => s_initialized && s_isInstalledAsPackage;
+
+        #endregion // Property
 
         #region Constructor
 
-        static PathUtil()
+        [InitializeOnLoadMethod]
+        internal static void Initialize()
         {
             ListRequest request = Client.List();
             EditorApplication.update += DetectIfUNoteIsPackage;
@@ -35,13 +53,30 @@ namespace UNote.Editor
                     return;
                 }
                 
-                s_isPackage = request.Result.Any(t => t.name == "com.mandarin-box.unote");
-                s_initializeCompleted = true;
+                s_isInstalledAsPackage = request.Result.Any(t => t.name == PackageIdentity);
+                s_initialized = true;
             }
         }
 
         #endregion // Constructor
-        
 
+        #region Function
+
+        private static string GetRootPath()
+        {
+            return IsInstalledAsPackage ? $"Packages/{PackageIdentity}" : $"Assets/UNote";
+        }
+
+        internal static string GetUxmlPath(string fileName)
+        {
+            return $"{GetRootPath()}/Editor/UXML/{fileName}";
+        }
+
+        internal static string GetUssPath(string fileName)
+        {
+            return $"{GetRootPath()}/Editor/USS/{fileName}";
+        }
+
+        #endregion // Function
     }
 }

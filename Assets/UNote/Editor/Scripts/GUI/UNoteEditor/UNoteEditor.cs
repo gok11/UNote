@@ -38,6 +38,17 @@ namespace UNote.Editor
 
         private void CreateGUI()
         {
+            // wait for initialize
+            if (!PathUtil.Initialized)
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    CreateGUI();
+                };
+                return;
+            }
+            
+            // create gui impl
             m_model = CreateInstance<NoteEditorModel>();
 
             VisualElement root = rootVisualElement;

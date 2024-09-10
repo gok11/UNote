@@ -53,7 +53,8 @@ namespace UNote.Editor
 
             foreach (var uxmlPath in uxmlPaths)
             {
-                AppendLine(uxmlPath);
+                string name = Path.GetFileNameWithoutExtension(uxmlPath);
+                builder.AppendLine($"        public static readonly string {name} = PathUtil.GetUxmlPath(\"{name}.uxml\");");
             }
 
             builder.AppendLine("    }");
@@ -64,7 +65,8 @@ namespace UNote.Editor
 
             foreach (var ussPath in ussPaths)
             {
-                AppendLine(ussPath);
+                string name = Path.GetFileNameWithoutExtension(ussPath);
+                builder.AppendLine($"        public static readonly string {name} = PathUtil.GetUssPath(\"{name}.uss\");");
             }
 
             builder.AppendLine("    }");
@@ -76,13 +78,6 @@ namespace UNote.Editor
             AssetDatabase.Refresh(ImportAssetOptions.ImportRecursive);
 
             return true;
-
-            void AppendLine(string path)
-            {
-                string name = Path.GetFileNameWithoutExtension(path);
-                string guid = AssetDatabase.AssetPathToGUID(path.FullPathToAssetPath());
-                builder.AppendLine($"        public static readonly string {name} = AssetDatabase.GUIDToAssetPath(\"{guid}\");");
-            }
         }
     }
 }

@@ -36,6 +36,13 @@ namespace UNote.Editor
 
         private static void TryInjectNoteElement()
         {
+            // wait for initialize
+            if (!PathUtil.Initialized)
+            {
+                return;
+            }
+            
+            // inject impl
             var windows = Resources.FindObjectsOfTypeAll<EditorWindow>();
 
             foreach (var window in windows)
