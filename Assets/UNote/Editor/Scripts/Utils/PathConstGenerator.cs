@@ -8,6 +8,16 @@ namespace UNote.Editor
     {
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
+            if (!PathUtil.Initialized)
+            {
+                return;
+            }
+
+            if (PathUtil.IsInstalledAsPackage)
+            {
+                return;
+            }
+            
             foreach (var importedAsset in importedAssets)
             {
                 if (CreateConstFile(importedAsset))

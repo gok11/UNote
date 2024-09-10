@@ -37,7 +37,7 @@ namespace UNote.Editor
         private static void TryInjectNoteElement()
         {
             // wait for initialize
-            if (!PathUtil.Initialized)
+            if (!Utility.Initialized)
             {
                 return;
             }

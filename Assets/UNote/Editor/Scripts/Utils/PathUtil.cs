@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace UNote.Editor
 {
-    public static partial class PathUtil
+    internal static class PathUtil
     {
         #region Field
 
@@ -27,6 +27,7 @@ namespace UNote.Editor
         #region Property
 
         internal static bool Initialized => s_initialized;
+
         internal static bool IsInstalledAsPackage => s_initialized && s_isInstalledAsPackage;
 
         #endregion // Property

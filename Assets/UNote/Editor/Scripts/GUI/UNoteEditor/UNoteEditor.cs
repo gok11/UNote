@@ -39,7 +39,7 @@ namespace UNote.Editor
         private void CreateGUI()
         {
             // wait for initialize
-            if (!PathUtil.Initialized)
+            if (!Utility.Initialized)
             {
                 EditorApplication.delayCall += () =>
                 {
