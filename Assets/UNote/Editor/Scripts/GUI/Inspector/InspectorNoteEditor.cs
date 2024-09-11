@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
 using Object = UnityEngine.Object;
@@ -74,7 +75,9 @@ namespace UNote.Editor
             bool foldout = UNoteSetting.InspectorFoldoutOpened;
             m_foldout.value = foldout;
             m_content.style.display = foldout ? DisplayStyle.Flex : DisplayStyle.None;
-            
+
+            m_openButton.Q("Visual").style.backgroundImage =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("editor.png"));
             m_openButton.SetEnabled(false);
             m_openButton.clicked += () =>
             {

@@ -78,6 +78,11 @@ namespace UNote.Editor
             return $"{GetRootPath()}/Editor/USS/{fileName}";
         }
 
+        internal static string GetTexturePath(string fileName)
+        {
+            return $"{GetRootPath()}/Editor/Texture/{fileName}";
+        }
+
         #endregion // Function
     }
 }
