@@ -73,17 +73,24 @@ namespace UNote.Editor
             
             notes = notes.OrderBy(t => t.CreatedDate);
 
+            bool existCurrentNote = false;
+            
             // Add content to list
             foreach (var note in notes)
             {
                 UNoteEditorListItem item = new UNoteEditorListItem(m_noteEditor);
                 container.Add(item);
                 item.Setup(note);
+
+                existCurrentNote |= note == EditorUNoteManager.CurrentNote;
             }
-            
-            // Select first found note
-            NoteBase firstNote = notes.FirstOrDefault();
-            EditorUNoteManager.SelectNote(firstNote);   
+
+            if (!existCurrentNote)
+            {
+                // Select first found note
+                NoteBase firstNote = notes.FirstOrDefault();
+                EditorUNoteManager.SelectNote(firstNote);      
+            }
 
             UpdateNoteBackground();
         }
