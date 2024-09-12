@@ -16,5 +16,6 @@
   * [ ] Asset references
   * [ ] Vector3 information, etc.
   * [ ] GameObject references
+* [ ] Add feature: screenshot
 * [ ] Add feature: referencing note information at runtime
 * [ ] Add feature: cloud synchronization of notes
