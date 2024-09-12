@@ -47,7 +47,11 @@ namespace UNote.Editor
 
             foreach (var window in windows)
             {
-                if (window.GetType().FullName != "UnityEditor.InspectorWindow")
+                string typeName = window.GetType().FullName;
+                bool isInspector = typeName != "UnityEditor.InspectorWindow";
+                bool isPropertyEditor = typeName != "UnityEditor.PropertyEditor";
+                
+                if (!isInspector && !isPropertyEditor)
                 {
                     continue;
                 }
