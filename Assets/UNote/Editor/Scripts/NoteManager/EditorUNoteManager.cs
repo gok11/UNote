@@ -62,11 +62,11 @@ namespace UNote.Editor
                 switch (Instance.m_currentNoteType)
                 {
                     case NoteType.Project:
-                        Instance.m_currentNote = GetProjectNoteAllList()?.FirstOrDefault();
+                        SelectNote(GetProjectNoteAllList()?.FirstOrDefault());
                         break;
                     
                     case NoteType.Asset:
-                        Instance.m_currentNote = GetAssetNoteAllList()?.FirstOrDefault();
+                        SelectNote(GetAssetNoteAllList()?.FirstOrDefault());
                         break;
                 }
 
