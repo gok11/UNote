@@ -55,7 +55,7 @@ namespace UNote.Editor
 
                 if (Instance.m_noteQuery != null)
                 {
-                    Instance.m_currentNote = GetFilteredNotes(Instance.m_noteQuery)?.FirstOrDefault();
+                    SelectNote(GetFilteredNotes(Instance.m_noteQuery)?.FirstOrDefault());
                     return Instance.m_currentNote;
                 }
 
