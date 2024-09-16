@@ -152,6 +152,12 @@ namespace UNote.Editor
                 SetTitleGUIEditMode(false);
             });
 
+            // Set enabled by archive setting
+            if (EditorUNoteManager.CurrentNote != null)
+            {
+                SetEnabled(!EditorUNoteManager.CurrentNote.Archived);
+            }
+
             // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupNoteList();
             EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList();
@@ -162,12 +168,29 @@ namespace UNote.Editor
                 {
                     m_noteInputField?.SetNoteInfo(note.NoteType, note.NoteId);
                     SetupNoteList();   
+                    SetEnabled(!note.Archived);
                 }
                 else
                 {
                     m_noteTitle.text = "";
                     m_noteList.contentContainer.Clear();
                 }
+            };
+
+            EditorUNoteManager.OnNoteArchvied += note =>
+            {
+                NoteBase currentNote = EditorUNoteManager.CurrentNote;
+                if (note == null)
+                {
+                    return;
+                }
+                
+                if (note != currentNote)
+                {
+                    return;
+                }
+                
+                SetEnabled(!note.Archived);
             };
         }
 

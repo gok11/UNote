@@ -12,6 +12,7 @@ namespace UNote.Editor
 
         private NoteBase m_note;
 
+        private VisualElement m_archvieLabel;
         private Label m_nameLabel;
         private Label m_noteContentLabel;
         private Button m_contextButton;
@@ -26,6 +27,7 @@ namespace UNote.Editor
             );
             TemplateContainer template = listItem.CloneTree();
 
+            m_archvieLabel = template.Q<VisualElement>("ArchiveLabel");
             m_nameLabel = template.Q<Label>("Name");
             m_noteContentLabel = template.Q<Label>("ContentLine");
             m_contextButton = template.Q<Button>("ContextButton");
@@ -35,6 +37,16 @@ namespace UNote.Editor
             m_noteListItem = contentContainer.Q("NoteListItem");
 
             m_contextButton.visible = false;
+
+            m_archvieLabel.style.backgroundImage = StyleUtil.ArchiveIcon;
+            
+            EditorUNoteManager.OnNoteArchvied += note =>
+            {
+                if (note == m_note)
+                {
+                    m_archvieLabel.style.display = note.Archived ? DisplayStyle.Flex : DisplayStyle.None;   
+                }
+            };
             
             // Handle mouse event
             contentContainer.RegisterCallback<MouseDownEvent>(evt =>
@@ -54,16 +66,18 @@ namespace UNote.Editor
 
             m_nameLabel.text = note.NoteName;
 
+            m_archvieLabel.style.display = note.Archived ? DisplayStyle.Flex : DisplayStyle.None;
+
             switch (note.NoteType)
             {
                 case NoteType.Project:
                 {
-                    ProjectNoteComment leafNote = EditorUNoteManager
+                    ProjectNoteComment comment = EditorUNoteManager
                         .GetProjectLeafNoteListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
 
-                    m_noteContentLabel.text = leafNote
+                    m_noteContentLabel.text = comment
                         ?.NoteContent.Replace("\r", " ")
                         .Replace("\n", " ");
 
@@ -73,12 +87,12 @@ namespace UNote.Editor
 
                 case NoteType.Asset:
                 {
-                    AssetNoteComment leafNote = EditorUNoteManager
+                    AssetNoteComment comment = EditorUNoteManager
                         .GetAssetLeafNoteListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
 
-                    m_noteContentLabel.text = leafNote
+                    m_noteContentLabel.text = comment
                         ?.NoteContent.Replace("\r", " ")
                         .Replace("\n", " ");
                     
@@ -161,6 +175,15 @@ namespace UNote.Editor
                 );
             }
             
+            string archiveLabel = m_note.Archived ? "Unarchived" : "Archive";
+            menu.AddItem(
+                new GUIContent(archiveLabel),
+                false,
+                () =>
+                {
+                    EditorUNoteManager.ToggleArchived(m_note);
+                });
+            
             menu.AddItem(
                 new GUIContent("Delete"),
                 false,
@@ -172,19 +195,13 @@ namespace UNote.Editor
                     }
                 }
             );
-
-            // Note supported yet
-            // string archiveLabel = m_note.Archived ? "Unarchived" : "Archive";
-            // menu.AddItem(
-            //     new GUIContent(archiveLabel),
-            //     false,
-            //     () =>
-            //     {
-            //         EditorUNoteManager.ToggleArchived(m_note);
-            //     }
-            // );
             
             menu.ShowAsContext();
+        }
+
+        private void ShowArchiveLabel()
+        {
+            
         }
     }
 }

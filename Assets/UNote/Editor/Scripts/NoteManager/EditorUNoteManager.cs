@@ -25,11 +25,14 @@ namespace UNote.Editor
         public delegate void SelectNoteHandler(NoteBase note);
 
         public delegate void SelectQueryHandler(NoteQuery query);
+
+        public delegate void ArchiveNoteHandler(NoteBase note);
         public delegate void DeleteNoteHandler(NoteBase note);
 
         public static event AddNoteHandler OnNoteAdded;
         public static event SelectNoteHandler OnNoteSelected;
         public static event SelectQueryHandler OnNoteQueryUpdated;
+        public static event ArchiveNoteHandler OnNoteArchvied;
         public static event DeleteNoteHandler OnNoteDeleted;
 
         private static EditorUNoteManager s_instance;
@@ -163,7 +166,7 @@ namespace UNote.Editor
                 case NoteType.Project:
                     if (note is ProjectNote projectNote)
                     {
-                        ProjectNoteContainer container =GetOwnProjectNoteContainer();
+                        ProjectNoteContainer container = GetOwnProjectNoteContainer();
                         Undo.RecordObject(container, "UNote Change Project Note Title");
                         projectNote.ChangeNoteName(noteName);
                         container.Save();
@@ -188,6 +191,8 @@ namespace UNote.Editor
                     throw new NotImplementedException();
             }
 
+            SaveContainerByNoteType(note);
+
             if (note is RootNoteBase)
             {
                 // Reset note selection
@@ -199,8 +204,8 @@ namespace UNote.Editor
         public static void ToggleArchived(NoteBase note)
         {
             note.Archived = !note.Archived;
-
-            SaveAll();
+            OnNoteArchvied?.Invoke(note);
+            SaveContainerByNoteType(note);
         }
 
         public static void SaveAll()
@@ -251,6 +256,23 @@ namespace UNote.Editor
             }
         }
 
+        private static void SaveContainerByNoteType(NoteBase note)
+        {
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                    GetOwnProjectNoteContainer().Save();
+                    break;
+                
+                case NoteType.Asset:
+                    GetOwnAssetNoteContainer().Save();
+                    break;
+                
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        
         #endregion // Private Method
     }
 }

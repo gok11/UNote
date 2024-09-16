@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -5,10 +6,31 @@ namespace UNote.Editor
 {
     public static class StyleUtil
     {
+        #region Const
+
         public static readonly Color UnselectColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
         public static readonly Color SelectColor = new Color(0.1725f, 0.3647f, 0.5294f, 1.0f);
         public static readonly Color GrayedTextColor = new Color(0.6f, 0.6f, 0.6f);
 
+        #endregion // Const
+        
+        #region Field
+
+        private static Texture2D s_archiveIcon;
+
+        #endregion // Field
+
+        #region Property
+
+        public static Texture2D ArchiveIcon => s_archiveIcon;
+
+        #endregion // Property
+
+        static StyleUtil()
+        {
+            s_archiveIcon = EditorGUIUtility.IconContent("d_Package Manager").image as Texture2D;
+        }
+        
         public static void SetMargin(this IStyle style, float margin)
         {
             style.marginTop = style.marginBottom = style.marginLeft = style.marginRight = margin;
