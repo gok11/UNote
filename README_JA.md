@@ -6,7 +6,7 @@
 
 UNote は Unity 上でメモを作成・編集する機能を提供し、1つのメモに対して複数ユーザーからコメントする機能を提供するツールです。
 
-<img width="50%" src="Doc/readme_01.png" alt="01">
+<img width="70%" src="Doc/readme_01.png" alt="01">
 
 <h2>機能</h2>
 

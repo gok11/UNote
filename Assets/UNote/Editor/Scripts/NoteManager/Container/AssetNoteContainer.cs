@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UNote.Runtime;
 
 namespace UNote.Editor
@@ -9,11 +10,11 @@ namespace UNote.Editor
         #region Field
 
         [SerializeField] private List<AssetNote> m_assetNoteList = new();
-        [SerializeField] private List<AssetNoteComment> m_assetLeafNoteList = new();
+        [FormerlySerializedAs("m_assetLeafNoteList")] [SerializeField] private List<AssetNoteComment> m_assetNoteCommentList = new();
         
         #endregion // Field
 
         public List<AssetNote> GetAssetNoteList() => m_assetNoteList;
-        public List<AssetNoteComment> GetAssetLeafNoteList() => m_assetLeafNoteList;
+        public List<AssetNoteComment> GetAssetNoteCommentList() => m_assetNoteCommentList;
     }
 }

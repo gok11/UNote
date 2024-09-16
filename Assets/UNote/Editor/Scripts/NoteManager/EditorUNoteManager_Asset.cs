@@ -67,7 +67,7 @@ namespace UNote.Editor
             {
                 AssetNoteContainer tmpContainer = AssetDatabase.LoadAssetAtPath<AssetNoteContainer>(file.FullPathToAssetPath());
                 Instance.m_assetNoteList.AddRange(tmpContainer.GetAssetNoteList());
-                Instance.m_assetLeafNoteList.AddRange(tmpContainer.GetAssetLeafNoteList());
+                Instance.m_assetLeafNoteList.AddRange(tmpContainer.GetAssetNoteCommentList());
             }
         }
 
@@ -111,7 +111,7 @@ namespace UNote.Editor
                 ReferenceNoteId = noteId
             };
 
-            container.GetAssetLeafNoteList().Add(newNote);
+            container.GetAssetNoteCommentList().Add(newNote);
             container.Save();
             
             ReloadAssetNotes();
@@ -210,7 +210,7 @@ namespace UNote.Editor
             }
             else if (note is AssetNoteComment assetLeafNote)
             {
-                List<AssetNoteComment> assetLeafNoteList = astContainer.GetAssetLeafNoteList();
+                List<AssetNoteComment> assetLeafNoteList = astContainer.GetAssetNoteCommentList();
                 if (assetLeafNoteList.Contains(assetLeafNote))
                 {
                     assetLeafNoteList.Remove(assetLeafNote);

@@ -5,7 +5,7 @@
 
 UNote is a tool that provides functionality to create and edit notes in Unity, allowing multiple users to comment on a single note.
 
-<img width="50%" src="Doc/readme_01.png" alt="01">
+<img width="70%" src="Doc/readme_01.png" alt="01">
 
 <h2>Features</h2>
 
