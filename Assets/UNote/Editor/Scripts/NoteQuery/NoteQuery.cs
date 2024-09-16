@@ -73,6 +73,8 @@ namespace UNote.Editor
             set => m_showFavoriteFirst = value;
         }
 
+        internal virtual bool IsOverWritable => true;
+
         #endregion
     }
 }

@@ -2,9 +2,12 @@
     <ui:VisualElement name="Header" style="flex-grow: 0;">
         <ui:Label name="title" text="UNote" style="margin-left: 4px; margin-top: 3px; -unity-font-style: bold; font-size: 18px; margin-bottom: 4px;" />
     </ui:VisualElement>
-    <ui:ScrollView>
+    <ui:ScrollView name="ScrollView">
         <ui:VisualElement name="PresetViews" style="flex-grow: 1; margin-top: 4px; margin-bottom: 4px; flex-shrink: 0;">
             <ui:Label tabindex="-1" text="Preset View" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; padding-left: 8px; margin-bottom: 4px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="CustomViews" style="flex-grow: 1; margin-top: 4px; margin-bottom: 4px; flex-shrink: 0;">
+            <ui:Label tabindex="-1" text="Custom View" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; padding-left: 8px; margin-bottom: 4px;" />
         </ui:VisualElement>
     </ui:ScrollView>
     <ui:VisualElement name="Spacer" style="flex-grow: 1;" />

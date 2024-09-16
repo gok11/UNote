@@ -1,6 +1,6 @@
 namespace UNote.Editor
 {
-    public class AssetNotesQuery : NoteQuery
+    public class AssetNotesQuery : PresetQuery
     {
         #region Constructor
 

@@ -3,7 +3,7 @@ using System;
 namespace UNote.Editor
 {
     [Serializable]
-    public class ProjectNotesQuery : NoteQuery
+    public class ProjectNotesQuery : PresetQuery
     {
         #region Constructor
 
