@@ -44,7 +44,13 @@ namespace UNote.Editor
             
             // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupListItems();
-            EditorUNoteManager.OnNoteSelected += _ => UpdateNoteBackground();
+            EditorUNoteManager.OnNoteSelected += n =>
+            {
+                if (n != null)
+                {
+                    UpdateNoteBackground();
+                }
+            };
             EditorUNoteManager.OnNoteDeleted += _ => SetupListItems();
             EditorUNoteManager.OnNoteQueryUpdated += _ => SetupListItems();
         }
@@ -106,8 +112,15 @@ namespace UNote.Editor
 
         private void UpdateNoteBackground()
         {
+            if (EditorUNoteManager.CurrentNote == null)
+            {
+                return;
+            }
+            
             // Update background color
-            foreach (var item in m_noteScroll.contentContainer.Query<UNoteEditorListItem>().Build())
+            UQueryState<UNoteEditorListItem> items = m_noteScroll.contentContainer.Query<UNoteEditorListItem>().Build();
+            
+            foreach (var item in items)
             {
                 item.SetBackgroundColor(item.BindNote == EditorUNoteManager.CurrentNote);
             }

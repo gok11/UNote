@@ -156,9 +156,8 @@ namespace UNote.Editor
             EditorUNoteManager.OnNoteAdded += _ => SetupNoteList();
             EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList();
             
-            EditorUNoteManager.OnNoteSelected += n =>
+            EditorUNoteManager.OnNoteSelected += note =>
             {
-                NoteBase note = n ?? EditorUNoteManager.CurrentNote;
                 if (note != null)
                 {
                     m_noteInputField?.SetNoteInfo(note.NoteType, note.NoteId);
