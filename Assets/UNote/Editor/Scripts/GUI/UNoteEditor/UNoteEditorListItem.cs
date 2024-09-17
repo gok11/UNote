@@ -13,6 +13,7 @@ namespace UNote.Editor
         private NoteBase m_note;
 
         private VisualElement m_archvieLabel;
+        private VisualElement m_favoriteLabel;
         private Label m_nameLabel;
         private Label m_noteContentLabel;
         private Button m_contextButton;
@@ -28,6 +29,7 @@ namespace UNote.Editor
             TemplateContainer template = listItem.CloneTree();
 
             m_archvieLabel = template.Q<VisualElement>("ArchiveLabel");
+            m_favoriteLabel = template.Q<VisualElement>("FavoriteLabel");
             m_nameLabel = template.Q<Label>("Name");
             m_noteContentLabel = template.Q<Label>("ContentLine");
             m_contextButton = template.Q<Button>("ContextButton");
@@ -39,6 +41,7 @@ namespace UNote.Editor
             m_contextButton.visible = false;
 
             m_archvieLabel.style.backgroundImage = StyleUtil.ArchiveIcon;
+            m_favoriteLabel.style.backgroundImage = StyleUtil.FavoriteIcon;
             
             EditorUNoteManager.OnNoteArchvied += note =>
             {
@@ -60,7 +63,7 @@ namespace UNote.Editor
             });
         }
 
-        public void Setup(NoteBase note)
+        internal void Setup(NoteBase note)
         {
             m_note = note;
 
@@ -114,15 +117,11 @@ namespace UNote.Editor
                     EditorUNoteManager.SelectNote(m_note);
                 }
 
-                bool isOwnNote = m_note.Author == UNoteSetting.UserName;
-                if (isOwnNote)
+                switch (evt.button)
                 {
-                    switch (evt.button)
-                    {
-                        case 1:
-                            ShowContextMenu();
-                            break;
-                    }
+                    case 1:
+                        ShowContextMenu();
+                        break;
                 }
 
                 evt.StopPropagation();
@@ -130,27 +129,16 @@ namespace UNote.Editor
 
             contentContainer.RegisterCallback<MouseEnterEvent>(_ =>
             {
-                bool isOwnNote = m_note.Author == UNoteSetting.UserName;
-                if (isOwnNote)
-                {
-                    m_contextButton.visible = true;
-                }
+                m_contextButton.visible = true;
             });
 
             contentContainer.RegisterCallback<MouseLeaveEvent>(_ =>
             {
-                bool isOwnNote = m_note.Author == UNoteSetting.UserName;
-                if (isOwnNote)
-                {
-                    m_contextButton.visible = false;
-                }
+                m_contextButton.visible = false;
             });
 
             // Handle button event
-            m_contextButton.clicked += () =>
-            {
-                ShowContextMenu();
-            };
+            m_contextButton.clicked += ShowContextMenu;
         }
 
         public void SetBackgroundColor(bool select)
@@ -162,8 +150,10 @@ namespace UNote.Editor
         private void ShowContextMenu()
         {
             GenericMenu menu = new GenericMenu();
+            
+            bool isOwnNote = m_note.Author == UNoteSetting.UserName;
 
-            if (m_note.NoteType == NoteType.Project)
+            if (m_note.NoteType == NoteType.Project && isOwnNote)
             {
                 menu.AddItem(
                     new GUIContent("Rename"),
@@ -174,27 +164,30 @@ namespace UNote.Editor
                     }
                 );
             }
-            
-            string archiveLabel = m_note.Archived ? "Unarchived" : "Archive";
-            menu.AddItem(
-                new GUIContent(archiveLabel),
-                false,
-                () =>
-                {
-                    EditorUNoteManager.ToggleArchived(m_note);
-                });
-            
-            menu.AddItem(
-                new GUIContent("Delete"),
-                false,
-                () =>
-                {
-                    if (EditorUtility.DisplayDialog("Confirm", "Do you want to delete this note?", "OK", "Cancel"))
+
+            if (isOwnNote)
+            {
+                string archiveLabel = m_note.Archived ? "Unarchived" : "Archive";
+                menu.AddItem(
+                    new GUIContent(archiveLabel),
+                    false,
+                    () =>
                     {
-                        EditorUNoteManager.DeleteNote(m_note);
+                        EditorUNoteManager.ToggleArchived(m_note);
+                    });
+            
+                menu.AddItem(
+                    new GUIContent("Delete"),
+                    false,
+                    () =>
+                    {
+                        if (EditorUtility.DisplayDialog("Confirm", "Do you want to delete this note?", "OK", "Cancel"))
+                        {
+                            EditorUNoteManager.DeleteNote(m_note);
+                        }
                     }
-                }
-            );
+                );    
+            }
             
             menu.ShowAsContext();
         }

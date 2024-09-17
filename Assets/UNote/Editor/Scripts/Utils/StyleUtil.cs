@@ -17,18 +17,21 @@ namespace UNote.Editor
         #region Field
 
         private static Texture2D s_archiveIcon;
+        private static Texture2D s_favoriteIcon;
 
         #endregion // Field
 
         #region Property
 
         public static Texture2D ArchiveIcon => s_archiveIcon;
+        public static Texture2D FavoriteIcon => s_favoriteIcon;
 
         #endregion // Property
 
         static StyleUtil()
         {
             s_archiveIcon = EditorGUIUtility.IconContent("d_Package Manager").image as Texture2D;
+            s_favoriteIcon = EditorGUIUtility.IconContent("d_Favorite").image as Texture2D;
         }
         
         public static void SetMargin(this IStyle style, float margin)
