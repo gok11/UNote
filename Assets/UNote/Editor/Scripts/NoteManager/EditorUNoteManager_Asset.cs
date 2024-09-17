@@ -17,7 +17,7 @@ namespace UNote.Editor
         private static AssetNoteContainer s_assetNoteInstance;
         
         private List<AssetNote> m_assetNoteList = new();
-        private List<AssetNoteComment> m_assetLeafNoteList = new();
+        private List<AssetNoteComment> m_assetNoteCommentList = new();
 
         private List<AssetNote> m_assetNoteListDistinct = new();
 
@@ -27,7 +27,7 @@ namespace UNote.Editor
         #endregion // Field
 
         private static IReadOnlyList<AssetNote> GetAssetNoteAllList() => Instance.m_assetNoteList;
-        private static IReadOnlyList<AssetNoteComment> GetAssetLeafNoteAllList() => Instance.m_assetLeafNoteList;
+        private static IReadOnlyList<AssetNoteComment> GetAssetNoteCommentAllList() => Instance.m_assetNoteCommentList;
 
         #region Initialize
 
@@ -67,7 +67,7 @@ namespace UNote.Editor
             {
                 AssetNoteContainer tmpContainer = AssetDatabase.LoadAssetAtPath<AssetNoteContainer>(file.FullPathToAssetPath());
                 Instance.m_assetNoteList.AddRange(tmpContainer.GetAssetNoteList());
-                Instance.m_assetLeafNoteList.AddRange(tmpContainer.GetAssetNoteCommentList());
+                Instance.m_assetNoteCommentList.AddRange(tmpContainer.GetAssetNoteCommentList());
             }
         }
 
@@ -178,7 +178,7 @@ namespace UNote.Editor
             List<AssetNoteComment> newList = new List<AssetNoteComment>(64);
             
             // sort by created date
-            foreach (var note in Instance.m_assetLeafNoteList.OrderBy(t => t.CreatedDate))
+            foreach (var note in Instance.m_assetNoteCommentList.OrderBy(t => t.CreatedDate))
             {
                 if (note.ReferenceNoteId == assetNoteId)
                 {
@@ -228,7 +228,7 @@ namespace UNote.Editor
         internal static void ClearAssetNoteCache()
         {
             Instance.m_assetNoteList.Clear();
-            Instance.m_assetLeafNoteList.Clear();
+            Instance.m_assetNoteCommentList.Clear();
             Instance.m_assetNoteListDistinct.Clear();
             Instance.m_assetNoteDict.Clear();
             Instance.m_assetLeafNoteDict.Clear();

@@ -125,7 +125,7 @@ namespace UNote.Editor
             switch (m_bindNoteType)
             {
                 case NoteType.Project:
-                    newLeafNote = EditorUNoteManager.AddNewLeafProjectNote(
+                    newLeafNote = EditorUNoteManager.AddNewProjectNoteComment(
                         m_bindId,
                         m_inputText.value
                     );   

@@ -17,7 +17,7 @@ namespace UNote.Editor
         private static ProjectNoteContainer s_projectNoteInstance;
         
         private List<ProjectNote> m_projectNoteList = new();
-        private List<ProjectNoteComment> m_projectLeafNoteList = new();
+        private List<ProjectNoteComment> m_projectNoteCommentList = new();
 
         private Dictionary<string, ProjectNote> m_projectNoteDict = new();
         private Dictionary<string, List<ProjectNoteComment>> m_projectNoteDictByGUID = new();
@@ -25,7 +25,7 @@ namespace UNote.Editor
         #endregion
         
         internal static IReadOnlyList<ProjectNote> GetProjectNoteAllList() => Instance.m_projectNoteList;
-        internal static IReadOnlyList<ProjectNoteComment> GetProjectLeafNoteAllList() => Instance.m_projectLeafNoteList;
+        internal static IReadOnlyList<ProjectNoteComment> GetProjectNoteCommentAllList() => Instance.m_projectNoteCommentList;
 
         #region Initialize
 
@@ -66,7 +66,7 @@ namespace UNote.Editor
             {
                 ProjectNoteContainer tmpContainer = AssetDatabase.LoadAssetAtPath<ProjectNoteContainer>(file.FullPathToAssetPath());
                 Instance.m_projectNoteList.AddRange(tmpContainer.GetProjectNoteList());
-                Instance.m_projectLeafNoteList.AddRange(tmpContainer.GetProjectCommentList());
+                Instance.m_projectNoteCommentList.AddRange(tmpContainer.GetProjectCommentList());
             }
         }
 
@@ -98,7 +98,7 @@ namespace UNote.Editor
             return newNote;
         }
         
-        public static ProjectNoteComment AddNewLeafProjectNote(string guid, string noteContent)
+        public static ProjectNoteComment AddNewProjectNoteComment(string guid, string noteContent)
         {
             ProjectNoteContainer container =GetOwnProjectNoteContainer();
             
@@ -135,7 +135,7 @@ namespace UNote.Editor
             List<ProjectNoteComment> newList = new(64);
 
             // sort by created date
-            foreach (var note in Instance.m_projectLeafNoteList.OrderBy(t => t.CreatedDate))
+            foreach (var note in Instance.m_projectNoteCommentList.OrderBy(t => t.CreatedDate))
             {
                 if (note.ReferenceNoteId == projectNoteId)
                 {
@@ -185,7 +185,7 @@ namespace UNote.Editor
         internal static void ClearProjectNoteCache()
         {
             Instance.m_projectNoteList.Clear();
-            Instance.m_projectLeafNoteList.Clear();
+            Instance.m_projectNoteCommentList.Clear();
             Instance.m_projectNoteDict.Clear();
             Instance.m_projectNoteDictByGUID.Clear();
         }

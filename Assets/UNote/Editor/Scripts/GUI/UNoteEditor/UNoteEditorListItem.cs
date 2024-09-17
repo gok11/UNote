@@ -42,6 +42,14 @@ namespace UNote.Editor
 
             m_archvieLabel.style.backgroundImage = StyleUtil.ArchiveIcon;
             m_favoriteLabel.style.backgroundImage = StyleUtil.FavoriteIcon;
+
+            EditorUNoteManager.OnNoteFavoriteChanged += note =>
+            {
+                if (note == m_note)
+                {
+                    m_favoriteLabel.style.display = note.IsFavorite() ? DisplayStyle.Flex : DisplayStyle.None;
+                }
+            };
             
             EditorUNoteManager.OnNoteArchvied += note =>
             {
@@ -69,6 +77,7 @@ namespace UNote.Editor
 
             m_nameLabel.text = note.NoteName;
 
+            m_favoriteLabel.style.display = note.IsFavorite() ? DisplayStyle.Flex : DisplayStyle.None;
             m_archvieLabel.style.display = note.Archived ? DisplayStyle.Flex : DisplayStyle.None;
 
             switch (note.NoteType)
@@ -152,7 +161,20 @@ namespace UNote.Editor
             GenericMenu menu = new GenericMenu();
             
             bool isOwnNote = m_note.Author == UNoteSetting.UserName;
+            
+            // Favorite
+            bool isFavorite = m_note.IsFavorite();
+            string favoriteLabel = isFavorite ? "Unfavorite" : "Favorite";
+            menu.AddItem(
+                new GUIContent(favoriteLabel),
+                false,
+                () =>
+                {
+                    EditorUNoteManager.ToggleFavorite(m_note);
+                }
+            );
 
+            // Rename
             if (m_note.NoteType == NoteType.Project && isOwnNote)
             {
                 menu.AddItem(
@@ -165,6 +187,7 @@ namespace UNote.Editor
                 );
             }
 
+            // Archive
             if (isOwnNote)
             {
                 string archiveLabel = m_note.Archived ? "Unarchived" : "Archive";

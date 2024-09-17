@@ -26,12 +26,14 @@ namespace UNote.Editor
 
         public delegate void SelectQueryHandler(NoteQuery query);
 
+        public delegate void FavoriteNoteHandler(NoteBase note);
         public delegate void ArchiveNoteHandler(NoteBase note);
         public delegate void DeleteNoteHandler(NoteBase note);
 
         public static event AddNoteHandler OnNoteAdded;
         public static event SelectNoteHandler OnNoteSelected;
         public static event SelectQueryHandler OnNoteQueryUpdated;
+        public static event FavoriteNoteHandler OnNoteFavoriteChanged;
         public static event ArchiveNoteHandler OnNoteArchvied;
         public static event DeleteNoteHandler OnNoteDeleted;
 
@@ -201,6 +203,21 @@ namespace UNote.Editor
             OnNoteDeleted?.Invoke(note);
         }
 
+        public static void ToggleFavorite(NoteBase note)
+        {
+            bool isFavorite = note.IsFavorite();
+            if (isFavorite)
+            {
+                DeleteFavorite(note);
+            }
+            else
+            {
+                AddFavorite(note);
+            }
+            OnNoteFavoriteChanged?.Invoke(note);
+            GetOwnFavoriteNoteContainer().Save();
+        }
+
         public static void ToggleArchived(NoteBase note)
         {
             note.Archived = !note.Archived;
@@ -212,6 +229,7 @@ namespace UNote.Editor
         {
             GetOwnProjectNoteContainer().Save();
             GetOwnAssetNoteContainer().Save();
+            GetOwnFavoriteNoteContainer().Save();
         }
         #endregion // Public Method
 
