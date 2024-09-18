@@ -173,6 +173,8 @@ namespace UNote.Editor
                     EditorUNoteManager.ToggleFavorite(m_note);
                 }
             );
+            
+            menu.AddSeparator("");
 
             // Rename
             if (m_note.NoteType == NoteType.Project && isOwnNote)
@@ -185,9 +187,11 @@ namespace UNote.Editor
                         EditorWindow.GetWindow<UNoteEditor>().RightPane.EnableChangeTitleMode();
                     }
                 );
+                
+                menu.AddSeparator("");
             }
 
-            // Archive
+            // Archive, Delete
             if (isOwnNote)
             {
                 string archiveLabel = m_note.Archived ? "Unarchived" : "Archive";
