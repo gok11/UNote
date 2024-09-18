@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
 
@@ -13,6 +14,7 @@ namespace UNote.Editor
         private UNoteEditor m_noteEditor;
 
         private Label m_noteQueryLabel;
+        private Button m_openSettingPanelButton;
         
         private ScrollView m_noteScroll;
 
@@ -36,11 +38,16 @@ namespace UNote.Editor
             contentContainer.Add(template);
 
             m_noteQueryLabel = template.Q<Label>("NoteCategoryLabel");
+            m_openSettingPanelButton = template.Q<Button>("SettingPanelButton");
             
             m_noteScroll = template.Q<ScrollView>("NoteList");
 
             // Setup
             EditorApplication.delayCall += SetupListItems;
+            
+            // setup button
+            m_openSettingPanelButton.Q("Image").style.backgroundImage =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("setting.png"));
             
             // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupListItems();
