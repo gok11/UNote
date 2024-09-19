@@ -8,6 +8,7 @@ namespace UNote.Editor
         public static readonly string NoteContent = PathUtil.GetUxmlPath("NoteContent.uxml");
         public static readonly string NoteEditorCenterPane = PathUtil.GetUxmlPath("NoteEditorCenterPane.uxml");
         public static readonly string NoteEditorLeftPane = PathUtil.GetUxmlPath("NoteEditorLeftPane.uxml");
+        public static readonly string NoteEditorQuerySettingPanel = PathUtil.GetUxmlPath("NoteEditorQuerySettingPanel.uxml");
         public static readonly string NoteEditorRightPane = PathUtil.GetUxmlPath("NoteEditorRightPane.uxml");
         public static readonly string NoteInputField = PathUtil.GetUxmlPath("NoteInputField.uxml");
         public static readonly string NoteListItem = PathUtil.GetUxmlPath("NoteListItem.uxml");

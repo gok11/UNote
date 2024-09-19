@@ -15,7 +15,7 @@ namespace UNote.Editor
 
         private Label m_noteQueryLabel;
         private Button m_openSettingPanelButton;
-        
+        private VisualElement m_noteEditorQuerySettingPanel;
         private ScrollView m_noteScroll;
 
         #endregion // Field
@@ -39,8 +39,13 @@ namespace UNote.Editor
 
             m_noteQueryLabel = template.Q<Label>("NoteCategoryLabel");
             m_openSettingPanelButton = template.Q<Button>("SettingPanelButton");
-            
+            m_noteEditorQuerySettingPanel = template.Q<VisualElement>("NoteEditorQuerySettingPanel");
             m_noteScroll = template.Q<ScrollView>("NoteList");
+            
+            // Set style
+            template.Q<EnumField>("NoteType").Q<Label>().style.minWidth = 90;
+            template.Q<EnumField>("NoteSort").Q<Label>().style.minWidth = 90;
+            template.Q<Toggle>("DisplayArchive").Q<Label>().style.minWidth = 90;
 
             // Setup
             EditorApplication.delayCall += SetupListItems;
@@ -48,6 +53,14 @@ namespace UNote.Editor
             // setup button
             m_openSettingPanelButton.Q("Image").style.backgroundImage =
                 AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("setting.png"));
+
+            m_openSettingPanelButton.clicked += () =>
+            {
+                m_noteEditorQuerySettingPanel.style.display =
+                    m_noteEditorQuerySettingPanel.style.display == DisplayStyle.Flex
+                        ? DisplayStyle.None
+                        : DisplayStyle.Flex;
+            };
             
             // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupListItems();
