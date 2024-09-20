@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 using UNote.Runtime;
 
 namespace UNote.Editor
@@ -10,12 +11,15 @@ namespace UNote.Editor
     /// <summary>
     /// Note manager in Unity Editor
     /// </summary>
+    [Serializable]
     public partial class EditorUNoteManager
     {
         #region Field
 
         private NoteType m_currentNoteType = NoteType.Project;
         private NoteBase m_currentNote;
+        
+        [SerializeField]
         private NoteQuery m_noteQuery;
         
         private ProjectNoteContainer m_projectNoteContainer;

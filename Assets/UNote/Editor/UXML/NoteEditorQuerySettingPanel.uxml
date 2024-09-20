@@ -3,7 +3,7 @@
         <ui:TextField picking-mode="Ignore" name="SearchField" />
         <ui:EnumField label="Note Type" type="UNote.Editor.NoteTypeFilter, UNote.Editor" name="NoteType" style="font-size: 11px;" />
         <ui:EnumField label="Note Sort" type="UNote.Editor.NoteQuerySort, UNote.Editor" name="NoteSort" style="font-size: 11px;" />
-        <ui:Toggle label="Display Archvie" name="ShowArchive" value="false" style="font-size: 11px;" />
+        <ui:Toggle label="Display Archvie" name="DisplayArchive" value="false" style="font-size: 11px;" />
         <ui:VisualElement style="flex-grow: 1; border-left-color: rgb(72, 72, 72); border-right-color: rgb(72, 72, 72); border-top-color: rgb(72, 72, 72); border-bottom-color: rgb(72, 72, 72); height: auto; border-top-width: 1px; margin-top: 1px; margin-bottom: 2px;" />
         <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row;">
             <ui:Button text="Save View" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="font-size: 11px; flex-grow: 1; margin-right: 0; margin-left: 2px;" />

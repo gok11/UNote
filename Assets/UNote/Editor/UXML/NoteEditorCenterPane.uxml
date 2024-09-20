@@ -1,11 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="NoteEditorQuerySettingPanel" src="project://database/Assets/UNote/Editor/UXML/NoteEditorQuerySettingPanel.uxml?fileID=9197481963319205126&amp;guid=93e3de11eed8c544b87bff65f1cabdd8&amp;type=3#NoteEditorQuerySettingPanel" />
     <ui:VisualElement name="Header" style="flex-grow: 0; flex-direction: row; margin-top: 2px; margin-bottom: 2px;">
         <ui:Label tabindex="-1" text="Project Note" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NoteCategoryLabel" style="margin-left: 6px; margin-top: 4px; font-size: 16px; height: auto; margin-right: 2px; margin-bottom: 0; -unity-font-style: bold; flex-grow: 1;" />
         <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="SettingPanelButton" style="width: 22px; height: 22px; margin-top: 2px; margin-right: 4px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px; padding-left: 3px; margin-bottom: 2px; margin-left: 4px;">
             <ui:VisualElement name="Image" style="flex-grow: 1; -unity-background-image-tint-color: rgb(210, 210, 210);" />
         </ui:Button>
     </ui:VisualElement>
-    <ui:Instance template="NoteEditorQuerySettingPanel" name="NoteEditorQuerySettingPanel" style="display: none;" />
     <ui:ScrollView name="NoteList" style="padding-top: 0; flex-grow: 1; flex-shrink: 1;" />
 </ui:UXML>
