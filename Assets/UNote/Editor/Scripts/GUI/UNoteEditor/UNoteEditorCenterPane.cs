@@ -90,9 +90,8 @@ namespace UNote.Editor
             m_noteQueryLabel.text = noteQuery.QueryName;
             IEnumerable<NoteBase> notes = EditorUNoteManager.GetFilteredNotes(noteQuery);
             
-            // TODO favorite first setting
-            
-            notes = notes.OrderBy(t => t.CreatedDate);
+            notes = notes.OrderBy(t => t.IsFavorite())
+                .ThenBy(t => t.CreatedDate);
 
             bool existCurrentNote = false;
             

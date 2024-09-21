@@ -18,8 +18,8 @@ namespace UNote.Editor
         [SerializeField] private NoteTypeFilter m_noteTypeFilter;
         [SerializeField] private string m_searchText;
         [SerializeField] private string[] m_searchTags;
-        [SerializeField] private bool m_showArchive;
-        [SerializeField] private bool m_showFavoriteFirst;
+        [SerializeField] private bool m_displayArchive;
+        [SerializeField] private NoteQuerySort m_noteQuerySort;
 
         public NoteQuery(string queryName, string searchText,
             string[] searchTags, bool showArchive, bool showFavoriteFirst)
@@ -61,16 +61,16 @@ namespace UNote.Editor
             set => m_searchTags = value;
         }
 
-        public bool ShowArchive
+        public bool DisplayArchive
         {
-            get => m_showArchive;
-            set => m_showArchive = value;
+            get => m_displayArchive;
+            set => m_displayArchive = value;
         }
 
-        public bool ShowFavoriteFirst
+        public NoteQuerySort NoteQuerySort
         {
-            get => m_showFavoriteFirst;
-            set => m_showFavoriteFirst = value;
+            get => m_noteQuerySort;
+            set => m_noteQuerySort = value;
         }
 
         internal virtual bool IsOverWritable => true;

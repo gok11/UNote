@@ -159,10 +159,22 @@ namespace UNote.Editor
                     noteList.AddRange(GetAllAssetNotesIdDistinct());
                     break;
             }
+
+            IEnumerable<NoteBase> notes = noteList;
+
+            // Filter by search text
+            string searchText = noteQuery.SearchText;
+            if (!searchText.IsNullOrWhiteSpace())
+            {
+                notes = notes.Where(t => t.NoteName.Contains(searchText) || t.NoteContent.Contains(searchText));
+            }
+
+            if (!noteQuery.DisplayArchive)
+            {
+                notes = notes.Where(t => !t.Archived);
+            }
             
-            // TODO
-            
-            return noteList;
+            return notes;
         }
         
         public static void ChangeNoteName(NoteBase note, string noteName)
