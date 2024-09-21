@@ -18,7 +18,7 @@ namespace UNote.Editor
         private Toggle m_displayArchive;
         
         #endregion // Field
-        
+
         internal QuerySettingPanel(NoteQuery noteQuery)
         {
             name = nameof(QuerySettingPanel);

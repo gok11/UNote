@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="Panel" style="flex-grow: 1; border-left-color: rgb(77, 77, 77); border-right-color: rgb(77, 77, 77); border-top-color: rgb(77, 77, 77); border-bottom-color: rgb(77, 77, 77); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; scale: 1 1; height: auto;">
-        <ui:TextField picking-mode="Ignore" name="SearchField" />
+        <ui:TextField picking-mode="Ignore" name="SearchField" is-delayed="true" />
         <ui:EnumField label="Note Type" type="UNote.Editor.NoteTypeFilter, UNote.Editor" name="NoteType" style="font-size: 11px;" />
         <ui:EnumField label="Note Sort" type="UNote.Editor.NoteQuerySort, UNote.Editor" name="NoteSort" style="font-size: 11px;" />
         <ui:Toggle label="Display Archvie" name="DisplayArchive" value="false" style="font-size: 11px;" />
