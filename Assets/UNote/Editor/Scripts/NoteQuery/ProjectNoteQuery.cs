@@ -7,11 +7,15 @@ namespace UNote.Editor
     {
         #region Constructor
 
-        public ProjectNotesQuery(string searchText = null, string[] searchTags = null, bool displayArchive = false)
+        public ProjectNotesQuery()
         {
             QueryID = Guid.NewGuid().ToString();
             QueryName = "Project Notes";
-            NoteTypeFilter = NoteTypeFilter.Project;
+            NoteTypeFilter = NoteTypeFilter.Project;   
+        }
+        
+        public ProjectNotesQuery(string searchText = null, string[] searchTags = null, bool displayArchive = false) : this()
+        {
             SearchText = searchText;
             SearchTags = searchTags;
             DisplayArchive = displayArchive;

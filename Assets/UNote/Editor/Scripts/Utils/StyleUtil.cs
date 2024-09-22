@@ -10,7 +10,7 @@ namespace UNote.Editor
 
         public static readonly Color UnselectColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
         public static readonly Color SelectColor = new Color(0.1725f, 0.3647f, 0.5294f, 1.0f);
-        public static readonly Color GrayedTextColor = new Color(0.6f, 0.6f, 0.6f);
+        public static readonly Color GrayColor = new Color(0.7f, 0.7f, 0.7f);
 
         #endregion // Const
         

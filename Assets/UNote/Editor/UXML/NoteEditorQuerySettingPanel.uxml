@@ -6,9 +6,9 @@
         <ui:Toggle label="Display Archvie" name="DisplayArchive" value="false" style="font-size: 11px;" />
         <ui:VisualElement style="flex-grow: 1; border-left-color: rgb(72, 72, 72); border-right-color: rgb(72, 72, 72); border-top-color: rgb(72, 72, 72); border-bottom-color: rgb(72, 72, 72); height: auto; border-top-width: 1px; margin-top: 1px; margin-bottom: 2px;" />
         <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row;">
-            <ui:Button text="Save View" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="font-size: 11px; flex-grow: 1; margin-right: 0; margin-left: 2px;" />
-            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="DeleteButton" style="margin-left: 0; margin-right: 2px;">
-                <ui:VisualElement name="Icon" style="flex-grow: 1;" />
+            <ui:Button text="Save Query" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="font-size: 11px; flex-grow: 1; margin-right: 0; margin-left: 2px;" />
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="DeleteButton" style="margin-left: 0; margin-right: 2px; padding-top: 2px; padding-right: 4px; padding-bottom: 2px; padding-left: 4px; width: 22px;">
+                <ui:VisualElement name="Icon" style="flex-grow: 1; width: auto;" />
             </ui:Button>
         </ui:VisualElement>
     </ui:VisualElement>

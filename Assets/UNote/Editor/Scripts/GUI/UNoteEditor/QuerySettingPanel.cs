@@ -16,6 +16,9 @@ namespace UNote.Editor
         private EnumField m_noteType;
         private EnumField m_noteSort;
         private Toggle m_displayArchive;
+
+        private Button m_saveQueryButton;
+        private Button m_deleteQueryButton;
         
         #endregion // Field
 
@@ -34,12 +37,19 @@ namespace UNote.Editor
             m_noteSort = contentContainer.Q<EnumField>("NoteSort");
             m_displayArchive = contentContainer.Q<Toggle>("DisplayArchive");
 
+            m_saveQueryButton = contentContainer.Q<Button>("SaveButton");
+            m_deleteQueryButton = contentContainer.Q<Button>("DeleteButton");
+
             SetQuery(noteQuery);
             
             // Set style
             m_noteType.Q<Label>().style.minWidth = 90;
             m_noteSort.Q<Label>().style.minWidth = 90;
             m_displayArchive.Q<Label>().style.minWidth = 90;
+
+            VisualElement deleteIcon = m_deleteQueryButton.Q("Icon"); 
+            deleteIcon.style.backgroundImage = AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("trash.png"));
+            deleteIcon.style.unityBackgroundImageTintColor = StyleUtil.GrayColor;
             
             // Register callback
             m_searchText.RegisterValueChangedCallback(x =>
@@ -72,6 +82,11 @@ namespace UNote.Editor
             m_noteType.SetValueWithoutNotify(noteQuery.NoteTypeFilter);
             m_noteSort.SetValueWithoutNotify(noteQuery.NoteQuerySort);
             m_displayArchive.SetValueWithoutNotify(noteQuery.DisplayArchive);
+
+            bool isPreset = noteQuery.IsOverWritable;
+            m_noteType.SetEnabled(isPreset);
+            m_saveQueryButton.style.display = isPreset ? DisplayStyle.Flex : DisplayStyle.None;
+            m_deleteQueryButton.style.display = isPreset ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         internal void ToggleDisplay()

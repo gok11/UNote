@@ -75,9 +75,9 @@ namespace UNote.Editor
 
         #region Internal Method
 
-        internal NoteQuery Clone()
+        internal T Clone<T>() where T : NoteQuery, new()
         {
-            return new NoteQuery()
+            return new T()
             {
                 m_queryId = QueryID,
                 m_queryName = QueryName,

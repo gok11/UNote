@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -67,7 +68,26 @@ namespace UNote.Editor
             {
                 pair.Value.RegisterCallback<MouseDownEvent>(evt =>
                 {
-                    NoteQuery query = pair.Key.Clone();
+                    NoteQuery query;
+
+                    switch (pair.Key.NoteTypeFilter)
+                    {
+                        case NoteTypeFilter.All:
+                            query = pair.Key.Clone<AllNotesQuery>();
+                            break;
+                        
+                        case NoteTypeFilter.Project:
+                            query = pair.Key.Clone<ProjectNotesQuery>();
+                            break;
+                        
+                        case NoteTypeFilter.Asset:
+                            query = pair.Key.Clone<AssetNotesQuery>();
+                            break;
+                        
+                        default:
+                            throw new NotImplementedException();
+                    }
+                    
                     EditorUNoteManager.SetNoteQuery(query);
                     SelectQueryElem(query);
                     evt.StopPropagation();
