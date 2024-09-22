@@ -23,8 +23,6 @@ namespace UNote.Editor
         {
             name = nameof(QuerySettingPanel);
 
-            m_noteQuery = noteQuery;
-
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteEditorQuerySettingPanel
             );
@@ -35,6 +33,8 @@ namespace UNote.Editor
             m_noteType = contentContainer.Q<EnumField>("NoteType");
             m_noteSort = contentContainer.Q<EnumField>("NoteSort");
             m_displayArchive = contentContainer.Q<Toggle>("DisplayArchive");
+
+            SetQuery(noteQuery);
             
             // Set style
             m_noteType.Q<Label>().style.minWidth = 90;
@@ -62,6 +62,16 @@ namespace UNote.Editor
                 m_noteQuery.DisplayArchive = x.newValue;
                 EditorUNoteManager.CallUpdateNoteQuery();
             });
+        }
+
+        internal void SetQuery(NoteQuery noteQuery)
+        {
+            m_noteQuery = noteQuery;
+
+            m_searchText.SetValueWithoutNotify(noteQuery.SearchText);
+            m_noteType.SetValueWithoutNotify(noteQuery.NoteTypeFilter);
+            m_noteSort.SetValueWithoutNotify(noteQuery.NoteQuerySort);
+            m_displayArchive.SetValueWithoutNotify(noteQuery.DisplayArchive);
         }
 
         internal void ToggleDisplay()

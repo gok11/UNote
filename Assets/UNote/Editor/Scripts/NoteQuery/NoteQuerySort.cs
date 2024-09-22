@@ -7,8 +7,8 @@ namespace UNote.Editor
     public enum NoteQuerySort
     {
         UpdateDate,
-        UpdateDateDescending,
+        UpdateDateAscending,
         CreateDate,
-        CreateDateDescending,
+        CreateDateAscending,
     }
 }

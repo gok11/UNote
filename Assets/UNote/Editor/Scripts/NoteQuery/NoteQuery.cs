@@ -13,6 +13,8 @@ namespace UNote.Editor
     [Serializable]
     public class NoteQuery
     {
+        #region Field
+
         [SerializeField] private string m_queryId;
         [SerializeField] private string m_queryName;
         [SerializeField] private NoteTypeFilter m_noteTypeFilter;
@@ -21,22 +23,16 @@ namespace UNote.Editor
         [SerializeField] private bool m_displayArchive;
         [SerializeField] private NoteQuerySort m_noteQuerySort;
 
-        public NoteQuery(string queryName, string searchText,
-            string[] searchTags, bool showArchive, bool showFavoriteFirst)
-        {
-            QueryName = queryName;
-            NoteTypeFilter = NoteTypeFilter.All;
-            QueryId = Guid.NewGuid().ToString();
-        }
+        #endregion // Field
 
         #region Property
 
-        public string QueryId
+        public string QueryID
         {
             get => m_queryId;
             set => m_queryId = value;
         }
-
+        
         public string QueryName
         {
             get => m_queryName;
@@ -76,5 +72,23 @@ namespace UNote.Editor
         internal virtual bool IsOverWritable => true;
 
         #endregion
+
+        #region Internal Method
+
+        internal NoteQuery Clone()
+        {
+            return new NoteQuery()
+            {
+                m_queryId = QueryID,
+                m_queryName = QueryName,
+                m_noteTypeFilter = NoteTypeFilter,
+                m_searchText = SearchText,
+                m_searchTags = SearchTags,
+                m_displayArchive = DisplayArchive,
+                m_noteQuerySort = NoteQuerySort,
+            };
+        }
+
+        #endregion // Internal Method
     }
 }

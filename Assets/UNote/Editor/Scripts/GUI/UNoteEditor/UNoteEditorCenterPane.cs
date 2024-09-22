@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -67,7 +68,12 @@ namespace UNote.Editor
                 }
             };
             EditorUNoteManager.OnNoteDeleted += _ => SetupListItems();
-            EditorUNoteManager.OnNoteQueryUpdated += _ => SetupListItems();
+            EditorUNoteManager.OnNoteQueryUpdated += query =>
+            {
+                m_querySettingPanel.SetQuery(query);
+                SetupListItems();
+            };
+            EditorUNoteManager.OnNoteFavoriteChanged += _ => SetupListItems();
         }
 
         #endregion // Constructor
@@ -90,9 +96,27 @@ namespace UNote.Editor
             m_noteQueryLabel.text = noteQuery.QueryName;
             IEnumerable<NoteBase> notes = EditorUNoteManager.GetFilteredNotes(noteQuery);
             
-            notes = notes.OrderBy(t => t.IsFavorite())
-                .ThenBy(t => t.CreatedDate);
-
+            // Sort
+            switch (noteQuery.NoteQuerySort)
+            {
+                case NoteQuerySort.UpdateDate:
+                    notes = notes.OrderByDescending(t => t.UpdatedDate);
+                    break;
+                case NoteQuerySort.UpdateDateAscending:
+                    notes = notes.OrderBy(t => t.UpdatedDate);
+                    break;
+                case NoteQuerySort.CreateDate:
+                    notes = notes.OrderByDescending(t => t.CreatedDate);
+                    break;
+                case NoteQuerySort.CreateDateAscending:
+                    notes = notes.OrderBy(t => t.CreatedDate);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            notes = notes.OrderByDescending(t => t.IsFavorite());
+            
             bool existCurrentNote = false;
             
             // Add content to list

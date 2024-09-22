@@ -67,8 +67,9 @@ namespace UNote.Editor
             {
                 pair.Value.RegisterCallback<MouseDownEvent>(evt =>
                 {
-                    EditorUNoteManager.SetNoteQuery(pair.Key);
-                    SelectQueryElem(pair.Key);
+                    NoteQuery query = pair.Key.Clone();
+                    EditorUNoteManager.SetNoteQuery(query);
+                    SelectQueryElem(query);
                     evt.StopPropagation();
                 });
             }
@@ -86,7 +87,7 @@ namespace UNote.Editor
             foreach (var category in m_queryElemDict)
             {
                 m_queryElemDict[category.Key].contentContainer.style.backgroundColor =
-                    noteQuery == category.Key ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
+                    noteQuery.QueryID == category.Key.QueryID ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
             }
             
             // Select internal
