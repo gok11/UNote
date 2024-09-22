@@ -100,10 +100,10 @@ namespace UNote.Editor
             switch (noteQuery.NoteQuerySort)
             {
                 case NoteQuerySort.UpdateDate:
-                    notes = notes.OrderByDescending(t => t.UpdatedDate);
+                    notes = notes.OrderByDescending(GetUpdatedDate);
                     break;
                 case NoteQuerySort.UpdateDateAscending:
-                    notes = notes.OrderBy(t => t.UpdatedDate);
+                    notes = notes.OrderBy(GetUpdatedDate);
                     break;
                 case NoteQuerySort.CreateDate:
                     notes = notes.OrderByDescending(t => t.CreatedDate);
@@ -164,6 +164,33 @@ namespace UNote.Editor
             }
         }
 
+        private string GetUpdatedDate(NoteBase note)
+        {
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                {
+                    ProjectNoteComment comment = EditorUNoteManager
+                        .GetProjectLeafNoteListByNoteId(note.NoteId)
+                        .OrderByDescending(t => t.UpdatedDate)
+                        .FirstOrDefault();
+                    return comment != null ? comment.UpdatedDate : note.CreatedDate;
+                }
+
+                case NoteType.Asset:
+                {
+                    AssetNoteComment comment = EditorUNoteManager
+                        .GetAssetLeafNoteListByNoteId(note.NoteId)
+                        .OrderByDescending(t => t.UpdatedDate)
+                        .FirstOrDefault();
+                    return comment != null ? comment.UpdatedDate : note.CreatedDate;
+                }
+                
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        
         #endregion // Private Method
     }
 }

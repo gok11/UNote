@@ -37,7 +37,7 @@ namespace UNote.Editor
             
             paneContainer.StretchToParentSize();
 
-            VisualElement presetViewElem = paneContainer.Q("PresetViews");
+            VisualElement presetViewElem = paneContainer.Q("PresetQueries");
 
             m_noteAddButton = paneContainer.Q<Button>("AddNoteButton");
 
