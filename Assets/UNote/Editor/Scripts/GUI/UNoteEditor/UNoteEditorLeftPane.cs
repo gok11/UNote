@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,10 +13,12 @@ namespace UNote.Editor
 
         private UNoteEditor m_noteEditor;
         private Button m_noteAddButton;
+        private VisualElement m_customQueryElem;
 
         private NoteQuery m_currentQuery;
         
-        private Dictionary<NoteQuery, VisualElement> m_queryElemDict = new();
+        private Dictionary<NoteQuery, VisualElement> m_presetQueryElemDict = new();
+        private Dictionary<NoteQuery, VisualElement> m_customQueryElemDict = new();
 
         #endregion // Field
 
@@ -39,6 +42,7 @@ namespace UNote.Editor
             paneContainer.StretchToParentSize();
 
             VisualElement presetViewElem = paneContainer.Q("PresetQueries");
+            m_customQueryElem = paneContainer.Q("QueryElems");
 
             m_noteAddButton = paneContainer.Q<Button>("AddNoteButton");
 
@@ -57,14 +61,14 @@ namespace UNote.Editor
             VisualElement assetNoteElem = categoryContainer.Q("AssetNoteElem");
             
             AllNotesQuery initQuery = new AllNotesQuery();
-            m_queryElemDict.Add(initQuery, allNoteElem);
-            m_queryElemDict.Add(new ProjectNotesQuery(), projectNoteElem);
-            m_queryElemDict.Add(new AssetNotesQuery(), assetNoteElem);
+            m_presetQueryElemDict.Add(initQuery, allNoteElem);
+            m_presetQueryElemDict.Add(new ProjectNotesQuery(), projectNoteElem);
+            m_presetQueryElemDict.Add(new AssetNotesQuery(), assetNoteElem);
 
             SelectQueryElem(initQuery);
 
             // Register select event
-            foreach (var pair in m_queryElemDict)
+            foreach (var pair in m_presetQueryElemDict)
             {
                 pair.Value.RegisterCallback<MouseDownEvent>(evt =>
                 {
@@ -95,19 +99,18 @@ namespace UNote.Editor
             }
             
             // Load custom query
-            VisualElement customQueryElem = paneContainer.Q("CustomQueries");
             Button addQueryButton = paneContainer.Q<Button>("AddQueryButton");
             
-            LoadCustomQuery(customQueryElem);
+            LoadCustomQuery();
 
             addQueryButton.clicked += () =>
             {
                 NoteQuery newQuery = new NoteQuery();
                 CustomQueryContainer.Get().NoteQueryList.Add(newQuery);
 
-                NoteQueryTemplate queryElem = new NoteQueryTemplate(this, newQuery);
-                customQueryElem.Add(queryElem);
-                m_queryElemDict.Add(newQuery, queryElem);
+                CustomNoteQueryElem queryElem = new CustomNoteQueryElem(this, newQuery);
+                m_customQueryElem.Add(queryElem);
+                m_customQueryElemDict.Add(newQuery, queryElem);
                 
                 CustomQueryContainer.Get().Save();
             };
@@ -117,28 +120,33 @@ namespace UNote.Editor
 
         #endregion // Constructor
 
-        #region Private Method
-        
-        private void LoadCustomQuery(VisualElement customQueryElem)
+        #region Internal Method
+
+        internal void SetDefaultQuery()
         {
+            NoteQuery query = m_presetQueryElemDict.Keys.First();
+            EditorUNoteManager.SetNoteQuery(query);
+            UpdateElemBackgroundColor(query);
+        }
+        
+        internal void LoadCustomQuery()
+        {
+            m_customQueryElem.Clear();
+            m_customQueryElemDict.Clear();
+            
             List<NoteQuery> queryList = CustomQueryContainer.Get().NoteQueryList;
             
             foreach (var query in queryList)
             {
-                NoteQueryTemplate queryElem = new NoteQueryTemplate(this, query);
-                customQueryElem.Add(queryElem);
-                m_queryElemDict.Add(query, queryElem);
+                CustomNoteQueryElem queryElem = new CustomNoteQueryElem(this, query);
+                m_customQueryElem.Add(queryElem);
+                m_customQueryElemDict.Add(query, queryElem);
             }
         }
 
         internal void SelectQueryElem(NoteQuery noteQuery)
         {
-            // Set background color
-            foreach (var queryElem in m_queryElemDict)
-            {
-                m_queryElemDict[queryElem.Key].contentContainer.style.backgroundColor =
-                    noteQuery.QueryID == queryElem.Key.QueryID ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
-            }
+            UpdateElemBackgroundColor(noteQuery);
             
             // Select internal
             if (noteQuery == m_currentQuery)
@@ -146,9 +154,29 @@ namespace UNote.Editor
                 return;
             }
             
-            m_noteEditor.CenterPane?.SetupListItems();
+            UNoteEditor.CenterPane?.SetupListItems();
             m_currentQuery = noteQuery;
         }
+
+        internal void UpdateElemBackgroundColor(NoteQuery noteQuery)
+        {
+            // Set background color
+            foreach (var queryElem in m_presetQueryElemDict)
+            {
+                m_presetQueryElemDict[queryElem.Key].contentContainer.style.backgroundColor =
+                    noteQuery.QueryID == queryElem.Key.QueryID ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
+            }
+            
+            foreach (var queryElem in m_customQueryElemDict)
+            {
+                m_customQueryElemDict[queryElem.Key].contentContainer.style.backgroundColor =
+                    noteQuery.QueryID == queryElem.Key.QueryID ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
+            }
+        }
+        
+        #endregion // Internal Method
+
+        #region Private Method
         
         private void ShowAddWindow()
         {

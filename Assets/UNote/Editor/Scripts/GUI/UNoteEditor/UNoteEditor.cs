@@ -14,11 +14,11 @@ namespace UNote.Editor
 
         #region Property
 
-        public UNoteEditorLeftPane LeftPane { get; private set; }
+        internal static UNoteEditorLeftPane LeftPane { get; private set; }
 
-        public UNoteEditorCenterPane CenterPane { get; private set; }
+        internal static UNoteEditorCenterPane CenterPane { get; private set; }
 
-        public UNoteEditorRightPane RightPane { get; private set; }
+        internal static UNoteEditorRightPane RightPane { get; private set; }
 
         public NoteEditorModel Model => m_model;
 

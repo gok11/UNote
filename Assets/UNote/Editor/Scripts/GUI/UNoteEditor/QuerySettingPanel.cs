@@ -72,6 +72,32 @@ namespace UNote.Editor
                 m_noteQuery.DisplayArchive = x.newValue;
                 EditorUNoteManager.CallUpdateNoteQuery();
             });
+
+            m_saveQueryButton.clicked += () =>
+            {
+                CustomQueryContainer.Get().Save();
+            };
+
+            m_deleteQueryButton.clicked += () =>
+            {
+                CustomQueryContainer container = CustomQueryContainer.Get();
+                container.NoteQueryList.Remove(m_noteQuery);
+
+                UNoteEditorLeftPane leftPane = UNoteEditor.LeftPane;
+                leftPane.LoadCustomQuery();
+                
+                if (container.NoteQueryList.Count > 0)
+                {
+                    EditorUNoteManager.SetNoteQuery(container.NoteQueryList[0]);
+                    leftPane.UpdateElemBackgroundColor(container.NoteQueryList[0]);
+                }
+                else
+                {
+                    leftPane.SetDefaultQuery();
+                }
+                
+                container.Save();
+            };
         }
 
         internal void SetQuery(NoteQuery noteQuery)

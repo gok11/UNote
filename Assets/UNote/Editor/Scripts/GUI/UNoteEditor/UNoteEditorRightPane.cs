@@ -105,7 +105,7 @@ namespace UNote.Editor
 
                     m_noteTitle.text = EditorUNoteManager.CurrentNote.NoteName;
                     
-                    m_noteEditor.CenterPane.SetupListItems();
+                    UNoteEditor.CenterPane.SetupListItems();
                 }
 
                 
@@ -323,7 +323,7 @@ namespace UNote.Editor
         {
             if (undoName.Contains("UNote Change Project Note Title"))
             {
-                m_noteEditor.CenterPane.OnUndoRedo(undoName);
+                UNoteEditor.CenterPane.OnUndoRedo(undoName);
             }
 
             switch (EditorUNoteManager.CurrentNoteType)

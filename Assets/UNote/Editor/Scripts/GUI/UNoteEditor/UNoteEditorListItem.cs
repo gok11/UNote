@@ -184,7 +184,7 @@ namespace UNote.Editor
                     false,
                     () =>
                     {
-                        EditorWindow.GetWindow<UNoteEditor>().RightPane.EnableChangeTitleMode();
+                        UNoteEditor.RightPane.EnableChangeTitleMode();
                     }
                 );
                 

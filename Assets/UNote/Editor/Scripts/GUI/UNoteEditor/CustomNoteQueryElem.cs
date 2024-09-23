@@ -6,11 +6,11 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
-    public class NoteQueryTemplate : VisualElement
+    public class CustomNoteQueryElem : VisualElement
     {
         private NoteQuery m_noteQuery;
         
-        public NoteQueryTemplate(UNoteEditorLeftPane leftPane, NoteQuery noteQuery)
+        public CustomNoteQueryElem(UNoteEditorLeftPane leftPane, NoteQuery noteQuery)
         {
             m_noteQuery = noteQuery;
             
