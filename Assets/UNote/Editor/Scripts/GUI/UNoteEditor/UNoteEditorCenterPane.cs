@@ -173,25 +173,7 @@ namespace UNote.Editor
             IEnumerable<NoteBase> notes = EditorUNoteManager.GetFilteredNotes(noteQuery);
             
             // Sort
-            switch (noteQuery.NoteQuerySort)
-            {
-                case NoteQuerySort.UpdateDate:
-                    notes = notes.OrderByDescending(GetUpdatedDate);
-                    break;
-                case NoteQuerySort.UpdateDateAscending:
-                    notes = notes.OrderBy(GetUpdatedDate);
-                    break;
-                case NoteQuerySort.CreateDate:
-                    notes = notes.OrderByDescending(t => t.CreatedDate);
-                    break;
-                case NoteQuerySort.CreateDateAscending:
-                    notes = notes.OrderBy(t => t.CreatedDate);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            
-            notes = notes.OrderByDescending(t => t.IsFavorite());
+            notes = EditorUNoteManager.SortNotes(notes, noteQuery);
             
             bool existCurrentNote = false;
             
@@ -251,33 +233,6 @@ namespace UNote.Editor
             foreach (var item in items)
             {
                 item.SetBackgroundColor(item.BindNote == EditorUNoteManager.CurrentNote);
-            }
-        }
-
-        private string GetUpdatedDate(NoteBase note)
-        {
-            switch (note.NoteType)
-            {
-                case NoteType.Project:
-                {
-                    ProjectNoteComment comment = EditorUNoteManager
-                        .GetProjectNoteCommentListByNoteId(note.NoteId)
-                        .OrderByDescending(t => t.UpdatedDate)
-                        .FirstOrDefault();
-                    return comment != null ? comment.UpdatedDate : note.CreatedDate;
-                }
-
-                case NoteType.Asset:
-                {
-                    AssetNoteComment comment = EditorUNoteManager
-                        .GetAssetNoteCommentListByNoteId(note.NoteId)
-                        .OrderByDescending(t => t.UpdatedDate)
-                        .FirstOrDefault();
-                    return comment != null ? comment.UpdatedDate : note.CreatedDate;
-                }
-                
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
         

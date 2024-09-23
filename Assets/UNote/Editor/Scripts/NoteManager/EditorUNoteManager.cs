@@ -64,7 +64,10 @@ namespace UNote.Editor
 
                 if (Instance.m_noteQuery != null)
                 {
-                    SelectNote(GetFilteredNotes(Instance.m_noteQuery)?.FirstOrDefault());
+                    IEnumerable<NoteBase> notes = GetFilteredNotes(Instance.m_noteQuery);
+                    notes = SortNotes(notes, Instance.m_noteQuery);
+                    
+                    SelectNote(notes?.FirstOrDefault());
                     return Instance.m_currentNote;
                 }
 
@@ -175,6 +178,57 @@ namespace UNote.Editor
             }
             
             return notes;
+        }
+
+        public static IEnumerable<NoteBase> SortNotes(IEnumerable<NoteBase> notes, NoteQuery noteQuery)
+        {
+            // Sort
+            switch (noteQuery.NoteQuerySort)
+            {
+                case NoteQuerySort.UpdateDate:
+                    notes = notes.OrderByDescending(GetUpdatedDate);
+                    break;
+                case NoteQuerySort.UpdateDateAscending:
+                    notes = notes.OrderBy(GetUpdatedDate);
+                    break;
+                case NoteQuerySort.CreateDate:
+                    notes = notes.OrderByDescending(t => t.CreatedDate);
+                    break;
+                case NoteQuerySort.CreateDateAscending:
+                    notes = notes.OrderBy(t => t.CreatedDate);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            return notes.OrderByDescending(t => t.IsFavorite());
+        }
+        
+        private static string GetUpdatedDate(NoteBase note)
+        {
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                {
+                    ProjectNoteComment comment = EditorUNoteManager
+                        .GetProjectNoteCommentListByNoteId(note.NoteId)
+                        .OrderByDescending(t => t.UpdatedDate)
+                        .FirstOrDefault();
+                    return comment != null ? comment.UpdatedDate : note.CreatedDate;
+                }
+
+                case NoteType.Asset:
+                {
+                    AssetNoteComment comment = EditorUNoteManager
+                        .GetAssetNoteCommentListByNoteId(note.NoteId)
+                        .OrderByDescending(t => t.UpdatedDate)
+                        .FirstOrDefault();
+                    return comment != null ? comment.UpdatedDate : note.CreatedDate;
+                }
+                
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
         
         private static bool ContainsSearchTextInComments(NoteBase note, string text)
