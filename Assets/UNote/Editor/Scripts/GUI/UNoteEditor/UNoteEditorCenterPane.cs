@@ -171,7 +171,7 @@ namespace UNote.Editor
                 case NoteType.Project:
                 {
                     ProjectNoteComment comment = EditorUNoteManager
-                        .GetProjectLeafNoteListByNoteId(note.NoteId)
+                        .GetProjectNoteCommentListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.UpdatedDate)
                         .FirstOrDefault();
                     return comment != null ? comment.UpdatedDate : note.CreatedDate;
@@ -180,7 +180,7 @@ namespace UNote.Editor
                 case NoteType.Asset:
                 {
                     AssetNoteComment comment = EditorUNoteManager
-                        .GetAssetLeafNoteListByNoteId(note.NoteId)
+                        .GetAssetNoteCommentListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.UpdatedDate)
                         .FirstOrDefault();
                     return comment != null ? comment.UpdatedDate : note.CreatedDate;

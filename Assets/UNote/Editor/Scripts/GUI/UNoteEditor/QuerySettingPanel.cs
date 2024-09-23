@@ -83,10 +83,10 @@ namespace UNote.Editor
             m_noteSort.SetValueWithoutNotify(noteQuery.NoteQuerySort);
             m_displayArchive.SetValueWithoutNotify(noteQuery.DisplayArchive);
 
-            bool isPreset = noteQuery.IsOverWritable;
-            m_noteType.SetEnabled(isPreset);
-            m_saveQueryButton.style.display = isPreset ? DisplayStyle.Flex : DisplayStyle.None;
-            m_deleteQueryButton.style.display = isPreset ? DisplayStyle.Flex : DisplayStyle.None;
+            bool isNotPreset = noteQuery.IsOverWritable;
+            m_noteType.SetEnabled(isNotPreset);
+            m_saveQueryButton.style.display = isNotPreset ? DisplayStyle.Flex : DisplayStyle.None;
+            m_deleteQueryButton.style.display = isNotPreset ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         internal void ToggleDisplay()

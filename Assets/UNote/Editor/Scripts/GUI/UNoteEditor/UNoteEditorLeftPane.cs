@@ -51,11 +51,11 @@ namespace UNote.Editor
             TemplateContainer categoryContainer = categoryTree.Instantiate();
             presetViewElem.Add(categoryContainer);
 
+            // Init query elem
             VisualElement allNoteElem = categoryContainer.Q("AllNoteElem");
             VisualElement projectNoteElem = categoryContainer.Q("ProjectNoteElem");
             VisualElement assetNoteElem = categoryContainer.Q("AssetNoteElem");
-
-            // Update color
+            
             AllNotesQuery initQuery = new AllNotesQuery();
             m_queryElemDict.Add(initQuery, allNoteElem);
             m_queryElemDict.Add(new ProjectNotesQuery(), projectNoteElem);
@@ -94,20 +94,50 @@ namespace UNote.Editor
                 });
             }
             
+            // Load custom query
+            VisualElement customQueryElem = paneContainer.Q("CustomQueries");
+            Button addQueryButton = paneContainer.Q<Button>("AddQueryButton");
+            
+            LoadCustomQuery(customQueryElem);
+
+            addQueryButton.clicked += () =>
+            {
+                NoteQuery newQuery = new NoteQuery();
+                CustomQueryContainer.Get().NoteQueryList.Add(newQuery);
+
+                NoteQueryTemplate queryElem = new NoteQueryTemplate(this, newQuery);
+                customQueryElem.Add(queryElem);
+                m_queryElemDict.Add(newQuery, queryElem);
+                
+                CustomQueryContainer.Get().Save();
+            };
+            
             m_noteAddButton.clicked += ShowAddWindow;
         }
 
         #endregion // Constructor
 
         #region Private Method
+        
+        private void LoadCustomQuery(VisualElement customQueryElem)
+        {
+            List<NoteQuery> queryList = CustomQueryContainer.Get().NoteQueryList;
+            
+            foreach (var query in queryList)
+            {
+                NoteQueryTemplate queryElem = new NoteQueryTemplate(this, query);
+                customQueryElem.Add(queryElem);
+                m_queryElemDict.Add(query, queryElem);
+            }
+        }
 
-        private void SelectQueryElem(NoteQuery noteQuery)
+        internal void SelectQueryElem(NoteQuery noteQuery)
         {
             // Set background color
-            foreach (var category in m_queryElemDict)
+            foreach (var queryElem in m_queryElemDict)
             {
-                m_queryElemDict[category.Key].contentContainer.style.backgroundColor =
-                    noteQuery.QueryID == category.Key.QueryID ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
+                m_queryElemDict[queryElem.Key].contentContainer.style.backgroundColor =
+                    noteQuery.QueryID == queryElem.Key.QueryID ? StyleUtil.SelectColor : StyleUtil.UnselectColor;
             }
             
             // Select internal

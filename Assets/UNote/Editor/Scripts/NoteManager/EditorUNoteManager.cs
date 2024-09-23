@@ -166,7 +166,7 @@ namespace UNote.Editor
             string searchText = noteQuery.SearchText;
             if (!searchText.IsNullOrWhiteSpace())
             {
-                notes = notes.Where(t => t.NoteName.Contains(searchText) || t.NoteContent.Contains(searchText));
+                notes = notes.Where(t => t.NoteName.Contains(searchText) || ContainsSearchTextInComments(t, searchText));
             }
 
             if (!noteQuery.DisplayArchive)
@@ -175,6 +175,29 @@ namespace UNote.Editor
             }
             
             return notes;
+        }
+        
+        private static bool ContainsSearchTextInComments(NoteBase note, string text)
+        {
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                {
+                    List<ProjectNoteComment> commentList = EditorUNoteManager
+                        .GetProjectNoteCommentListByNoteId(note.NoteId);
+                    return commentList.FindIndex(t => t.NoteContent.Contains(text)) >= 0;
+                }
+
+                case NoteType.Asset:
+                {
+                    List<AssetNoteComment> commentList = EditorUNoteManager
+                        .GetAssetNoteCommentListByNoteId(note.NoteId);
+                    return commentList.FindIndex(t => t.NoteContent.Contains(text)) >= 0;
+                }
+                
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
         
         public static void ChangeNoteName(NoteBase note, string noteName)

@@ -73,6 +73,12 @@ namespace UNote.Editor
 
         #endregion
 
+        internal NoteQuery()
+        {
+            m_queryId = Guid.NewGuid().ToString();
+            m_queryName = "Query";
+        }
+
         #region Internal Method
 
         internal T Clone<T>() where T : NoteQuery, new()

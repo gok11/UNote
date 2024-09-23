@@ -48,7 +48,7 @@ namespace UNote.Editor
                 return;
             }
 
-            IReadOnlyList<AssetNoteComment> noteList = EditorUNoteManager.GetAssetLeafNoteListByNoteId(guid);
+            IReadOnlyList<AssetNoteComment> noteList = EditorUNoteManager.GetAssetNoteCommentListByNoteId(guid);
             if (noteList == null || noteList.Count == 0)
             {
                 return;   

@@ -41,10 +41,7 @@ namespace UNote.Editor
             // wait for initialize
             if (!Utility.Initialized)
             {
-                EditorApplication.delayCall += () =>
-                {
-                    CreateGUI();
-                };
+                EditorApplication.delayCall += CreateGUI;
                 return;
             }
             
@@ -55,7 +52,7 @@ namespace UNote.Editor
 
             // Three split pane
             int fixedPaneIndex = 0;
-            float leftPaneInitialWidth = 120f;
+            float leftPaneInitialWidth = 140f;
             float centerPaneInitialWidth = 200f;
             TwoPaneSplitViewOrientation orientation = TwoPaneSplitViewOrientation.Horizontal;
 

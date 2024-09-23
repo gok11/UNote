@@ -168,7 +168,7 @@ namespace UNote.Editor
             return Instance.m_assetNoteListDistinct;
         }
 
-        public static List<AssetNoteComment> GetAssetLeafNoteListByNoteId(string assetNoteId)
+        public static List<AssetNoteComment> GetAssetNoteCommentListByNoteId(string assetNoteId)
         {
             if (Instance.m_assetLeafNoteDict.TryGetValue(assetNoteId, out var leafNoteList))
             {

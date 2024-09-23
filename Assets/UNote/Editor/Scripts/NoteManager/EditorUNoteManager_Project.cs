@@ -125,7 +125,7 @@ namespace UNote.Editor
 
         #region Get Note
 
-        public static List<ProjectNoteComment> GetProjectLeafNoteListByNoteId(string projectNoteId)
+        public static List<ProjectNoteComment> GetProjectNoteCommentListByNoteId(string projectNoteId)
         {
             if (Instance.m_projectNoteDictByGUID.TryGetValue(projectNoteId, out var leafNoteList))
             {
