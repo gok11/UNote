@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="HeaderArea" style="flex-grow: 0; border-left-color: rgb(87, 87, 87); border-right-color: rgb(87, 87, 87); border-top-color: rgb(87, 87, 87); border-bottom-color: rgb(87, 87, 87); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 2px; margin-right: 2px; margin-bottom: 0; margin-left: 2px; flex-basis: auto; height: auto; min-height: 28px; flex-direction: row; flex-shrink: 1;">
+        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NoteQueryLabel" style="-unity-text-align: middle-left; flex-direction: column; flex-grow: 1; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; font-size: 16px; -unity-font-style: bold; display: flex; visibility: visible;" />
+        <ui:TextField picking-mode="Ignore" name="NoteQueryField" style="display: none; visibility: visible; flex-grow: 1; font-size: 15px;" />
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="SettingPanelButton" style="width: 22px; height: 22px; margin-top: 2px; margin-right: 4px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px; padding-left: 3px; margin-bottom: 2px; margin-left: 4px;">
+            <ui:VisualElement name="Image" style="flex-grow: 1; -unity-background-image-tint-color: rgb(210, 210, 210);" />
+        </ui:Button>
+    </ui:VisualElement>
+    <ui:ScrollView name="NoteList" style="padding-top: 0; flex-grow: 1; flex-shrink: 1;" />
+</ui:UXML>

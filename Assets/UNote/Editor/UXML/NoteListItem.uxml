@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="NoteListItem" class="noteSelectable" style="flex-grow: 0; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(74, 74, 74); border-right-color: rgb(74, 74, 74); border-top-color: rgb(74, 74, 74); border-bottom-color: rgb(74, 74, 74); margin-right: 2px; margin-left: 2px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-bottom: 1px; margin-top: 1px; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="NameLine" style="flex-grow: 1; flex-direction: row; max-height: 24px; max-width: none;">
+            <ui:VisualElement name="ArchiveLabel" style="flex-grow: 0; height: 16px; width: 16px; display: none; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 0;" />
+            <ui:VisualElement name="FavoriteLabel" style="flex-grow: 0; height: 16px; width: 16px; display: none; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 0;" />
+            <ui:Label tabindex="-1" text="Name" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Name" style="font-size: 12px; flex-grow: 1; -unity-font-style: normal; -unity-text-align: middle-left;" />
+            <ui:Button text="…" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContextButton" style="font-size: 12px; width: 20px; height: 18px;" />
+        </ui:VisualElement>
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="ContentLine" style="font-size: 10px; -unity-font-style: normal; text-overflow: ellipsis; white-space: nowrap; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px;" />
+    </ui:VisualElement>
+</ui:UXML>

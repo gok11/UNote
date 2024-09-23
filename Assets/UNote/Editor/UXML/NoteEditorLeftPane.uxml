@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Header" style="flex-grow: 0;">
+        <ui:Label name="title" text="UNote" style="margin-left: 4px; margin-top: 3px; -unity-font-style: bold; font-size: 18px; margin-bottom: 4px;" />
+    </ui:VisualElement>
+    <ui:ScrollView name="ScrollView">
+        <ui:VisualElement name="PresetQueries" style="flex-grow: 1; margin-top: 4px; margin-bottom: 4px; flex-shrink: 0;">
+            <ui:Label tabindex="-1" text="Preset Query" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; padding-left: 8px; margin-bottom: 4px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="CustomQueries" style="flex-grow: 1; margin-top: 4px; margin-bottom: 4px; flex-shrink: 0; flex-direction: column;">
+            <ui:VisualElement name="LabelLine" style="flex-grow: 1; flex-direction: row;">
+                <ui:Label tabindex="-1" text="Custom Query" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; padding-left: 8px; margin-bottom: 4px; flex-grow: 1;" />
+                <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddQueryButton" />
+            </ui:VisualElement>
+            <ui:VisualElement name="QueryElems" style="flex-grow: 1;" />
+        </ui:VisualElement>
+    </ui:ScrollView>
+    <ui:VisualElement name="Spacer" style="flex-grow: 1;" />
+    <ui:VisualElement name="Footer" style="flex-grow: 0; flex-shrink: 1;">
+        <ui:Button text="Add Note..." parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddNoteButton" style="margin-bottom: 4px; height: 22px;" />
+    </ui:VisualElement>
+</ui:UXML>

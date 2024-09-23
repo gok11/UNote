@@ -1,0 +1,22 @@
+using UnityEngine;
+
+namespace UNote.Runtime
+{
+    public abstract class RootNoteBase : NoteBase
+    {
+        #region Field
+
+        [SerializeField] private string m_noteName;
+
+        #endregion
+        
+        public override NoteType NoteType => NoteType.Project;
+        
+        public override string NoteName => m_noteName;
+        
+        public void ChangeNoteName(string newName)
+        {
+            m_noteName = newName;
+        }
+    }
+}
