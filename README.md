@@ -12,6 +12,9 @@ UNote is a tool that provides functionality to create and edit notes in Unity, a
 * Add, delete, and edit notes from the Note Editor.
 * Create notes related to the entire project or specific assets.
 * Asset notes can be edited from the Inspector when the corresponding asset is selected.
+* You can mark notes as favorites to prioritize their display.
+* You can archive notes to limit editing and display.
+* Using the search function, you can filter notes by text content or sort them by creation date, among other options.
 
 For an overview of planned features, please refer to [TODO.md](Doc/En/TODO.md).
 
