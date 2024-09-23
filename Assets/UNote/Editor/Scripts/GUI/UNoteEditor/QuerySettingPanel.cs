@@ -75,13 +75,23 @@ namespace UNote.Editor
 
             m_saveQueryButton.clicked += () =>
             {
-                CustomQueryContainer.Get().Save();
+                CustomQueryContainer container = CustomQueryContainer.Get();
+                int sourceIndex = container.NoteQueryList.FindIndex(t => t.QueryID == m_noteQuery.QueryID);
+                if (sourceIndex >= 0)
+                {
+                    container.NoteQueryList[sourceIndex] = m_noteQuery;
+                    CustomQueryContainer.Get().Save();   
+                }
             };
 
             m_deleteQueryButton.clicked += () =>
             {
                 CustomQueryContainer container = CustomQueryContainer.Get();
-                container.NoteQueryList.Remove(m_noteQuery);
+                int sourceIndex = container.NoteQueryList.FindIndex(t => t.QueryID == m_noteQuery.QueryID);
+                if (sourceIndex >= 0)
+                {
+                    container.NoteQueryList.RemoveAt(sourceIndex);   
+                }
 
                 UNoteEditorLeftPane leftPane = UNoteEditor.LeftPane;
                 leftPane.LoadCustomQuery();

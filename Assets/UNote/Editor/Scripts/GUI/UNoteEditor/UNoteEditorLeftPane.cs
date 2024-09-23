@@ -65,6 +65,7 @@ namespace UNote.Editor
             m_presetQueryElemDict.Add(new ProjectNotesQuery(), projectNoteElem);
             m_presetQueryElemDict.Add(new AssetNotesQuery(), assetNoteElem);
 
+            EditorUNoteManager.SetNoteQuery(initQuery);
             SelectQueryElem(initQuery);
 
             // Register select event
@@ -138,9 +139,10 @@ namespace UNote.Editor
             
             foreach (var query in queryList)
             {
-                CustomNoteQueryElem queryElem = new CustomNoteQueryElem(this, query);
+                NoteQuery cloneQuery = query.Clone();
+                CustomNoteQueryElem queryElem = new CustomNoteQueryElem(this, cloneQuery);
                 m_customQueryElem.Add(queryElem);
-                m_customQueryElemDict.Add(query, queryElem);
+                m_customQueryElemDict.Add(cloneQuery, queryElem);
             }
         }
 
