@@ -108,10 +108,11 @@ namespace UNote.Editor
             {
                 NoteQuery newQuery = new NoteQuery();
                 CustomQueryContainer.Get().NoteQueryList.Add(newQuery);
-
-                CustomNoteQueryElem queryElem = new CustomNoteQueryElem(this, newQuery);
+                
+                NoteQuery cloneQuery = newQuery.Clone();
+                CustomNoteQueryElem queryElem = new CustomNoteQueryElem(this, cloneQuery);
                 m_customQueryElem.Add(queryElem);
-                m_customQueryElemDict.Add(newQuery, queryElem);
+                m_customQueryElemDict.Add(cloneQuery, queryElem);
                 
                 CustomQueryContainer.Get().Save();
             };
