@@ -2,9 +2,9 @@
 * [x] ProjectNote
 * [x] AssetNote
 * [x] Editing functionality from Inspector
-* [ ] Add feature: favorites, archive
-* [ ] Add feature: search
-  * [ ] Options for prioritizing the display of note content, favorites, and archives
+* [x] Add feature: favorites, archive
+* [x] Add feature: search
+  * [x] Options for prioritizing the display of note content, favorites, and archives
 * [ ] Add feature: Tag
 * [ ] Add multiple threads for Asset Notes, etc.
 * [ ] Add SceneNote
