@@ -122,6 +122,15 @@ namespace UNote.Editor
                 // Save query name
                 if (evt.keyCode == KeyCode.Return)
                 {
+                    // except invalid value
+                    if (m_noteQueryField.value.IsNullOrWhiteSpace())
+                    {
+                        SetNameGUIEditMode(false);
+                        m_noteQueryField.UnregisterCallback<KeyDownEvent>(TryChangeName);
+                        return;
+                    }
+                    
+                    // exec rename
                     noteQuery.QueryName = m_noteQueryField.value;
                     
                     CustomQueryContainer container = CustomQueryContainer.Get();

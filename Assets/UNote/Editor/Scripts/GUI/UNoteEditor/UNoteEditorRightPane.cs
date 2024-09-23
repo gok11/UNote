@@ -98,6 +98,15 @@ namespace UNote.Editor
             {
                 if (evt.keyCode == KeyCode.Return)
                 {
+                    // except invalid title
+                    if (m_titleField.value.IsNullOrWhiteSpace())
+                    {
+                        m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
+                        SetTitleGUIEditMode(false);
+                        return;
+                    }
+                    
+                    // exec rename
                     EditorUNoteManager.ChangeNoteName(note, m_titleField.value);
                     
                     // finish editing title
