@@ -19,24 +19,75 @@ namespace UNote.Editor
             TemplateContainer noteQueryTemplate = noteQueryTemplateAsset.Instantiate();
             
             contentContainer.Add(noteQueryTemplate);
+            contentContainer.Q<Label>("Label").text = noteQuery.QueryName;
 
             // Register event
             RegisterCallback<MouseDownEvent>(evt =>
             {
-                // Left click
-                if (evt.button == 0)
+                // Update query
+                if (EditorUNoteManager.CurrentNoteQuery != m_noteQuery)
                 {
                     EditorUNoteManager.SetNoteQuery(m_noteQuery);
                     leftPane.SelectQueryElem(m_noteQuery);
-                    evt.StopPropagation();
                 }
                 
-                // Right click
-                if (evt.button == 1)
+                switch (evt.button)
                 {
-                    
+                    // Right click
+                    case 1:
+                        ShowContextMenu();
+                        break;
                 }
+                
+                evt.StopPropagation();
             });
+        }
+
+        private void ShowContextMenu()
+        {
+            GenericMenu menu = new GenericMenu();
+            
+            menu.AddItem(
+                new GUIContent("Rename"),
+                false,
+                () =>
+                {
+                    UNoteEditor.CenterPane.EnableChangeQueryNameMode();
+                }
+            );
+            
+            menu.AddItem(
+                new GUIContent("Delete"),
+                false,
+                () =>
+                {
+                    if (EditorUtility.DisplayDialog("Confirm", "Do you want to delete this query?", "OK", "Cancel"))
+                    {
+                        CustomQueryContainer container = CustomQueryContainer.Get();
+                        int sourceIndex = container.NoteQueryList.FindIndex(t => t.QueryID == m_noteQuery.QueryID);
+                        if (sourceIndex >= 0)
+                        {
+                            container.NoteQueryList.RemoveAt(sourceIndex);   
+                        }
+
+                        UNoteEditorLeftPane leftPane = UNoteEditor.LeftPane;
+                        leftPane.LoadCustomQuery();
+                
+                        if (container.NoteQueryList.Count > 0)
+                        {
+                            EditorUNoteManager.SetNoteQuery(container.NoteQueryList[0]);
+                        }
+                        else
+                        {
+                            leftPane.SetDefaultQuery();
+                        }
+                
+                        container.Save();
+                    }
+                }
+            );
+            
+            menu.ShowAsContext();
         }
     }
 }

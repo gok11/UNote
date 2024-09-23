@@ -15,6 +15,8 @@ namespace UNote.Editor
         private UNoteEditor m_noteEditor;
 
         private Label m_noteQueryLabel;
+        private TextField m_noteQueryField;
+        
         private QuerySettingPanel m_querySettingPanel;
         private Button m_openSettingPanelButton;
         private ScrollView m_noteScroll;
@@ -38,7 +40,9 @@ namespace UNote.Editor
             TemplateContainer template = tree.CloneTree();
             contentContainer.Add(template);
 
-            m_noteQueryLabel = template.Q<Label>("NoteCategoryLabel");
+            m_noteQueryLabel = template.Q<Label>("NoteQueryLabel");
+            m_noteQueryField = template.Q<TextField>("NoteQueryField");
+            
             m_openSettingPanelButton = template.Q<Button>("SettingPanelButton");
             m_noteScroll = template.Q<ScrollView>("NoteList");
             
@@ -57,6 +61,17 @@ namespace UNote.Editor
             {
                 m_querySettingPanel.ToggleDisplay();
             };
+            
+            // Register text event
+            m_noteQueryLabel.RegisterCallback<MouseDownEvent>(_ =>
+            {
+                EnableChangeQueryNameMode();
+            });
+            
+            m_noteQueryField.RegisterCallback<BlurEvent>(_ =>
+            {
+                SetNameGUIEditMode(false);
+            });
             
             // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupListItems();
@@ -80,6 +95,58 @@ namespace UNote.Editor
 
         #region Internal Method
 
+        internal void EnableChangeQueryNameMode()
+        {
+            NoteQuery noteQuery = EditorUNoteManager.CurrentNoteQuery;
+            
+            if (noteQuery == null)
+            {
+                return;
+            }
+
+            if (!noteQuery.IsOverWritable)
+            {
+                return;
+            }
+
+            SetNameGUIEditMode(true);
+
+            m_noteQueryField.value = noteQuery.QueryName;
+            m_noteQueryField.Focus();
+
+            m_noteQueryField.UnregisterCallback<KeyDownEvent>(TryChangeName);
+            m_noteQueryField.RegisterCallback<KeyDownEvent>(TryChangeName);
+            
+            void TryChangeName(KeyDownEvent evt)
+            {
+                // Save query name
+                if (evt.keyCode == KeyCode.Return)
+                {
+                    noteQuery.QueryName = m_noteQueryField.value;
+                    
+                    CustomQueryContainer container = CustomQueryContainer.Get();
+                    int sourceIndex = container.NoteQueryList.FindIndex(t => t.QueryID == noteQuery.QueryID);
+                    if (sourceIndex >= 0)
+                    {
+                        container.NoteQueryList[sourceIndex] = noteQuery;
+                        CustomQueryContainer.Get().Save();   
+                    }
+
+                    m_noteQueryLabel.text = noteQuery.QueryName;
+                    UNoteEditor.LeftPane.LoadCustomQuery();
+                    
+                    m_noteQueryField.UnregisterCallback<KeyDownEvent>(TryChangeName);
+                }
+
+                if (evt.keyCode == KeyCode.Escape)
+                {
+                    SetNameGUIEditMode(false);
+                    
+                    m_noteQueryField.UnregisterCallback<KeyDownEvent>(TryChangeName);
+                }
+            }
+        }
+        
         internal void SetupListItems()
         {
             NoteQuery noteQuery = EditorUNoteManager.CurrentNoteQuery;
@@ -148,6 +215,20 @@ namespace UNote.Editor
 
         #region Private Method
 
+        private void SetNameGUIEditMode(bool enableEdit)
+        {
+            if (enableEdit)
+            {
+                m_noteQueryLabel.style.display = DisplayStyle.None;
+                m_noteQueryField.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                m_noteQueryLabel.style.display = DisplayStyle.Flex;
+                m_noteQueryField.style.display = DisplayStyle.None;
+            }
+        }
+        
         private void UpdateNoteBackground()
         {
             if (EditorUNoteManager.CurrentNote == null)

@@ -99,7 +99,6 @@ namespace UNote.Editor
                 if (container.NoteQueryList.Count > 0)
                 {
                     EditorUNoteManager.SetNoteQuery(container.NoteQueryList[0]);
-                    leftPane.UpdateElemBackgroundColor(container.NoteQueryList[0]);
                 }
                 else
                 {

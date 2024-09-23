@@ -115,9 +115,18 @@ namespace UNote.Editor
                 m_customQueryElemDict.Add(cloneQuery, queryElem);
                 
                 CustomQueryContainer.Get().Save();
+                
+                EditorUNoteManager.SetNoteQuery(cloneQuery);
+                UNoteEditor.CenterPane.EnableChangeQueryNameMode();
             };
             
             m_noteAddButton.clicked += ShowAddWindow;
+            
+            // Query event
+            EditorUNoteManager.OnNoteQueryUpdated += query =>
+            {
+                UpdateElemBackgroundColor(query);
+            };
         }
 
         #endregion // Constructor
@@ -128,7 +137,6 @@ namespace UNote.Editor
         {
             NoteQuery query = m_presetQueryElemDict.Keys.First();
             EditorUNoteManager.SetNoteQuery(query);
-            UpdateElemBackgroundColor(query);
         }
         
         internal void LoadCustomQuery()
