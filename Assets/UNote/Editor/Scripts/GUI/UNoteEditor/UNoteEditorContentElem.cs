@@ -13,7 +13,8 @@ namespace UNote.Editor
 
         private NoteBase m_note;
 
-        private Label m_contentText;
+        // private Label m_contentText;
+        private VisualElement m_contents;
         private VisualElement m_editNoteElem;
         private Button m_contextButton;
         
@@ -34,8 +35,8 @@ namespace UNote.Editor
 
             VisualElement noteElement = noteContentTree.Instantiate();
             contentContainer.Add(noteElement);
-            
-            m_contentText = noteElement.Q<Label>("ContentText");
+
+            m_contents = noteElement.Q("Contents");
             m_editNoteElem = noteElement.Q<VisualElement>("EditNoteElem");
             m_contextButton = noteElement.Q<Button>("ContextButton");
             
@@ -44,16 +45,9 @@ namespace UNote.Editor
             
             noteElement.Q<Label>("AuthorLabel").text = note.Author;
             noteElement.Q<Label>("CreatedDate").text = note.CreatedDate;
-
-            bool isEdited = note.CreatedDate != note.UpdatedDate;
-            m_contentText.text = note.NoteContent;
-
-            if (isEdited)
-            {
-                m_contentText.text += CreateEditedText();
-            }
-
-            bool isOwnNote = note.Author == UNoteSetting.UserName;
+            
+            // Parse text and insert elem
+            ParseTextElements(note);
 
             // register context button event
             m_contextButton.clicked += () =>
@@ -77,6 +71,8 @@ namespace UNote.Editor
             }, TrickleDown.TrickleDown);
 
             // show menu if this is an own note
+            bool isOwnNote = note.Author == UNoteSetting.UserName;
+            
             if (isOwnNote)
             {
                 noteElement.RegisterCallback<MouseEnterEvent>(_ =>
@@ -127,7 +123,7 @@ namespace UNote.Editor
         
         private void EnableEditText()
         {
-            m_contentText.style.display = DisplayStyle.None;
+            m_contents.style.display = DisplayStyle.None;
             m_editNoteElem.style.display = DisplayStyle.Flex;
             m_contextButton.style.display = DisplayStyle.None;
 
@@ -137,21 +133,20 @@ namespace UNote.Editor
 
         private void QuitEditText()
         {
-            m_contentText.style.display = DisplayStyle.Flex;
+            m_contents.style.display = DisplayStyle.Flex;
             m_editNoteElem.style.display = DisplayStyle.None;
             m_contextButton.style.display = DisplayStyle.Flex;
         }
 
         private void FinishEditText()
         {
-            m_contentText.style.display = DisplayStyle.Flex;
+            ParseTextElements(m_note);
+            m_contents.style.display = DisplayStyle.Flex;
             m_editNoteElem.style.display = DisplayStyle.None;
             m_contextButton.style.display = DisplayStyle.Flex;
 
             if (m_note.NoteContent != m_editField.value)
             {
-                m_contentText.text = $"{m_editField.value} {CreateEditedText()}";
-
                 m_note.NoteContent = m_editField.value;
                 m_note.UpdatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
                 EditorUNoteManager.SaveAll();
@@ -160,8 +155,28 @@ namespace UNote.Editor
             }
         }
 
+        private void ParseTextElements(NoteBase note)
+        {
+            m_contents.Clear();
+            
+            Label label = new Label(note.NoteContent);
+            label.style.SetMargin(2);
+            label.style.SetPadding(3, 4, 3, 8);
+            label.style.whiteSpace = WhiteSpace.Normal;
+            
+            m_contents.Add(label);
+
+            bool isEdited = note.CreatedDate != note.UpdatedDate;
+            if (isEdited)
+            {
+                label.text += CreateEditedText();
+            }
+        }
+
         private string CreateEditedText() => "<size=10><color=#999999> (edited)</color></size>";
-        
+
+        private Label CreateEditedTextElem() => new(CreateEditedText());
+
         #endregion // Private Method
     }
 }

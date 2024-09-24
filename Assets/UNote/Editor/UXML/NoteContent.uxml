@@ -5,7 +5,7 @@
             <ui:Label tabindex="-1" text="2024/05/13" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CreatedDate" style="-unity-text-align: upper-left; font-size: 9px; -unity-font-style: normal; flex-grow: 1; padding-left: 6px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 4px; padding-right: 2px; padding-bottom: 4px; color: rgb(153, 153, 153);" />
             <ui:Button text="…" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContextButton" style="width: 20px; height: 18px; visibility: hidden;" />
         </ui:VisualElement>
-        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContentText" style="font-size: 12px; -unity-font-style: normal; padding-top: 3px; padding-right: 4px; padding-bottom: 3px; padding-left: 8px; -unity-background-image-tint-color: rgba(0, 0, 0, 0); color: rgb(204, 204, 204); display: flex; margin-left: 2px; margin-right: 2px; white-space: normal;" />
+        <ui:VisualElement name="Contents" style="flex-grow: 1;" />
         <ui:VisualElement name="EditNoteElem" style="flex-grow: 1; display: none;">
             <ui:TextField picking-mode="Ignore" name="EditField" multiline="true" style="font-size: 12px; flex-wrap: nowrap; white-space: normal;" />
             <ui:VisualElement name="FooterElem" style="flex-grow: 1; flex-direction: row; display: flex;">

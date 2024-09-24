@@ -25,7 +25,7 @@ namespace UNote.Editor
         {
             // Type
             EnumField noteTypeField = new EnumField("Note Type", NoteType.Project);
-            noteTypeField.style.SetMargin(4, 2, 4, 4);
+            noteTypeField.style.SetMargin(4, 4, 2, 4);
             
             m_container = new VisualElement();
             m_container.style.flexGrow = 1;
@@ -57,7 +57,7 @@ namespace UNote.Editor
         {
             // Button
             Button addButton = new Button();
-            addButton.style.SetMargin(2, 2, 4, 4);
+            addButton.style.SetMargin(2, 4, 2, 4);
             addButton.text = "Add New Note";
             addButton.clicked += () =>
             {
@@ -75,12 +75,12 @@ namespace UNote.Editor
         {
             // Bind Asset
             ObjectField assetField = new ObjectField("Bind Asset");
-            assetField.style.SetMargin(2, 2, 4, 4);
+            assetField.style.SetMargin(2, 4, 2, 4);
             assetField.allowSceneObjects = false;
             
             // Button
             Button addButton = new Button();
-            addButton.style.SetMargin(2, 2, 4, 4);
+            addButton.style.SetMargin(2, 4, 2, 4);
             addButton.text = "Add New Note";
             addButton.SetEnabled(false);
             addButton.clicked += () =>

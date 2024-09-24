@@ -312,7 +312,7 @@ namespace UNote.Editor
             
             if (lineCount > 0)
             {
-                subInfoStyle.SetMargin(2,0,2,2);
+                subInfoStyle.SetMargin(2,2,0,2);
                 subInfoStyle.SetBorderWidth(1);
                 subInfoStyle.height = 22 * lineCount;
             }

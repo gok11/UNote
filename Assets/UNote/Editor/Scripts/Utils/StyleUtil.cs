@@ -40,12 +40,12 @@ namespace UNote.Editor
         }
 
         public static void SetMargin(this IStyle style,
-            float marginTop, float marginBottom, float marginLeft, float marginRight)
+            float marginTop, float marginRight, float marginBottom, float marginLeft)
         {
             style.marginTop = marginTop;
+            style.marginRight = marginRight;
             style.marginBottom = marginBottom;
             style.marginLeft = marginLeft;
-            style.marginRight = marginRight;
         }
 
         public static void SetPadding(this IStyle style, float padding)
@@ -54,11 +54,11 @@ namespace UNote.Editor
         }
         
         public static void SetPadding(this IStyle style,
-            float paddingTop, float paddingBottom, float paddingRight, float paddingLeft)
+            float paddingTop, float paddingRight, float paddingBottom, float paddingLeft)
         {
             style.paddingTop = paddingTop;
-            style.paddingBottom = paddingBottom;
             style.paddingRight = paddingRight;
+            style.paddingBottom = paddingBottom;
             style.paddingLeft = paddingLeft;
         }
 
