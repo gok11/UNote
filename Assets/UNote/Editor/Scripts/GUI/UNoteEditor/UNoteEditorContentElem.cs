@@ -75,6 +75,9 @@ namespace UNote.Editor
                     QuitEditText();
                 }
             }, TrickleDown.TrickleDown);
+            
+            // Prepare drop area
+            VisualElementUtil.CreateDropAreaElem(m_editField);
 
             // show menu if this is an own note
             bool isOwnNote = note.Author == UNoteSetting.UserName;
@@ -211,19 +214,20 @@ namespace UNote.Editor
                     {
                         Object obj = AssetDatabase.LoadAssetAtPath<Object>(path);
 
+                        // Draw texture
                         if (obj is Texture2D tex)
                         {
                             VisualElement texElem = CreateTextureElement(tex, this);
+                            texElem.style.SetMargin(2, 0, 2, 0);
                             m_contents.Add(texElem);
                         }
-                        else
-                        {
-                            ObjectField objectField = new ObjectField();
-                            objectField.SetEnabled(false);
-                            objectField.SetValueWithoutNotify(obj);
+                        
+                        // Add ObjectField 
+                        ObjectField objectField = new ObjectField();
+                        objectField.SetEnabled(false);
+                        objectField.SetValueWithoutNotify(obj);
 
-                            m_contents.Add(objectField);   
-                        }
+                        m_contents.Add(objectField);   
                         
                         if (!restStr.IsNullOrWhiteSpace())
                         {

@@ -52,6 +52,9 @@ namespace UNote.Editor
             
             m_inputText.BindProperty(m_model.EditingText);
             
+            // Prepare drop area
+            VisualElementUtil.CreateDropAreaElem(m_inputText);
+            
             // create note when button clicked
             m_sendButton.clicked += SendNote;
             
