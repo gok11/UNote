@@ -1,9 +1,11 @@
 using System;
 using System.Globalization;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
+using Object = UnityEngine.Object;
 
 namespace UNote.Editor
 {
@@ -46,8 +48,12 @@ namespace UNote.Editor
             noteElement.Q<Label>("AuthorLabel").text = note.Author;
             noteElement.Q<Label>("CreatedDate").text = note.CreatedDate;
             
+            // Set style
+            m_contents.style.SetPadding(3, 4, 3, 8);
+            m_contents.style.whiteSpace = WhiteSpace.Normal;
+            
             // Parse text and insert elem
-            ParseTextElements(note);
+            ParseTextElements(note.NoteContent);
 
             // register context button event
             m_contextButton.clicked += () =>
@@ -140,7 +146,6 @@ namespace UNote.Editor
 
         private void FinishEditText()
         {
-            ParseTextElements(m_note);
             m_contents.style.display = DisplayStyle.Flex;
             m_editNoteElem.style.display = DisplayStyle.None;
             m_contextButton.style.display = DisplayStyle.Flex;
@@ -148,6 +153,12 @@ namespace UNote.Editor
             if (m_note.NoteContent != m_editField.value)
             {
                 m_note.NoteContent = m_editField.value;
+
+                // Reset field
+                m_contents.Clear();
+                ParseTextElements(m_note.NoteContent);
+                
+                // Update note last updated date
                 m_note.UpdatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
                 EditorUNoteManager.SaveAll();
                     
@@ -155,27 +166,111 @@ namespace UNote.Editor
             }
         }
 
-        private void ParseTextElements(NoteBase note)
+        private void ParseTextElements(string text)
         {
-            m_contents.Clear();
+            const string SplitKey = "[unref-";
+            string[] splitTexts = text.Split(SplitKey, StringSplitOptions.RemoveEmptyEntries);
             
-            Label label = new Label(note.NoteContent);
-            label.style.SetMargin(2);
-            label.style.SetPadding(3, 4, 3, 8);
-            label.style.whiteSpace = WhiteSpace.Normal;
-            
-            m_contents.Add(label);
-
-            bool isEdited = note.CreatedDate != note.UpdatedDate;
-            if (isEdited)
+            foreach (var splitText in splitTexts)
             {
-                label.text += CreateEditedText();
+                // Object ref
+                const string objectKey = "guid:";
+                if (splitText.StartsWith(objectKey))
+                {
+                    int startIndex = splitText.IndexOf(objectKey);
+
+                    if (startIndex == -1)
+                    {
+                        InsertAsLabel(splitText);
+                        continue;
+                    }
+
+                    int keyLength = objectKey.Length;
+                    int endIndex = splitText.IndexOf("]", startIndex + keyLength);
+                    if (endIndex == -1)
+                    {
+                        InsertAsLabel(splitText);
+                        continue;
+                    }
+
+                    string guid = splitText.Substring(startIndex + keyLength, endIndex - startIndex - keyLength);
+                    string restStr = splitText.Substring(endIndex + 1).Trim();
+                    if (string.IsNullOrWhiteSpace(guid))
+                    {
+                        InsertAsLabel(splitText);
+                        if (!restStr.IsNullOrWhiteSpace())
+                        {
+                            InsertAsLabel(restStr);   
+                        }
+                        continue;
+                    }
+
+                    // Object field
+                    string path = AssetDatabase.GUIDToAssetPath(guid);
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        Object obj = AssetDatabase.LoadAssetAtPath<Object>(path);
+
+                        if (obj is Texture2D tex)
+                        {
+                            VisualElement texElem = CreateTextureElement(tex, this);
+                            m_contents.Add(texElem);
+                        }
+                        else
+                        {
+                            ObjectField objectField = new ObjectField();
+                            objectField.SetEnabled(false);
+                            objectField.SetValueWithoutNotify(obj);
+
+                            m_contents.Add(objectField);   
+                        }
+                        
+                        if (!restStr.IsNullOrWhiteSpace())
+                        {
+                            InsertAsLabel(restStr);   
+                        }
+                        continue;
+                    }
+                }
+                
+                // Default
+                InsertAsLabel(splitText);
+
+                void InsertAsLabel(string text)
+                {
+                    Label label = new Label(text.Trim());
+                    label.style.SetMargin(2, 0, 2, 0);
+                    m_contents.Add(label);
+                }
             }
         }
 
         private string CreateEditedText() => "<size=10><color=#999999> (edited)</color></size>";
 
         private Label CreateEditedTextElem() => new(CreateEditedText());
+
+        private VisualElement CreateTextureElement(Texture2D tex, VisualElement parent)
+        {
+            // float maxWidth = parent.style.width.value.value;
+            float maxWidth = tex.width;
+
+            float width = tex.width;
+            float height = tex.height;
+            
+            if (width > maxWidth)
+            {
+                float ratio = maxWidth / width;
+
+                width = maxWidth;
+                height *= ratio;
+            }
+            
+            VisualElement texElem = new VisualElement();
+            texElem.style.backgroundImage = tex;
+            texElem.style.width = width;
+            texElem.style.height = height;
+            return texElem;
+        }
 
         #endregion // Private Method
     }
