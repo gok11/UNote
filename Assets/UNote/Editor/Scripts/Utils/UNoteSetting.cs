@@ -19,7 +19,6 @@ namespace UNote.Editor
 
         [SerializeField] private string m_userName;
         [SerializeField] private bool m_inspectorFoldoutOpened;
-        [SerializeField] private List<NoteQuery> m_noteQueryList;
 
         #endregion // Field
 
@@ -55,8 +54,6 @@ namespace UNote.Editor
                 Save(uns);
             }
         }
-
-        public static List<NoteQuery> NoteQueryList => Load().m_noteQueryList;
 
         #endregion // Property
 

@@ -214,6 +214,13 @@ namespace UNote.Editor
                     {
                         Object obj = AssetDatabase.LoadAssetAtPath<Object>(path);
 
+                        // Add ObjectField 
+                        ObjectField objectField = new ObjectField();
+                        objectField.SetEnabled(false);
+                        objectField.SetValueWithoutNotify(obj);
+
+                        m_contents.Add(objectField);   
+                        
                         // Draw texture
                         if (obj is Texture2D tex)
                         {
@@ -221,13 +228,6 @@ namespace UNote.Editor
                             texElem.style.SetMargin(2, 0, 2, 0);
                             m_contents.Add(texElem);
                         }
-                        
-                        // Add ObjectField 
-                        ObjectField objectField = new ObjectField();
-                        objectField.SetEnabled(false);
-                        objectField.SetValueWithoutNotify(obj);
-
-                        m_contents.Add(objectField);   
                         
                         if (!restStr.IsNullOrWhiteSpace())
                         {

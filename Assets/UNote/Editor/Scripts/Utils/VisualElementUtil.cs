@@ -38,7 +38,11 @@ namespace UNote.Editor
                     string guid = AssetDatabase.AssetPathToGUID(path);
                     if (!string.IsNullOrEmpty(guid))
                     {
-                        parentTextField.value += $"\n[unref-guid:{guid}]";
+                        if (!parentTextField.value.IsNullOrEmpty())
+                        {
+                            parentTextField.value += "\n";
+                        }
+                        parentTextField.value += $"[unref-guid:{guid}]";
                     }
                 }
                 

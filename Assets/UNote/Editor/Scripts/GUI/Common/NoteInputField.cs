@@ -21,6 +21,7 @@ namespace UNote.Editor
         private TextField m_inputText;
         private ScrollView m_inputScroll;
         private Label m_authorLabel;
+        private Button m_addButton;
         private Button m_sendButton;
         
         private float m_lastScrollPosition;
@@ -46,6 +47,7 @@ namespace UNote.Editor
             m_inputScroll = contentContainer.Q<ScrollView>("TextArea");
 
             m_authorLabel = contentContainer.Q<Label>("Author");
+            m_addButton = contentContainer.Q<Button>("AddButton");
             m_sendButton = contentContainer.Q<Button>("SendButton");
             
             m_authorLabel.text = UNoteSetting.UserName;
@@ -54,6 +56,9 @@ namespace UNote.Editor
             
             // Prepare drop area
             VisualElementUtil.CreateDropAreaElem(m_inputText);
+            
+            // show add menu when button clicked
+            m_addButton.clicked += ShowAddMenu;
             
             // create note when button clicked
             m_sendButton.clicked += SendNote;
@@ -111,6 +116,57 @@ namespace UNote.Editor
             if (evt.keyCode == KeyCode.Return && (evt.ctrlKey || evt.commandKey))
             {
                 SendNote();
+            }
+        }
+
+        private void ShowAddMenu()
+        {
+            GenericMenu menu = new GenericMenu();
+            
+            menu.AddItem(new GUIContent("Reference/Asset"), false, () =>
+            {
+                string filePath = EditorUtility.OpenFilePanel("Select Asset", Application.dataPath, "*");
+                ParsePathToGuidAndInput(filePath);
+            });
+            
+            menu.AddItem(new GUIContent("Reference/Folder"), false, () =>
+            {
+                string folderPath = EditorUtility.OpenFolderPanel("Select Folder", Application.dataPath, "");
+                ParsePathToGuidAndInput(folderPath);
+            });
+            
+            
+            menu.AddItem(new GUIContent("Screenshot/GameView"), false, () =>
+            {
+                string ssSavePath = PathUtil.GetScreenshotSavePath();
+                Utility.TakeScreenShot(ScreenshotTarget.GameView, ssSavePath);
+                ParsePathToGuidAndInput(ssSavePath);
+            });
+            
+            menu.AddItem(new GUIContent("Screenshot/SceneView"), false, () =>
+            {
+                string ssSavePath = PathUtil.GetScreenshotSavePath();
+                Utility.TakeScreenShot(ScreenshotTarget.SceneView, ssSavePath);
+                ParsePathToGuidAndInput(ssSavePath);
+            });
+            
+            menu.ShowAsContext();
+        }
+        
+        /// <summary>
+        /// Parse file or folder path to guid and insert it to InputText
+        /// </summary>
+        /// <param name="path"></param>
+        void ParsePathToGuidAndInput(string path)
+        {
+            string guid = AssetDatabase.AssetPathToGUID(path.FullPathToAssetPath());
+            if (!string.IsNullOrEmpty(guid))
+            {
+                if (!m_inputText.value.IsNullOrEmpty())
+                {
+                    m_inputText.value += "\n";
+                }
+                m_inputText.value += $"[unref-guid:{guid}]";
             }
         }
         

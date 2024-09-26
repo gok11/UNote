@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -81,6 +83,14 @@ namespace UNote.Editor
         internal static string GetTexturePath(string fileName)
         {
             return $"{GetRootPath()}/Editor/Texture/{fileName}";
+        }
+
+        internal static string GetScreenshotSavePath()
+        {
+            string folder = "Assets/UNote/NoteAssets/ScreenShots/";
+            string nowStr = DateTime.Now.ToString("s").Replace(":", "_").Replace("-", "_");
+            string fileName = $"{UNoteSetting.UserName}_{nowStr}.png";
+            return Path.Combine(folder, fileName).FullPathToAssetPath();
         }
 
         #endregion // Function
