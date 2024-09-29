@@ -42,7 +42,7 @@ namespace UNote.Editor
                         {
                             parentTextField.value += "\n";
                         }
-                        parentTextField.value += $"[unref-guid:{guid}]";
+                        parentTextField.value += $"[unatt-guid:{guid}]";
                     }
                 }
                 

@@ -166,7 +166,7 @@ namespace UNote.Editor
                 {
                     m_inputText.value += "\n";
                 }
-                m_inputText.value += $"[unref-guid:{guid}]";
+                m_inputText.value += $"[unatt-guid:{guid}]";
             }
         }
         

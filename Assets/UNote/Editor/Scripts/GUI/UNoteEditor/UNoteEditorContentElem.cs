@@ -171,7 +171,7 @@ namespace UNote.Editor
 
         private void ParseTextElements(string text)
         {
-            const string SplitKey = "[unref-";
+            const string SplitKey = "[unatt-";
             string[] splitTexts = text.Split(SplitKey, StringSplitOptions.RemoveEmptyEntries);
             
             foreach (var splitText in splitTexts)
