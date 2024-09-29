@@ -13,9 +13,9 @@
   * [ ] Notes pointing to specific coordinates
   * [ ] Notes pointing to specific scene camera coordinates
 * [ ] Allow embedding additional information in text format within notes
-  * [ ] Asset references
+  * [X] Asset references
   * [ ] Vector3 information, etc.
   * [ ] GameObject references
-* [ ] Add feature: screenshot
+* [X] Add feature: screenshot
 * [ ] Add feature: referencing note information at runtime
 * [ ] Add feature: cloud synchronization of notes
