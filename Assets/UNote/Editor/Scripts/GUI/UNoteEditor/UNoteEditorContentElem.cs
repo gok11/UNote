@@ -277,7 +277,7 @@ namespace UNote.Editor
                         // Draw texture
                         if (obj is Texture2D tex)
                         {
-                            VisualElement texElem = CreateTextureElement(tex, this);
+                            VisualElement texElem = new FlexibleImageElem(tex, this);
                             texElem.style.SetMargin(2, 0, 2, 0);
                             m_contents.Add(texElem);
                         }
@@ -305,29 +305,6 @@ namespace UNote.Editor
         private string CreateEditedText() => "<size=10><color=#999999> (edited)</color></size>";
 
         private Label CreateEditedTextElem() => new(CreateEditedText());
-
-        private VisualElement CreateTextureElement(Texture2D tex, VisualElement parent)
-        {
-            // float maxWidth = parent.style.width.value.value;
-            float maxWidth = tex.width;
-
-            float width = tex.width;
-            float height = tex.height;
-            
-            if (width > maxWidth)
-            {
-                float ratio = maxWidth / width;
-
-                width = maxWidth;
-                height *= ratio;
-            }
-            
-            VisualElement texElem = new VisualElement();
-            texElem.style.backgroundImage = tex;
-            texElem.style.width = width;
-            texElem.style.height = height;
-            return texElem;
-        }
 
         #endregion // Private Method
     }
