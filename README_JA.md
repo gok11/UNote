@@ -21,6 +21,8 @@ UNote は Unity 上でメモを作成・編集する機能を提供し、1つの
 
 <h2>インストール</h2>
 
+Unity2022.3 以降で動作します。
+
 1. メニューから Window > Package Manager を選択
 2. \+ ボタンを押して Add package from git URL... を選択
 3. `https://github.com/gok11/UNote.git?path=/Assets/UNote` を入力して Add を押す

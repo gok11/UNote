@@ -119,7 +119,7 @@ namespace UNote.Editor
             }
         }
 
-        private void ShowAddMenu()
+        internal void ShowAddMenu()
         {
             GenericMenu menu = new GenericMenu();
             
@@ -134,7 +134,6 @@ namespace UNote.Editor
                 string folderPath = EditorUtility.OpenFolderPanel("Select Folder", Application.dataPath, "");
                 ParsePathToGuidAndInput(folderPath);
             });
-            
             
             menu.AddItem(new GUIContent("Screenshot/GameView"), false, () =>
             {

@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="QueryElem" style="flex-grow: 0; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0; padding-top: 2px; padding-bottom: 4px;">
-        <ui:Label tabindex="-1" text="Query" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="font-size: 12px; -unity-font-style: normal; white-space: nowrap; margin-left: 14px; margin-top: 2px;" />
+    <ui:VisualElement name="QueryElem" style="flex-grow: 0; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0; padding-top: 2px; padding-bottom: 4px; flex-direction: row;">
+        <ui:Label tabindex="-1" text="Query" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="font-size: 12px; -unity-font-style: normal; white-space: nowrap; margin-left: 14px; margin-top: 2px; flex-grow: 1;" />
+        <ui:Button text="…" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContextButton" style="height: 18px; width: 20px;" />
     </ui:VisualElement>
 </ui:UXML>

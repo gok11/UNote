@@ -25,21 +25,28 @@ namespace UNote.Editor
         private ProjectNoteContainer m_projectNoteContainer;
         private AssetNoteContainer m_assetNoteContainer;
 
+        // Note callback
         public delegate void AddNoteHandler(NoteBase note);
         public delegate void SelectNoteHandler(NoteBase note);
-
-        public delegate void SelectQueryHandler(NoteQuery query);
-
+        public delegate void DeleteNoteHandler(NoteBase note);
         public delegate void FavoriteNoteHandler(NoteBase note);
         public delegate void ArchiveNoteHandler(NoteBase note);
-        public delegate void DeleteNoteHandler(NoteBase note);
-
         public static event AddNoteHandler OnNoteAdded;
         public static event SelectNoteHandler OnNoteSelected;
-        public static event SelectQueryHandler OnNoteQueryUpdated;
-        public static event FavoriteNoteHandler OnNoteFavoriteChanged;
-        public static event ArchiveNoteHandler OnNoteArchvied;
         public static event DeleteNoteHandler OnNoteDeleted;
+        public static event FavoriteNoteHandler OnNoteFavoriteChanged;
+        public static event ArchiveNoteHandler OnNoteArchived;
+        
+        // Query callback
+        public delegate void AddQueryHandler(NoteQuery query);
+        public delegate void SelectQueryHandler(NoteQuery query);
+
+        public delegate void DeleteQueryHandler(NoteQuery query);
+
+        public static event AddQueryHandler OnNoteQueryAdded;
+        public static event SelectQueryHandler OnNoteQuerySelected;
+        public static event DeleteQueryHandler OnNoteQueryDeleted;
+
 
         private static EditorUNoteManager s_instance;
 
@@ -122,12 +129,12 @@ namespace UNote.Editor
         {
             Instance.m_currentNote = null;
             Instance.m_noteQuery = noteQuery;
-            OnNoteQueryUpdated?.Invoke(noteQuery);
+            OnNoteQuerySelected?.Invoke(noteQuery);
         }
 
         public static void CallUpdateNoteQuery()
         {
-            OnNoteQueryUpdated?.Invoke(Instance.m_noteQuery);
+            OnNoteQuerySelected?.Invoke(Instance.m_noteQuery);
         }
 
         public static void SelectNote(NoteBase note)
@@ -314,10 +321,35 @@ namespace UNote.Editor
         public static void ToggleArchived(NoteBase note)
         {
             note.Archived = !note.Archived;
-            OnNoteArchvied?.Invoke(note);
+            OnNoteArchived?.Invoke(note);
             SaveContainerByNoteType(note);
         }
 
+        public static NoteQuery AddQuery()
+        {
+            CustomQueryContainer container = CustomQueryContainer.Get();
+            
+            NoteQuery newQuery = new NoteQuery();
+            container.NoteQueryList.Add(newQuery);
+            container.Save();
+
+            OnNoteQueryAdded?.Invoke(newQuery);
+            return newQuery;
+        }
+
+        public static void DeleteQuery(NoteQuery noteQuery)
+        {
+            CustomQueryContainer container = CustomQueryContainer.Get();
+            int sourceIndex = container.NoteQueryList.FindIndex(t => t.QueryID == noteQuery.QueryID);
+            if (sourceIndex >= 0)
+            {
+                container.NoteQueryList.RemoveAt(sourceIndex);   
+            }
+            container.Save();
+            
+            OnNoteQueryDeleted?.Invoke(noteQuery);
+        }
+        
         public static void SaveAll()
         {
             GetOwnProjectNoteContainer().Save();

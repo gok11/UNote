@@ -106,15 +106,12 @@ namespace UNote.Editor
 
             addQueryButton.clicked += () =>
             {
-                NoteQuery newQuery = new NoteQuery();
-                CustomQueryContainer.Get().NoteQueryList.Add(newQuery);
+                NoteQuery newQuery = EditorUNoteManager.AddQuery();
                 
                 NoteQuery cloneQuery = newQuery.Clone();
                 CustomNoteQueryElem queryElem = new CustomNoteQueryElem(this, cloneQuery);
                 m_customQueryElem.Add(queryElem);
                 m_customQueryElemDict.Add(cloneQuery, queryElem);
-                
-                CustomQueryContainer.Get().Save();
                 
                 EditorUNoteManager.SetNoteQuery(cloneQuery);
                 UNoteEditor.CenterPane.EnableChangeQueryNameMode();
@@ -123,9 +120,25 @@ namespace UNote.Editor
             m_noteAddButton.clicked += ShowAddWindow;
             
             // Query event
-            EditorUNoteManager.OnNoteQueryUpdated += query =>
+            EditorUNoteManager.OnNoteQuerySelected += query =>
             {
                 UpdateElemBackgroundColor(query);
+            };
+
+            EditorUNoteManager.OnNoteQueryDeleted += _ =>
+            {
+                LoadCustomQuery();
+
+                // Select other query
+                CustomQueryContainer container = CustomQueryContainer.Get();
+                if (container.NoteQueryList.Count > 0)
+                {
+                    EditorUNoteManager.SetNoteQuery(container.NoteQueryList[0]);
+                }
+                else
+                {
+                    SetDefaultQuery();
+                }
             };
         }
 

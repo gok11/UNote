@@ -83,7 +83,7 @@ namespace UNote.Editor
                 }
             };
             EditorUNoteManager.OnNoteDeleted += _ => SetupListItems();
-            EditorUNoteManager.OnNoteQueryUpdated += query =>
+            EditorUNoteManager.OnNoteQuerySelected += query =>
             {
                 m_querySettingPanel.SetQuery(query);
                 SetupListItems();

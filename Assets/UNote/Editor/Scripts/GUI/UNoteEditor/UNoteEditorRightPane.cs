@@ -186,7 +186,7 @@ namespace UNote.Editor
                 }
             };
 
-            EditorUNoteManager.OnNoteArchvied += note =>
+            EditorUNoteManager.OnNoteArchived += note =>
             {
                 NoteBase currentNote = EditorUNoteManager.CurrentNote;
                 if (note == null)

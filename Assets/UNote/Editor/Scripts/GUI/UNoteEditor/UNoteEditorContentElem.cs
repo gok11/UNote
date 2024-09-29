@@ -21,6 +21,7 @@ namespace UNote.Editor
         private Button m_contextButton;
         
         private TextField m_editField;
+        private Button m_addButton;
         private Button m_sendButton;
 
         #endregion // Field
@@ -43,6 +44,7 @@ namespace UNote.Editor
             m_contextButton = noteElement.Q<Button>("ContextButton");
             
             m_editField = noteElement.Q<TextField>("EditField");
+            m_addButton = noteElement.Q<Button>("AddButton");
             m_sendButton = noteElement.Q<Button>("SendButton");
             
             noteElement.Q<Label>("AuthorLabel").text = note.Author;
@@ -62,6 +64,7 @@ namespace UNote.Editor
             };
             
             // edit event
+            m_addButton.clicked += ShowAddMenu;
             m_sendButton.clicked += FinishEditText;
             RegisterCallback<KeyDownEvent>(evt =>
             {
@@ -166,6 +169,56 @@ namespace UNote.Editor
                 EditorUNoteManager.SaveAll();
                     
                 UNoteEditor.CenterPane?.SetupListItems();
+            }
+        }
+        
+        internal void ShowAddMenu()
+        {
+            GenericMenu menu = new GenericMenu();
+            
+            menu.AddItem(new GUIContent("Reference/Asset"), false, () =>
+            {
+                string filePath = EditorUtility.OpenFilePanel("Select Asset", Application.dataPath, "*");
+                ParsePathToGuidAndInput(filePath);
+            });
+            
+            menu.AddItem(new GUIContent("Reference/Folder"), false, () =>
+            {
+                string folderPath = EditorUtility.OpenFolderPanel("Select Folder", Application.dataPath, "");
+                ParsePathToGuidAndInput(folderPath);
+            });
+            
+            menu.AddItem(new GUIContent("Screenshot/GameView"), false, () =>
+            {
+                string ssSavePath = PathUtil.GetScreenshotSavePath();
+                Utility.TakeScreenShot(ScreenshotTarget.GameView, ssSavePath);
+                ParsePathToGuidAndInput(ssSavePath);
+            });
+            
+            menu.AddItem(new GUIContent("Screenshot/SceneView"), false, () =>
+            {
+                string ssSavePath = PathUtil.GetScreenshotSavePath();
+                Utility.TakeScreenShot(ScreenshotTarget.SceneView, ssSavePath);
+                ParsePathToGuidAndInput(ssSavePath);
+            });
+            
+            menu.ShowAsContext();
+        }
+        
+        /// <summary>
+        /// Parse file or folder path to guid and insert it to InputText
+        /// </summary>
+        /// <param name="path"></param>
+        void ParsePathToGuidAndInput(string path)
+        {
+            string guid = AssetDatabase.AssetPathToGUID(path.FullPathToAssetPath());
+            if (!string.IsNullOrEmpty(guid))
+            {
+                if (!m_editField.value.IsNullOrEmpty())
+                {
+                    m_editField.value += "\n";
+                }
+                m_editField.value += $"[unatt-guid:{guid}]";
             }
         }
 

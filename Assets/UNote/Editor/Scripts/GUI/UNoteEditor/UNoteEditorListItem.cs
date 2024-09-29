@@ -51,7 +51,7 @@ namespace UNote.Editor
                 }
             };
             
-            EditorUNoteManager.OnNoteArchvied += note =>
+            EditorUNoteManager.OnNoteArchived += note =>
             {
                 if (note == m_note)
                 {

@@ -20,6 +20,9 @@ For an overview of planned features, please refer to [TODO.md](Doc/En/TODO.md).
 
 <h2>Installation</h2>
 
+Requirement
+Unity 2022.3 or later
+
 1. From the menu, select Window > Package Manager.
 2. Click the + button and select "Add package from git URL...".
 3. Enter https://github.com/gok11/UNote.git?path=/Assets/UNote and press Add.
