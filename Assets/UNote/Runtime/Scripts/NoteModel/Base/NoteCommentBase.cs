@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UNote.Runtime
@@ -8,6 +9,8 @@ namespace UNote.Runtime
 
         [SerializeField] private string m_referenceNoteId;
 
+        [SerializeField] private List<string> noteTagDataIdList;
+
         #endregion // Field
 
         #region Property
@@ -16,6 +19,12 @@ namespace UNote.Runtime
         {
             get => m_referenceNoteId;
             set => m_referenceNoteId = value;
+        }
+
+        public List<string> NoteTagDataIdList
+        {
+            get => noteTagDataIdList;
+            set => noteTagDataIdList = value;
         }
 
         #endregion // Property

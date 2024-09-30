@@ -98,9 +98,9 @@ namespace UNote.Editor
             return newNote;
         }
         
-        public static ProjectNoteComment AddNewProjectNoteComment(string guid, string noteContent)
+        public static ProjectNoteComment AddNewProjectNoteComment(string guid, string noteContent, List<string> noteTagList)
         {
-            ProjectNoteContainer container =GetOwnProjectNoteContainer();
+            ProjectNoteContainer container = GetOwnProjectNoteContainer();
             
             Undo.RegisterCompleteObjectUndo(container, "UNote Add New Project Note");
             
@@ -108,7 +108,8 @@ namespace UNote.Editor
             {
                 Author = UNoteSetting.UserName,
                 NoteContent = noteContent,
-                ReferenceNoteId = guid
+                ReferenceNoteId = guid,
+                NoteTagDataIdList = noteTagList
             };
 
             container.GetProjectCommentList().Add(newNote);

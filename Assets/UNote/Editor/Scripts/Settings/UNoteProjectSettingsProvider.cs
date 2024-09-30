@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -56,6 +57,15 @@ namespace UNote.Editor
                     root.Add(colorField);
                     
                     return root;
+                }
+            };
+            listView.itemsAdded += indices =>
+            {
+                foreach (var idx in indices)
+                {
+                    // Initialize TagID
+                    settings.m_tagList[idx].TagId = Guid.NewGuid().ToString();
+                    Debug.Log(settings.m_tagList[idx].TagId );
                 }
             };
             listView.reorderable = true;

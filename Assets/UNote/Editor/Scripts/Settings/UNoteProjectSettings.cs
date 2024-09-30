@@ -9,13 +9,13 @@ namespace UNote.Editor
     [FilePath("ProjectSettings/UNoteSettings.asset", FilePathAttribute.Location.ProjectFolder)]
     public class UNoteProjectSettings : ScriptableSingleton<UNoteProjectSettings>
     {
-        public List<UNoteTag> m_tagList;
+        public List<UNoteTagData> m_tagList;
 
         private void OnEnable()
         {
             if (m_tagList == null || m_tagList.Count == 0)
             {
-                m_tagList = new List<UNoteTag>
+                m_tagList = new List<UNoteTagData>
                 {
                     new ("Todo", Color.blue),
                     new ("Bug", Color.red)

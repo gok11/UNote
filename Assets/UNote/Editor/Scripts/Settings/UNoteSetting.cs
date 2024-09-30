@@ -25,7 +25,7 @@ namespace UNote.Editor
         public static Vector2 AttachmentImageMaxSize =>
             UNotePreferences.instance.m_attachmentImageMaxSize;
 
-        public static List<UNoteTag> TagList => UNoteProjectSettings.instance.m_tagList;
+        public static List<UNoteTagData> TagList => UNoteProjectSettings.instance.m_tagList;
 
         #endregion // Property
     }

@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="TagBackground" style="flex-grow: 0; background-color: rgb(0, 121, 243); height: 16px; flex-direction: column; -unity-font-style: normal; font-size: 14px; padding-top: 2px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; margin-right: 2px; margin-left: 2px; margin-top: 2px;">
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TagLabel" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; color: rgb(233, 233, 233); -unity-text-align: middle-left; -unity-font-style: bold; font-size: 12px;" />
+    </ui:VisualElement>
+</ui:UXML>

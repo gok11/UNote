@@ -98,7 +98,7 @@ namespace UNote.Editor
             return newNote;
         }
         
-        public static AssetNoteComment AddNewAssetLeafNote(string noteId, string noteContent)
+        public static AssetNoteComment AddNewAssetNoteComment(string noteId, string noteContent, List<string> noteTagList)
         {
             AssetNoteContainer container = GetOwnAssetNoteContainer();
             
@@ -108,7 +108,8 @@ namespace UNote.Editor
             {
                 Author = UNoteSetting.UserName,
                 NoteContent = noteContent,
-                ReferenceNoteId = noteId
+                ReferenceNoteId = noteId,
+                NoteTagDataIdList = noteTagList
             };
 
             container.GetAssetNoteCommentList().Add(newNote);

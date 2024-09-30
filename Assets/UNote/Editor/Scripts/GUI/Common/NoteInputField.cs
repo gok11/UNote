@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -15,12 +16,14 @@ namespace UNote.Editor
         private NoteType m_bindNoteType;
         private string m_bindId;
         private string m_objectId;
+        private List<string> m_tagIdList = new();
         
         [SerializeField] private NoteEditorModel m_model;
         
         private TextField m_inputText;
         private ScrollView m_inputScroll;
         private Label m_authorLabel;
+        private Button m_addTagButton;
         private Button m_addButton;
         private Button m_sendButton;
         
@@ -47,10 +50,14 @@ namespace UNote.Editor
             m_inputScroll = contentContainer.Q<ScrollView>("TextArea");
 
             m_authorLabel = contentContainer.Q<Label>("Author");
+            m_addTagButton = contentContainer.Q<Button>("AddTagButton");
             m_addButton = contentContainer.Q<Button>("AddButton");
             m_sendButton = contentContainer.Q<Button>("SendButton");
             
             m_authorLabel.text = UNoteSetting.UserName;
+
+            m_addTagButton.Q("Icon").style.backgroundImage 
+                = AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("tag.png"));
             
             m_inputText.BindProperty(m_model.EditingText);
             
@@ -58,6 +65,7 @@ namespace UNote.Editor
             VisualElementUtil.CreateDropAreaElem(m_inputText);
             
             // show add menu when button clicked
+            m_addTagButton.clicked += ShowAddTagMenu;
             m_addButton.clicked += ShowAddMenu;
             
             // create note when button clicked
@@ -119,6 +127,30 @@ namespace UNote.Editor
             }
         }
 
+        void ShowAddTagMenu()
+        {
+            GenericMenu menu = new GenericMenu();
+
+            List<UNoteTagData> tagList = UNoteSetting.TagList;
+            foreach (var tagData in tagList)
+            {
+                menu.AddItem(new GUIContent(tagData.TagName), false, () =>
+                {
+                    contentContainer.Q("Tags").Add(new UNoteTag(tagData.TagId));
+                    m_tagIdList.Add(tagData.TagId);
+                });
+            }
+            
+            menu.AddSeparator("");
+            
+            menu.AddItem(new GUIContent("Open Tag Setting"), false, ()=>
+            {
+                SettingsService.OpenProjectSettings("Project/UNote");
+            });
+            
+            menu.ShowAsContext();
+        }
+
         internal void ShowAddMenu()
         {
             GenericMenu menu = new GenericMenu();
@@ -178,14 +210,15 @@ namespace UNote.Editor
 
             m_inputText.Unbind();
             
-            NoteBase newLeafNote = null;
+            NoteBase newNoteComment = null;
 
             switch (m_bindNoteType)
             {
                 case NoteType.Project:
-                    newLeafNote = EditorUNoteManager.AddNewProjectNoteComment(
+                    newNoteComment = EditorUNoteManager.AddNewProjectNoteComment(
                         m_bindId,
-                        m_inputText.value
+                        m_inputText.value,
+                        new List<string>(m_tagIdList)
                     );   
                     break;
                 
@@ -198,10 +231,11 @@ namespace UNote.Editor
                         m_bindId = newNote.NoteId;
                     }
                     
-                    // Add leaf note
-                    newLeafNote = EditorUNoteManager.AddNewAssetLeafNote(
+                    // Add note comment
+                    newNoteComment = EditorUNoteManager.AddNewAssetNoteComment(
                         m_bindId,
-                        m_inputText.value
+                        m_inputText.value,
+                        new List<string>(m_tagIdList)
                     );
                     break;
 
@@ -209,10 +243,12 @@ namespace UNote.Editor
                     throw new NotImplementedException();
             }
 
-            if (newLeafNote == null)
+            if (newNoteComment == null)
             {
                 return;
             }
+            
+            m_tagIdList.Clear();
             
             // update state before rebind
             m_model.ModelObject.Update();

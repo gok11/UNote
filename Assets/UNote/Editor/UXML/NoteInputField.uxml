@@ -3,8 +3,14 @@
         <ui:VisualElement name="HeaderArea" style="flex-grow: 0;">
             <ui:Label tabindex="-1" text="Gok" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Author" style="font-size: 14px; margin-top: 4px; margin-right: 2px; margin-bottom: 0; margin-left: 4px; -unity-font-style: bold; -unity-text-align: middle-left; padding-top: 0; padding-bottom: 0;" />
         </ui:VisualElement>
-        <ui:ScrollView name="TextArea" style="height: 75px; flex-grow: 1;">
-            <ui:TextField picking-mode="Ignore" multiline="true" name="InputText" style="background-color: rgba(0, 0, 0, 0); opacity: 1; flex-grow: 1; flex-shrink: 0; flex-direction: row; display: flex; visibility: visible; overflow: hidden; height: auto; min-height: 66px; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal;" />
+        <ui:VisualElement name="TagArea" style="flex-grow: 1; flex-direction: row;">
+            <ui:Button text="&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddTagButton" style="font-size: 12px; height: 16px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-shrink: 1; margin-top: 2px; margin-right: 4px; margin-bottom: 0; margin-left: 4px; width: 24px;">
+                <ui:VisualElement name="Icon" style="flex-grow: 1; margin-top: 1px; margin-right: 4px; margin-bottom: 1px; margin-left: 4px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            </ui:Button>
+            <ui:VisualElement name="Tags" style="flex-grow: 1; flex-direction: row;" />
+        </ui:VisualElement>
+        <ui:ScrollView name="TextArea" style="flex-grow: 1;">
+            <ui:TextField picking-mode="Ignore" multiline="true" name="InputText" style="background-color: rgba(0, 0, 0, 0); opacity: 1; flex-grow: 1; flex-shrink: 0; flex-direction: row; display: flex; visibility: visible; overflow: hidden; min-height: auto; margin-top: 2px; margin-right: 4px; margin-bottom: 2px; margin-left: 4px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; height: 46px;" />
         </ui:ScrollView>
         <ui:VisualElement name="FooterArea" style="flex-grow: 0; flex-direction: row; height: auto; padding-bottom: 0; padding-top: 0; padding-right: 0; padding-left: 0;">
             <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddButton" style="height: 20px;" />
