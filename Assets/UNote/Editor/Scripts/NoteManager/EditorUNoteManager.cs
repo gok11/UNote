@@ -172,16 +172,17 @@ namespace UNote.Editor
 
             IEnumerable<NoteBase> notes = noteList;
 
+            // Filter by archive state
+            if (!noteQuery.DisplayArchive)
+            {
+                notes = notes.Where(t => !t.Archived);
+            }
+            
             // Filter by search text
             string searchText = noteQuery.SearchText;
             if (!searchText.IsNullOrWhiteSpace())
             {
                 notes = notes.Where(t => t.NoteName.Contains(searchText) || ContainsSearchTextInComments(t, searchText));
-            }
-
-            if (!noteQuery.DisplayArchive)
-            {
-                notes = notes.Where(t => !t.Archived);
             }
             
             return notes;

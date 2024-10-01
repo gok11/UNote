@@ -48,6 +48,7 @@ namespace UNote.Editor
                 ? StyleUtil.BlackTextColor
                 : StyleUtil.WhiteTextColor;
 
+            // Mouse event
             if (ifRegisterEvent)
             {
                 RegisterCallback<MouseDownEvent>(_ =>

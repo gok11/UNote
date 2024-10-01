@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
+    
     public class QuerySettingPanel : VisualElement
     {
         #region Field
@@ -15,6 +19,7 @@ namespace UNote.Editor
         private TextField m_searchText;
         private EnumField m_noteType;
         private EnumField m_noteSort;
+        private EnumFlagsField m_noteTag;
         private Toggle m_displayArchive;
 
         private Button m_saveQueryButton;
@@ -35,16 +40,23 @@ namespace UNote.Editor
             m_searchText = contentContainer.Q<TextField>("SearchField");
             m_noteType = contentContainer.Q<EnumField>("NoteType");
             m_noteSort = contentContainer.Q<EnumField>("NoteSort");
+            m_noteTag = contentContainer.Q<EnumFlagsField>("NoteTag");
             m_displayArchive = contentContainer.Q<Toggle>("DisplayArchive");
 
             m_saveQueryButton = contentContainer.Q<Button>("SaveButton");
             m_deleteQueryButton = contentContainer.Q<Button>("DeleteButton");
-
+            
+            // Create note tag field
+            int insertIndex = m_noteSort.parent.IndexOf(m_noteSort);
+            m_noteTag = new EnumFlagsField("Note Tag", NoteTags.All);
+            m_noteSort.parent.Insert(insertIndex, m_noteTag);
+            
             SetQuery(noteQuery);
             
             // Set style
             m_noteType.Q<Label>().style.minWidth = 90;
             m_noteSort.Q<Label>().style.minWidth = 90;
+            m_noteTag.Q<Label>().style.minWidth = 90;
             m_displayArchive.Q<Label>().style.minWidth = 90;
 
             VisualElement deleteIcon = m_deleteQueryButton.Q("Icon"); 
