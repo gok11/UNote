@@ -16,7 +16,6 @@ namespace UNote.Editor
         private NoteType m_bindNoteType;
         private string m_bindId;
         private string m_objectId;
-        private List<string> m_tagIdList = new();
         
         [SerializeField] private NoteEditorModel m_model;
         
@@ -129,15 +128,26 @@ namespace UNote.Editor
 
         void ShowAddTagMenu()
         {
+            VisualElement tags = contentContainer.Q("Tags");
+
+            List<UNoteTag> tempList = new();
+            tags.Query<UNoteTag>().ToList(tempList);
+            
             GenericMenu menu = new GenericMenu();
 
             List<UNoteTagData> tagList = UNoteSetting.TagList;
             foreach (var tagData in tagList)
             {
+                // Overlap check
+                if (tempList.Find(t => t.TagId == tagData.TagId) != null)
+                {
+                    continue;
+                }
+                
+                // Add item
                 menu.AddItem(new GUIContent(tagData.TagName), false, () =>
                 {
-                    contentContainer.Q("Tags").Add(new UNoteTag(tagData.TagId));
-                    m_tagIdList.Add(tagData.TagId);
+                    tags.Add(new UNoteTag(tagData.TagId, true));
                 });
             }
             
@@ -212,13 +222,19 @@ namespace UNote.Editor
             
             NoteBase newNoteComment = null;
 
+            List<string> tagIdList = new List<string>();
+            foreach (var noteTag in contentContainer.Q("Tags").Query<UNoteTag>().Build())
+            {
+                tagIdList.Add(noteTag.TagId);
+            }
+
             switch (m_bindNoteType)
             {
                 case NoteType.Project:
                     newNoteComment = EditorUNoteManager.AddNewProjectNoteComment(
                         m_bindId,
                         m_inputText.value,
-                        new List<string>(m_tagIdList)
+                        new List<string>(tagIdList)
                     );   
                     break;
                 
@@ -235,7 +251,7 @@ namespace UNote.Editor
                     newNoteComment = EditorUNoteManager.AddNewAssetNoteComment(
                         m_bindId,
                         m_inputText.value,
-                        new List<string>(m_tagIdList)
+                        new List<string>(tagIdList)
                     );
                     break;
 
@@ -248,7 +264,7 @@ namespace UNote.Editor
                 return;
             }
             
-            m_tagIdList.Clear();
+            contentContainer.Q("Tags").Clear();
             
             // update state before rebind
             m_model.ModelObject.Update();

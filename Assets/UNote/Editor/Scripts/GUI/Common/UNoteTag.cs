@@ -20,7 +20,7 @@ namespace UNote.Editor
             set => tagId = value;
         }
 
-        public UNoteTag(string tagId)
+        public UNoteTag(string tagId, bool ifRegisterEvent)
         {
             name = nameof(UNoteTag);
 
@@ -43,18 +43,33 @@ namespace UNote.Editor
 
             m_tagBackground.style.backgroundColor = tagData.Color;
             m_tagLabel.text = tagData.TagName;
-            
-            RegisterCallback<MouseDownEvent>(evt =>
+
+            m_tagLabel.style.color = CalculateBrightness(tagData.Color) > 0.5f
+                ? StyleUtil.BlackTextColor
+                : StyleUtil.WhiteTextColor;
+
+            if (ifRegisterEvent)
             {
-                GenericMenu menu = new GenericMenu();
-                
-                menu.AddItem(new GUIContent("Remove"), false, () =>
+                RegisterCallback<MouseDownEvent>(_ =>
                 {
-                    parent.Remove(this);
-                });
+                    GenericMenu menu = new GenericMenu();
                 
-                menu.ShowAsContext();
-            });
+                    menu.AddItem(new GUIContent("Remove"), false, () =>
+                    {
+                        parent.Remove(this);
+                    });
+                
+                    menu.ShowAsContext();
+                });
+            }
+        }
+        
+        /// <summary>
+        /// Calculate specified color brightness
+        /// </summary>
+        private float CalculateBrightness(Color color)
+        {
+            return 0.299f * color.r + 0.587f * color.g + 0.114f * color.b;
         }
     }
 }

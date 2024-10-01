@@ -46,6 +46,7 @@ namespace UNote.Editor
                         bindingPath = "m_tagName",
                         style = { flexGrow = 1 }
                     };
+                    textField.RegisterValueChangedCallback(_ => SaveSettings());
                     root.Add(textField);
 
                     ColorField colorField = new ColorField("Color")
@@ -53,6 +54,7 @@ namespace UNote.Editor
                         bindingPath = "m_color",
                         style = { width = 160f }
                     };
+                    colorField.RegisterValueChangedCallback(_ => SaveSettings());
                     colorField.Q<Label>().style.minWidth = 40;
                     root.Add(colorField);
                     
@@ -65,14 +67,22 @@ namespace UNote.Editor
                 {
                     // Initialize TagID
                     settings.m_tagList[idx].TagId = Guid.NewGuid().ToString();
-                    Debug.Log(settings.m_tagList[idx].TagId );
                 }
+
+                SaveSettings();
             };
             listView.reorderable = true;
             
             rootElement.Add(listView);
             
             rootElement.Bind(new SerializedObject(settings));
+        }
+
+        private void SaveSettings()
+        {
+            UNoteProjectSettings settings = UNoteProjectSettings.instance;
+            EditorUtility.SetDirty(settings);
+            AssetDatabase.SaveAssetIfDirty(settings);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace UNote.Editor
     {
         public string m_userName;
         public bool m_inspectorFoldoutOpened;
-        public Vector2 m_attachmentImageMaxSize = new Vector2(InitialImageMaxSizeX, InitialImageMaxSizeY);
+        public Vector2 m_attachmentImageMaxSize = new(InitialImageMaxSizeX, InitialImageMaxSizeY);
 
         private const float InitialImageMaxSizeX = 480;
         private const float InitialImageMaxSizeY = 270;

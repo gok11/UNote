@@ -15,7 +15,7 @@ namespace UNote.Editor
 
         private NoteBase m_note;
 
-        // private Label m_contentText;
+        private VisualElement m_noteTag;
         private VisualElement m_contents;
         private VisualElement m_editNoteElem;
         private Button m_contextButton;
@@ -39,6 +39,7 @@ namespace UNote.Editor
             VisualElement noteElement = noteContentTree.Instantiate();
             contentContainer.Add(noteElement);
 
+            m_noteTag = noteElement.Q("NoteTag");
             m_contents = noteElement.Q("Contents");
             m_editNoteElem = noteElement.Q<VisualElement>("EditNoteElem");
             m_contextButton = noteElement.Q<Button>("ContextButton");
@@ -53,6 +54,9 @@ namespace UNote.Editor
             // Set style
             m_contents.style.SetPadding(3, 4, 3, 8);
             m_contents.style.whiteSpace = WhiteSpace.Normal;
+            
+            // Load tags
+            LoadTags();
             
             // Parse text and insert elem
             ParseTextElements(note.NoteContent);
@@ -131,6 +135,23 @@ namespace UNote.Editor
                 }
             );
             menu.ShowAsContext();
+        }
+
+        private void LoadTags()
+        {
+            VisualElement tags = m_noteTag.Q("Tags");
+            tags.Clear();
+            
+            NoteCommentBase comment = m_note as NoteCommentBase;
+            if (comment == null)
+            {
+                return;
+            }
+
+            foreach (var id in comment.NoteTagDataIdList)
+            {
+                tags.Add(new UNoteTag(id, false));
+            }
         }
         
         private void EnableEditText()

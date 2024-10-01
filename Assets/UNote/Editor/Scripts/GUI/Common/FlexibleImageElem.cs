@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,7 +10,7 @@ namespace UNote.Editor
         
         public FlexibleImageElem(Texture2D tex, VisualElement parent)
         {
-            CalcSize(tex.width);
+            CalcSize(Mathf.Min(tex.width, UNoteSetting.AttachmentImageMaxSize.x) - 24);
             
             // Register callback
             parent.RegisterCallback<GeometryChangedEvent>(evt =>
@@ -26,7 +23,7 @@ namespace UNote.Editor
                 }
                 
                 float width = evt.newRect.width;
-                float maxWidth = width - 24;
+                float maxWidth = Mathf.Min(width, UNoteSetting.AttachmentImageMaxSize.x) - 24;
                     
                 CalcSize(maxWidth);
 
