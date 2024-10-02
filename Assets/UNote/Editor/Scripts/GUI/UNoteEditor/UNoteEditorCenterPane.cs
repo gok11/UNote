@@ -74,6 +74,30 @@ namespace UNote.Editor
             });
             
             // Register note event
+            contentContainer.RegisterCallback<MouseDownEvent>(evt =>
+            {
+                if (evt.button != 1)
+                {
+                    return;
+                }
+                
+                GenericMenu menu = new GenericMenu();
+                
+                menu.AddItem(new GUIContent("Add Note"), false, () =>
+                {
+                    if (EditorWindow.HasOpenInstances<NoteAddWindow>())
+                    {
+                        return;
+                    }
+            
+                    NoteAddWindow addWindow = ScriptableObject.CreateInstance<NoteAddWindow>();
+                    addWindow.ShowUtility(); 
+                });
+                
+                menu.ShowAsContext();
+            });
+            
+            // Register note event
             EditorUNoteManager.OnNoteAdded += _ => SetupListItems();
             EditorUNoteManager.OnNoteSelected += n =>
             {

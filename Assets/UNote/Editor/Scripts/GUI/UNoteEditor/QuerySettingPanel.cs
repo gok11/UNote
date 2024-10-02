@@ -57,6 +57,7 @@ namespace UNote.Editor
             m_noteType.Q<Label>().style.minWidth = 90;
             m_noteSort.Q<Label>().style.minWidth = 90;
             m_noteTag.Q<Label>().style.minWidth = 90;
+            m_noteTag.Q<Label>().style.fontSize = 11;
             m_displayArchive.Q<Label>().style.minWidth = 90;
 
             VisualElement deleteIcon = m_deleteQueryButton.Q("Icon"); 
@@ -72,6 +73,11 @@ namespace UNote.Editor
             m_noteType.RegisterValueChangedCallback(x =>
             {
                 m_noteQuery.NoteTypeFilter = (NoteTypeFilter)x.newValue;
+                EditorUNoteManager.CallUpdateNoteQuery();
+            });
+            m_noteTag.RegisterValueChangedCallback(x =>
+            {
+                m_noteQuery.SearchTags = (NoteTags)x.newValue;
                 EditorUNoteManager.CallUpdateNoteQuery();
             });
             m_noteSort.RegisterValueChangedCallback(x =>
@@ -121,12 +127,55 @@ namespace UNote.Editor
             };
         }
 
+        // private void UpdateQueryTags(NoteTags tags)
+        // {
+        //     List<UNoteTagData> tagDataList = UNoteSetting.TagList;
+        //
+        //     foreach (NoteTags noteTag in Enum.GetValues(typeof(NoteTags)))
+        //     {
+        //         if (noteTag == NoteTags.None || noteTag == NoteTags.All)
+        //         {
+        //             continue;
+        //         }
+        //
+        //         UNoteTagData tagData = tagDataList.Find(t => t.TagName == noteTag.ToString());
+        //         if (tagData == null)
+        //         {
+        //             continue;
+        //         }
+        //             
+        //         bool isOn = (tags & noteTag) != 0;
+        //         if (isOn)
+        //         {
+        //             if (!m_noteQuery.SearchTagList.Contains(tagData.TagId))
+        //             {
+        //                 Debug.Log($"Add: {tagData.TagName}");
+        //                 m_noteQuery.SearchTagList.Add(tagData.TagId);   
+        //             }
+        //         }
+        //         else
+        //         {
+        //             if (m_noteQuery.SearchTagList.Contains(tagData.TagId))
+        //             {
+        //                 Debug.Log($"Remove: {tagData.TagName}");
+        //                 m_noteQuery.SearchTagList.Remove(tagData.TagId);   
+        //             }
+        //         }
+        //     }
+        // }
+
+        /// <summary>
+        /// Set new query
+        /// </summary>
+        /// <param name="noteQuery"></param>
         internal void SetQuery(NoteQuery noteQuery)
         {
             m_noteQuery = noteQuery;
 
+            // Avoid view update after each field update
             m_searchText.SetValueWithoutNotify(noteQuery.SearchText);
             m_noteType.SetValueWithoutNotify(noteQuery.NoteTypeFilter);
+            m_noteTag.SetValueWithoutNotify(noteQuery.SearchTags);
             m_noteSort.SetValueWithoutNotify(noteQuery.NoteQuerySort);
             m_displayArchive.SetValueWithoutNotify(noteQuery.DisplayArchive);
 

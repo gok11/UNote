@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -16,9 +17,10 @@ namespace UNote.Editor
 
         #region Private Method
 
-                private void OnEnable()
+        private void OnEnable()
         {
-            titleContent = new GUIContent("New Note");   
+            titleContent = new GUIContent("New Note");
+            minSize = maxSize = new(270, 100);
         }
 
         private void CreateGUI()

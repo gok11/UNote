@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace UNote.Editor
 {
@@ -10,10 +11,11 @@ namespace UNote.Editor
         {
             QueryID = Guid.NewGuid().ToString();
             QueryName = "Asset Notes";
+            SearchTags = NoteTags.All;
             NoteTypeFilter = NoteTypeFilter.Asset;   
         }
         
-        public AssetNotesQuery(string searchText = null, string[] searchTags = null, bool displayArchive = false) : this()
+        public AssetNotesQuery(string searchText = null, NoteTags searchTags = NoteTags.All, bool displayArchive = false) : this()
         {
             SearchText = searchText;
             SearchTags = searchTags;

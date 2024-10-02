@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UNote.Editor
 {
@@ -19,7 +21,7 @@ namespace UNote.Editor
         [SerializeField] private string m_queryName;
         [SerializeField] private NoteTypeFilter m_noteTypeFilter;
         [SerializeField] private string m_searchText;
-        [SerializeField] private string[] m_searchTags;
+        [SerializeField] private NoteTags m_searchTags = NoteTags.All;
         [SerializeField] private bool m_displayArchive;
         [SerializeField] private NoteQuerySort m_noteQuerySort;
 
@@ -51,7 +53,7 @@ namespace UNote.Editor
             set => m_searchText = value;
         }
 
-        public string[] SearchTags
+        public NoteTags SearchTags
         {
             get => m_searchTags;
             set => m_searchTags = value;

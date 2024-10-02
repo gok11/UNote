@@ -178,6 +178,14 @@ namespace UNote.Editor
                 notes = notes.Where(t => !t.Archived);
             }
             
+            // Filter by note tag
+            NoteTags tags = noteQuery.SearchTags;
+            if (tags != NoteTags.All)
+            {
+                // Need filtering
+                notes = notes.Where(t => CheckTagInMessages(t, tags));
+            }
+            
             // Filter by search text
             string searchText = noteQuery.SearchText;
             if (!searchText.IsNullOrWhiteSpace())
@@ -186,6 +194,65 @@ namespace UNote.Editor
             }
             
             return notes;
+        }
+
+        /// <summary>
+        /// Check messages has specified tag
+        /// </summary>
+        private static bool CheckTagInMessages(NoteBase note, NoteTags tags)
+        {
+            NoteTags[] filterTags = Enum.GetValues(typeof(NoteTags)).Cast<NoteTags>()
+                .Where(t => t != NoteTags.All && t != NoteTags.None && (t & tags) != 0)
+                .ToArray();
+            
+            switch (note.NoteType)
+            {
+                case NoteType.Project:
+                {
+                    List<ProjectNoteMessage> messageList = GetProjectNoteMessageListByNoteId(note.NoteId);
+                    return CheckMessageListInternal(messageList);
+                }
+
+                case NoteType.Asset:
+                {
+                    List<AssetNoteMessage> messageList = GetAssetNoteMessageListByNoteId(note.NoteId);
+                    return CheckMessageListInternal(messageList);
+                }
+                
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            // Internal method
+            bool CheckMessageListInternal<T>(List<T> messageList) where T : NoteMessageBase
+            {
+                // None: all message has no tag
+                if (tags == NoteTags.None)
+                {
+                    return messageList.TrueForAll(
+                        t => t.NoteTagDataIdList == null || t.NoteTagDataIdList.Count == 0);
+                }
+                    
+                // Tag check
+                foreach (var message in messageList)
+                {
+                    List<string> tagIdList = message.NoteTagDataIdList;
+                    if (tagIdList == null || tagIdList.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    foreach (var tag in filterTags)
+                    {
+                        if (message.NoteTagDataIdList.Contains(tag.ToNoteId()))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
         }
 
         public static IEnumerable<NoteBase> SortNotes(IEnumerable<NoteBase> notes, NoteQuery noteQuery)
