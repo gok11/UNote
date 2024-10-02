@@ -257,9 +257,9 @@ namespace UNote.Editor
                     ProjectNote projectNote = note as ProjectNote;
                     string projectNoteId = projectNote?.NoteId;
 
-                    foreach (var leafNote in EditorUNoteManager.GetProjectNoteCommentListByNoteId(projectNoteId))
+                    foreach (var noteMessage in EditorUNoteManager.GetProjectNoteMessageListByNoteId(projectNoteId))
                     {
-                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(leafNote));
+                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(noteMessage));
                     }
                     break;
                 
@@ -267,9 +267,9 @@ namespace UNote.Editor
                     AssetNote assetNote = note as AssetNote;
                     string assetNoteNoteId = assetNote?.NoteId;
 
-                    foreach (var leafNote in EditorUNoteManager.GetAssetNoteCommentListByNoteId(assetNoteNoteId))
+                    foreach (var noteMessage in EditorUNoteManager.GetAssetNoteMessageListByNoteId(assetNoteNoteId))
                     {
-                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(leafNote));
+                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(noteMessage));
                     }
                     break;
                 

@@ -142,13 +142,13 @@ namespace UNote.Editor
             VisualElement tags = m_noteTag.Q("Tags");
             tags.Clear();
             
-            NoteCommentBase comment = m_note as NoteCommentBase;
-            if (comment == null)
+            NoteMessageBase message = m_note as NoteMessageBase;
+            if (message == null)
             {
                 return;
             }
 
-            foreach (var id in comment.NoteTagDataIdList)
+            foreach (var id in message.NoteTagDataIdList)
             {
                 tags.Add(new UNoteTag(id, false));
             }

@@ -9,12 +9,12 @@ namespace UNote.Runtime
         #region Field
         
         [SerializeField] private List<ProjectNote> m_projectNoteList = new List<ProjectNote>();
-        [FormerlySerializedAs("m_projectLeafNoteList")] [SerializeField] private List<ProjectNoteComment> m_projectCommentList = new List<ProjectNoteComment>();
+        [FormerlySerializedAs("m_projectCommentList")] [FormerlySerializedAs("m_projectLeafNoteList")] [SerializeField] private List<ProjectNoteMessage> m_projectMessageList = new List<ProjectNoteMessage>();
         
         #endregion // Field
         
         public List<ProjectNote> GetProjectNoteList() => m_projectNoteList;
 
-        public List<ProjectNoteComment> GetProjectCommentList() => m_projectCommentList;
+        public List<ProjectNoteMessage> GetProjectMessageList() => m_projectMessageList;
     }
 }

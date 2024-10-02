@@ -84,12 +84,12 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                 {
-                    ProjectNoteComment comment = EditorUNoteManager
-                        .GetProjectNoteCommentListByNoteId(note.NoteId)
+                    ProjectNoteMessage message = EditorUNoteManager
+                        .GetProjectNoteMessageListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
 
-                    m_noteContentLabel.text = comment
+                    m_noteContentLabel.text = message
                         ?.NoteContent.Replace("\r", " ")
                         .Replace("\n", " ");
 
@@ -99,12 +99,12 @@ namespace UNote.Editor
 
                 case NoteType.Asset:
                 {
-                    AssetNoteComment comment = EditorUNoteManager
-                        .GetAssetNoteCommentListByNoteId(note.NoteId)
+                    AssetNoteMessage message = EditorUNoteManager
+                        .GetAssetNoteMessageListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
 
-                    m_noteContentLabel.text = comment
+                    m_noteContentLabel.text = message
                         ?.NoteContent.Replace("\r", " ")
                         .Replace("\n", " ");
                     

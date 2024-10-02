@@ -48,7 +48,7 @@ namespace UNote.Editor
                 return;
             }
 
-            IReadOnlyList<AssetNoteComment> noteList = EditorUNoteManager.GetAssetNoteCommentListByNoteId(guid);
+            IReadOnlyList<AssetNoteMessage> noteList = EditorUNoteManager.GetAssetNoteMessageListByNoteId(guid);
             if (noteList == null || noteList.Count == 0)
             {
                 return;   
@@ -65,7 +65,7 @@ namespace UNote.Editor
             }
         }
         
-        private static void DrawCountAtRightEdge(IReadOnlyList<AssetNoteComment> noteList, Rect rect)
+        private static void DrawCountAtRightEdge(IReadOnlyList<AssetNoteMessage> noteList, Rect rect)
         {
             // background
             rect.x = rect.xMax - 16;
@@ -82,7 +82,7 @@ namespace UNote.Editor
             GUI.DrawTexture(noteIconRect, NoteIcon);
         }
 
-        private static void DrawCountAtLeftTop(IReadOnlyList<AssetNoteComment> noteList, Rect rect)
+        private static void DrawCountAtLeftTop(IReadOnlyList<AssetNoteMessage> noteList, Rect rect)
         {
             // background
             rect.x = rect.xMin - 2;

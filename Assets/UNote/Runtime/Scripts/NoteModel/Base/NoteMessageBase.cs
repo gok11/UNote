@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UNote.Runtime
 {
-    public abstract class NoteCommentBase : NoteBase
+    public abstract class NoteMessageBase : NoteBase
     {
         #region Field
 

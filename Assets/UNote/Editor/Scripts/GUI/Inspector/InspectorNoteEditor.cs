@@ -161,9 +161,9 @@ namespace UNote.Editor
                     AssetNote assetNote = EditorUNoteManager.GetAssetNoteListByGuid(assetGuid).FirstOrDefault();
                     if (assetNote != null)
                     {
-                        foreach (var leafNote in EditorUNoteManager.GetAssetNoteCommentListByNoteId(assetNote.NoteId))
+                        foreach (var noteMessage in EditorUNoteManager.GetAssetNoteMessageListByNoteId(assetNote.NoteId))
                         {
-                            m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(leafNote));
+                            m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(noteMessage));
                         }   
                     }
                     break;

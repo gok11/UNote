@@ -17,17 +17,17 @@ namespace UNote.Editor
         private static AssetNoteContainer s_assetNoteInstance;
         
         private List<AssetNote> m_assetNoteList = new();
-        private List<AssetNoteComment> m_assetNoteCommentList = new();
+        private List<AssetNoteMessage> m_assetNoteMessageList = new();
 
         private List<AssetNote> m_assetNoteListDistinct = new();
 
         private Dictionary<string, List<AssetNote>> m_assetNoteDict = new();
-        private Dictionary<string, List<AssetNoteComment>> m_assetLeafNoteDict = new();
+        private Dictionary<string, List<AssetNoteMessage>> m_assetNoteMessageDict = new();
 
         #endregion // Field
 
         private static IReadOnlyList<AssetNote> GetAssetNoteAllList() => Instance.m_assetNoteList;
-        private static IReadOnlyList<AssetNoteComment> GetAssetNoteCommentAllList() => Instance.m_assetNoteCommentList;
+        private static IReadOnlyList<AssetNoteMessage> GetAssetNoteMessageAllList() => Instance.m_assetNoteMessageList;
 
         #region Initialize
 
@@ -67,7 +67,7 @@ namespace UNote.Editor
             {
                 AssetNoteContainer tmpContainer = AssetDatabase.LoadAssetAtPath<AssetNoteContainer>(file.FullPathToAssetPath());
                 Instance.m_assetNoteList.AddRange(tmpContainer.GetAssetNoteList());
-                Instance.m_assetNoteCommentList.AddRange(tmpContainer.GetAssetNoteCommentList());
+                Instance.m_assetNoteMessageList.AddRange(tmpContainer.GetAssetNoteMessageList());
             }
         }
 
@@ -98,13 +98,13 @@ namespace UNote.Editor
             return newNote;
         }
         
-        public static AssetNoteComment AddNewAssetNoteComment(string noteId, string noteContent, List<string> noteTagList)
+        public static AssetNoteMessage AddNewAssetNoteMessage(string noteId, string noteContent, List<string> noteTagList)
         {
             AssetNoteContainer container = GetOwnAssetNoteContainer();
             
-            Undo.RegisterCompleteObjectUndo(container, "UNote Add New Asset Leaf Note");
+            Undo.RegisterCompleteObjectUndo(container, "UNote Add New Asset Note Message");
             
-            AssetNoteComment newNote = new AssetNoteComment
+            AssetNoteMessage newNote = new AssetNoteMessage
             {
                 Author = UNoteSetting.UserName,
                 NoteContent = noteContent,
@@ -112,7 +112,7 @@ namespace UNote.Editor
                 NoteTagDataIdList = noteTagList
             };
 
-            container.GetAssetNoteCommentList().Add(newNote);
+            container.GetAssetNoteMessageList().Add(newNote);
             container.Save();
             
             ReloadAssetNotes();
@@ -169,24 +169,24 @@ namespace UNote.Editor
             return Instance.m_assetNoteListDistinct;
         }
 
-        public static List<AssetNoteComment> GetAssetNoteCommentListByNoteId(string assetNoteId)
+        public static List<AssetNoteMessage> GetAssetNoteMessageListByNoteId(string assetNoteId)
         {
-            if (Instance.m_assetLeafNoteDict.TryGetValue(assetNoteId, out var leafNoteList))
+            if (Instance.m_assetNoteMessageDict.TryGetValue(assetNoteId, out var noteMessageList))
             {
-                return leafNoteList;
+                return noteMessageList;
             }
 
-            List<AssetNoteComment> newList = new List<AssetNoteComment>(64);
+            List<AssetNoteMessage> newList = new List<AssetNoteMessage>(64);
             
             // sort by created date
-            foreach (var note in Instance.m_assetNoteCommentList.OrderBy(t => t.CreatedDate))
+            foreach (var note in Instance.m_assetNoteMessageList.OrderBy(t => t.CreatedDate))
             {
                 if (note.ReferenceNoteId == assetNoteId)
                 {
                     newList.Add(note);
                 }
             }
-            Instance.m_assetLeafNoteDict.Add(assetNoteId, newList);
+            Instance.m_assetNoteMessageDict.Add(assetNoteId, newList);
 
             return newList;
         }
@@ -209,12 +209,12 @@ namespace UNote.Editor
                     astContainer.Save();
                 }
             }
-            else if (note is AssetNoteComment assetLeafNote)
+            else if (note is AssetNoteMessage assetNoteMessage)
             {
-                List<AssetNoteComment> assetLeafNoteList = astContainer.GetAssetNoteCommentList();
-                if (assetLeafNoteList.Contains(assetLeafNote))
+                List<AssetNoteMessage> assetNoteMessageList = astContainer.GetAssetNoteMessageList();
+                if (assetNoteMessageList.Contains(assetNoteMessage))
                 {
-                    assetLeafNoteList.Remove(assetLeafNote);
+                    assetNoteMessageList.Remove(assetNoteMessage);
                     astContainer.Save();
                 }
             }
@@ -229,10 +229,10 @@ namespace UNote.Editor
         internal static void ClearAssetNoteCache()
         {
             Instance.m_assetNoteList.Clear();
-            Instance.m_assetNoteCommentList.Clear();
+            Instance.m_assetNoteMessageList.Clear();
             Instance.m_assetNoteListDistinct.Clear();
             Instance.m_assetNoteDict.Clear();
-            Instance.m_assetLeafNoteDict.Clear();
+            Instance.m_assetNoteMessageDict.Clear();
         }
         
         #endregion

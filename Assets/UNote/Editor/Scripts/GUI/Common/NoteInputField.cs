@@ -220,7 +220,7 @@ namespace UNote.Editor
 
             m_inputText.Unbind();
             
-            NoteBase newNoteComment = null;
+            NoteBase newNoteMessage = null;
 
             List<string> tagIdList = new List<string>();
             foreach (var noteTag in contentContainer.Q("Tags").Query<UNoteTag>().Build())
@@ -231,7 +231,7 @@ namespace UNote.Editor
             switch (m_bindNoteType)
             {
                 case NoteType.Project:
-                    newNoteComment = EditorUNoteManager.AddNewProjectNoteComment(
+                    newNoteMessage = EditorUNoteManager.AddNewProjectNoteMessage(
                         m_bindId,
                         m_inputText.value,
                         new List<string>(tagIdList)
@@ -247,8 +247,8 @@ namespace UNote.Editor
                         m_bindId = newNote.NoteId;
                     }
                     
-                    // Add note comment
-                    newNoteComment = EditorUNoteManager.AddNewAssetNoteComment(
+                    // Add note message
+                    newNoteMessage = EditorUNoteManager.AddNewAssetNoteMessage(
                         m_bindId,
                         m_inputText.value,
                         new List<string>(tagIdList)
@@ -259,7 +259,7 @@ namespace UNote.Editor
                     throw new NotImplementedException();
             }
 
-            if (newNoteComment == null)
+            if (newNoteMessage == null)
             {
                 return;
             }

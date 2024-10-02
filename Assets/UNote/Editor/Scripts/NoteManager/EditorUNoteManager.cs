@@ -182,7 +182,7 @@ namespace UNote.Editor
             string searchText = noteQuery.SearchText;
             if (!searchText.IsNullOrWhiteSpace())
             {
-                notes = notes.Where(t => t.NoteName.Contains(searchText) || ContainsSearchTextInComments(t, searchText));
+                notes = notes.Where(t => t.NoteName.Contains(searchText) || ContainsSearchTextInMessages(t, searchText));
             }
             
             return notes;
@@ -218,20 +218,18 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                 {
-                    ProjectNoteComment comment = EditorUNoteManager
-                        .GetProjectNoteCommentListByNoteId(note.NoteId)
+                    ProjectNoteMessage message = GetProjectNoteMessageListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.UpdatedDate)
                         .FirstOrDefault();
-                    return comment != null ? comment.UpdatedDate : note.CreatedDate;
+                    return message != null ? message.UpdatedDate : note.CreatedDate;
                 }
 
                 case NoteType.Asset:
                 {
-                    AssetNoteComment comment = EditorUNoteManager
-                        .GetAssetNoteCommentListByNoteId(note.NoteId)
+                    AssetNoteMessage message = GetAssetNoteMessageListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.UpdatedDate)
                         .FirstOrDefault();
-                    return comment != null ? comment.UpdatedDate : note.CreatedDate;
+                    return message != null ? message.UpdatedDate : note.CreatedDate;
                 }
                 
                 default:
@@ -239,22 +237,20 @@ namespace UNote.Editor
             }
         }
         
-        private static bool ContainsSearchTextInComments(NoteBase note, string text)
+        private static bool ContainsSearchTextInMessages(NoteBase note, string text)
         {
             switch (note.NoteType)
             {
                 case NoteType.Project:
                 {
-                    List<ProjectNoteComment> commentList = EditorUNoteManager
-                        .GetProjectNoteCommentListByNoteId(note.NoteId);
-                    return commentList.FindIndex(t => t.NoteContent.Contains(text)) >= 0;
+                    List<ProjectNoteMessage> messageList = GetProjectNoteMessageListByNoteId(note.NoteId);
+                    return messageList.FindIndex(t => t.NoteContent.Contains(text)) >= 0;
                 }
 
                 case NoteType.Asset:
                 {
-                    List<AssetNoteComment> commentList = EditorUNoteManager
-                        .GetAssetNoteCommentListByNoteId(note.NoteId);
-                    return commentList.FindIndex(t => t.NoteContent.Contains(text)) >= 0;
+                    List<AssetNoteMessage> messageList = GetAssetNoteMessageListByNoteId(note.NoteId);
+                    return messageList.FindIndex(t => t.NoteContent.Contains(text)) >= 0;
                 }
                 
                 default:

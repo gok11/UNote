@@ -10,11 +10,11 @@ namespace UNote.Editor
         #region Field
 
         [SerializeField] private List<AssetNote> m_assetNoteList = new();
-        [FormerlySerializedAs("m_assetLeafNoteList")] [SerializeField] private List<AssetNoteComment> m_assetNoteCommentList = new();
+        [FormerlySerializedAs("m_assetNoteCommentList")] [FormerlySerializedAs("m_assetLeafNoteList")] [SerializeField] private List<AssetNoteMessage> m_assetNoteMessageList = new();
         
         #endregion // Field
 
         public List<AssetNote> GetAssetNoteList() => m_assetNoteList;
-        public List<AssetNoteComment> GetAssetNoteCommentList() => m_assetNoteCommentList;
+        public List<AssetNoteMessage> GetAssetNoteMessageList() => m_assetNoteMessageList;
     }
 }
