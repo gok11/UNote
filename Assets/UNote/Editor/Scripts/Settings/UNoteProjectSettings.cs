@@ -20,8 +20,8 @@ namespace UNote.Editor
             {
                 m_tagList = new List<UNoteTagData>
                 {
-                    new ("Todo", Color.blue),
-                    new ("Bug", Color.red)
+                    new ("Todo", StyleUtil.TodoInitColor),
+                    new ("Bug", StyleUtil.BugInitColor)
                 };
                 Save();
             }
