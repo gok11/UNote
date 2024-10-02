@@ -65,7 +65,7 @@ namespace UNote.Editor
 
         #region Function
 
-        private static string GetRootPath()
+        internal static string GetRootPath()
         {
             return IsInstalledAsPackage ? $"Packages/{PackageIdentity}" : $"Assets/UNote";
         }

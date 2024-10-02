@@ -61,6 +61,9 @@ namespace UNote.Editor
                     return root;
                 }
             };
+            listView.reorderable = true;
+            
+            // List callback
             listView.itemsAdded += indices =>
             {
                 foreach (var idx in indices)
@@ -71,7 +74,11 @@ namespace UNote.Editor
 
                 SaveSettings();
             };
-            listView.reorderable = true;
+            
+            listView.itemsRemoved += _ =>
+            {
+                SaveSettings();
+            };
             
             rootElement.Add(listView);
             
@@ -83,6 +90,9 @@ namespace UNote.Editor
             UNoteProjectSettings settings = UNoteProjectSettings.instance;
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssetIfDirty(settings);
+            
+            // Update const file
+            NoteTagConstGenerator.Generate();
         }
     }
 }
