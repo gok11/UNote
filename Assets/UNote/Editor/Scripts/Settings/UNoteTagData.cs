@@ -36,5 +36,12 @@ namespace UNote.Editor
             TagName = tagName;
             Color = color;
         }
+
+        public void Initialize()
+        {
+            m_tagId = Guid.NewGuid().ToString();
+            m_tagName = "NewTag";
+            Color = Color.white;
+        }
     }
 }

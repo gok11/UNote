@@ -18,6 +18,7 @@ namespace UNote.Editor
         public static readonly string NoteQueryTemplate = PathUtil.GetUxmlPath("NoteQueryTemplate.uxml");
         public static readonly string NoteTag = PathUtil.GetUxmlPath("NoteTag.uxml");
         public static readonly string NoteTypeItem = PathUtil.GetUxmlPath("NoteTypeItem.uxml");
+        public static readonly string ProjectSettingsItem = PathUtil.GetUxmlPath("ProjectSettingsItem.uxml");
     }
 
     ///////////////////////////////////////////////////////
@@ -25,7 +26,6 @@ namespace UNote.Editor
     ///////////////////////////////////////////////////////
     public static class UssPath
     {
-        public static readonly string NewUSSFile = PathUtil.GetUssPath("NewUSSFile.uss");
         public static readonly string UNoteEditor = PathUtil.GetUssPath("UNoteEditor.uss");
     }
 }

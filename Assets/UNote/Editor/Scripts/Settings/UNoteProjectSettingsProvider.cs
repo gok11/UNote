@@ -11,6 +11,8 @@ namespace UNote.Editor
     public class UNoteProjectSettingsProvider : SettingsProvider
     {
         private const string SettingPath = "Project/UNote";
+
+        private VisualElement m_rootElement;
         
         [SettingsProvider]
         private static SettingsProvider CreateUNoteSettingProvider()
@@ -25,8 +27,12 @@ namespace UNote.Editor
 
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
+            m_rootElement = rootElement;
+            
             UNoteProjectSettings settings = UNoteProjectSettings.instance;
             settings.hideFlags = HideFlags.HideAndDontSave & ~HideFlags.NotEditable;
+
+            SerializedObject serializedObject = settings.SerializedObject;
 
             ListView listView = new ListView
             {
@@ -37,42 +43,18 @@ namespace UNote.Editor
                 showFoldoutHeader = true,
                 headerTitle = "Tags",
                 virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight,
-                makeItem = () =>
-                {
-                    BindableElement root = new BindableElement { style = { flexDirection = FlexDirection.Row } };
-
-                    TextField textField = new TextField("Tag Name")
-                    {
-                        bindingPath = "m_tagName",
-                        style = { flexGrow = 1 }
-                    };
-                    textField.RegisterValueChangedCallback(_ => SaveSettings());
-                    root.Add(textField);
-
-                    ColorField colorField = new ColorField("Color")
-                    {
-                        bindingPath = "m_color",
-                        style = { width = 160f }
-                    };
-                    colorField.RegisterValueChangedCallback(_ => SaveSettings());
-                    colorField.Q<Label>().style.minWidth = 40;
-                    root.Add(colorField);
-                    
-                    return root;
-                }
+                makeItem = MakeItem,
             };
             listView.reorderable = true;
             
             // List callback
             listView.itemsAdded += indices =>
             {
+                // Initialize added item
                 foreach (var idx in indices)
                 {
-                    // Initialize TagID
-                    settings.m_tagList[idx].TagId = Guid.NewGuid().ToString();
+                    settings.m_tagList[idx].Initialize();
                 }
-
-                SaveSettings();
             };
             
             listView.itemsRemoved += _ =>
@@ -82,14 +64,44 @@ namespace UNote.Editor
             
             rootElement.Add(listView);
             
-            rootElement.Bind(new SerializedObject(settings));
+            rootElement.Bind(serializedObject);
         }
 
+        /// <summary>
+        /// Make each line gui item
+        /// </summary>
+        /// <returns></returns>
+        private BindableElement MakeItem()
+        {
+            BindableElement root = new BindableElement { style = { flexDirection = FlexDirection.Row } };
+
+            TextField textField = new TextField("Tag Name")
+            {
+                bindingPath = "m_tagName",
+                style = { flexGrow = 1 }
+            };
+            textField.isDelayed = true;
+            textField.RegisterValueChangedCallback(_ => SaveSettings());
+            root.Add(textField);
+
+            ColorField colorField = new ColorField("Color")
+            {
+                bindingPath = "m_color",
+                style = { width = 160f }
+            };
+            colorField.RegisterValueChangedCallback(_ =>
+            {
+                SaveSettings();
+            });
+            colorField.Q<Label>().style.minWidth = 40;
+            root.Add(colorField);
+                    
+            return root;
+        }
+        
         private void SaveSettings()
         {
-            UNoteProjectSettings settings = UNoteProjectSettings.instance;
-            EditorUtility.SetDirty(settings);
-            AssetDatabase.SaveAssetIfDirty(settings);
+            UNoteProjectSettings.instance.Save();
             
             // Update const file
             NoteTagConstGenerator.Generate();

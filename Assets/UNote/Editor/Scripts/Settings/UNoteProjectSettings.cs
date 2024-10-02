@@ -10,6 +10,9 @@ namespace UNote.Editor
     public class UNoteProjectSettings : ScriptableSingleton<UNoteProjectSettings>
     {
         public List<UNoteTagData> m_tagList;
+        private SerializedObject m_serializedObject;
+
+        internal SerializedObject SerializedObject => m_serializedObject ?? new SerializedObject(this);
 
         private void OnEnable()
         {

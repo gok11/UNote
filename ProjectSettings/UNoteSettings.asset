@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tagList:
-  - m_tagName: Todo
-    m_color: {r: 0, g: 0, b: 1, a: 1}
-  - m_tagName: Bug
-    m_color: {r: 1, g: 0, b: 0, a: 1}
+  - m_tagId: 31ec0711-8f4f-4116-a2ed-4c35e9ea67d4
+    m_tagName: Todo
+    m_color: {r: 0.1802243, g: 0.1802243, b: 0.8490566, a: 1}
+  - m_tagId: f87a6539-66c4-485a-ade9-8b087cbfcb3f
+    m_tagName: Bug
+    m_color: {r: 0.7264151, g: 0, b: 0, a: 1}
