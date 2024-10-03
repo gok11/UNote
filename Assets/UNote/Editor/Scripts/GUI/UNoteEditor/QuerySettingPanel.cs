@@ -48,17 +48,17 @@ namespace UNote.Editor
             
             // Create note tag field
             int insertIndex = m_noteSort.parent.IndexOf(m_noteSort);
-            m_noteTag = new EnumFlagsField("Note Tag", NoteTags.All);
+            m_noteTag = new EnumFlagsField("Tag", NoteTags.All);
             m_noteSort.parent.Insert(insertIndex, m_noteTag);
             
             SetQuery(noteQuery);
             
             // Set style
-            m_noteType.Q<Label>().style.minWidth = 90;
-            m_noteSort.Q<Label>().style.minWidth = 90;
-            m_noteTag.Q<Label>().style.minWidth = 90;
+            m_noteType.Q<Label>().style.minWidth = 40;
+            m_noteSort.Q<Label>().style.minWidth = 40;
+            m_noteTag.Q<Label>().style.minWidth = 40;
             m_noteTag.Q<Label>().style.fontSize = 11;
-            m_displayArchive.Q<Label>().style.minWidth = 90;
+            m_displayArchive.Q<Label>().style.minWidth = 110;
 
             VisualElement deleteIcon = m_deleteQueryButton.Q("Icon"); 
             deleteIcon.style.backgroundImage = AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("trash.png"));
@@ -126,43 +126,6 @@ namespace UNote.Editor
                 container.Save();
             };
         }
-
-        // private void UpdateQueryTags(NoteTags tags)
-        // {
-        //     List<UNoteTagData> tagDataList = UNoteSetting.TagList;
-        //
-        //     foreach (NoteTags noteTag in Enum.GetValues(typeof(NoteTags)))
-        //     {
-        //         if (noteTag == NoteTags.None || noteTag == NoteTags.All)
-        //         {
-        //             continue;
-        //         }
-        //
-        //         UNoteTagData tagData = tagDataList.Find(t => t.TagName == noteTag.ToString());
-        //         if (tagData == null)
-        //         {
-        //             continue;
-        //         }
-        //             
-        //         bool isOn = (tags & noteTag) != 0;
-        //         if (isOn)
-        //         {
-        //             if (!m_noteQuery.SearchTagList.Contains(tagData.TagId))
-        //             {
-        //                 Debug.Log($"Add: {tagData.TagName}");
-        //                 m_noteQuery.SearchTagList.Add(tagData.TagId);   
-        //             }
-        //         }
-        //         else
-        //         {
-        //             if (m_noteQuery.SearchTagList.Contains(tagData.TagId))
-        //             {
-        //                 Debug.Log($"Remove: {tagData.TagName}");
-        //                 m_noteQuery.SearchTagList.Remove(tagData.TagId);   
-        //             }
-        //         }
-        //     }
-        // }
 
         /// <summary>
         /// Set new query
