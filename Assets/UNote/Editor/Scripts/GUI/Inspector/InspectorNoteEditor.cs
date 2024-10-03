@@ -11,8 +11,6 @@ namespace UNote.Editor
 {
     public sealed class InspectorNoteEditor : VisualElement
     {
-        #region Field
-
         private Foldout m_foldout;
         private Button m_openButton;
         private VisualElement m_content;
@@ -23,10 +21,6 @@ namespace UNote.Editor
         private VisualElement m_footerElem;
 
         private NoteInputField m_noteInputField;
-
-        #endregion // Field
-
-        #region Constructor
 
         public InspectorNoteEditor(Object target)
         {
@@ -102,10 +96,6 @@ namespace UNote.Editor
             EditorUNoteManager.OnNoteAdded += _ => SetupNoteList(noteType, target);
             EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList(noteType, target);
         }
-
-        #endregion // Constructor
-
-        #region Private Method
 
         private NoteType GetTargetNoteType(Object target)
         {
@@ -190,7 +180,5 @@ namespace UNote.Editor
                 }
             }
         }
-        
-        #endregion // Private Method
     }
 }

@@ -12,8 +12,6 @@ namespace UNote.Editor
     /// </summary>
     public partial class EditorUNoteManager
     {
-        #region Field
-
         private static ProjectNoteContainer s_projectNoteInstance;
         
         private List<ProjectNote> m_projectNoteList = new();
@@ -22,12 +20,8 @@ namespace UNote.Editor
         private Dictionary<string, ProjectNote> m_projectNoteDict = new();
         private Dictionary<string, List<ProjectNoteMessage>> m_projectNoteDictByGUID = new();
         
-        #endregion
-        
         internal static IReadOnlyList<ProjectNote> GetProjectNoteAllList() => Instance.m_projectNoteList;
         internal static IReadOnlyList<ProjectNoteMessage> GetProjectNoteMessageAllList() => Instance.m_projectNoteMessageList;
-
-        #region Initialize
 
         private static ProjectNoteContainer GetOwnProjectNoteContainer()
         {
@@ -69,10 +63,6 @@ namespace UNote.Editor
                 Instance.m_projectNoteMessageList.AddRange(tmpContainer.GetProjectMessageList());
             }
         }
-
-        #endregion
-
-        #region Add Note
 
         public static ProjectNote AddNewProjectNote()
         {
@@ -122,10 +112,6 @@ namespace UNote.Editor
             return newNote;
         }
 
-        #endregion
-
-        #region Get Note
-
         public static List<ProjectNoteMessage> GetProjectNoteMessageListByNoteId(string projectNoteId)
         {
             if (Instance.m_projectNoteDictByGUID.TryGetValue(projectNoteId, out var noteMessageList))
@@ -147,10 +133,6 @@ namespace UNote.Editor
             Instance.m_projectNoteDictByGUID.Add(projectNoteId, newList);
             return newList;
         }
-
-        #endregion
-
-        #region Delete Note
 
         private static void DeleteProjectNote(NoteBase note)
         {
@@ -179,10 +161,6 @@ namespace UNote.Editor
             ReloadProjectNotes();
         }
 
-        #endregion
-
-        #region Clear Cache
-
         internal static void ClearProjectNoteCache()
         {
             Instance.m_projectNoteList.Clear();
@@ -190,7 +168,5 @@ namespace UNote.Editor
             Instance.m_projectNoteDict.Clear();
             Instance.m_projectNoteDictByGUID.Clear();
         }
-
-        #endregion
     }
 }

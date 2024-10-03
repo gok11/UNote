@@ -22,6 +22,6 @@
                 <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="-unity-text-align: middle-center; margin-top: 2px;" />
             </ui:VisualElement>
         </ui:ScrollView>
-        <ui:ScrollView name="NoteList" style="flex-grow: 1; flex-basis: 4000px; border-left-color: rgb(87, 87, 87); border-right-color: rgb(87, 87, 87); border-top-color: rgb(87, 87, 87); border-bottom-color: rgb(87, 87, 87); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 1px; margin-right: 2px; margin-bottom: 0; margin-left: 2px; border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px; flex-shrink: 0.1; max-height: none;" />
+        <ui:ScrollView name="NoteList" vertical-scroller-visibility="AlwaysVisible" horizontal-scroller-visibility="AlwaysVisible" style="flex-grow: 1; flex-basis: 4000px; border-left-color: rgb(87, 87, 87); border-right-color: rgb(87, 87, 87); border-top-color: rgb(87, 87, 87); border-bottom-color: rgb(87, 87, 87); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 1px; margin-right: 2px; margin-bottom: 0; margin-left: 2px; border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px; flex-shrink: 0.1; max-height: none;" />
     </ui:VisualElement>
 </ui:UXML>

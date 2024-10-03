@@ -9,13 +9,7 @@ namespace UNote.Editor
 {
     public partial class EditorUNoteManager
     {
-        #region Field
-
         private static FavoriteNoteContainer s_favoriteNoteContainerInstance;
-
-        #endregion // Field
-
-        #region Initialize
 
         private static FavoriteNoteContainer GetOwnFavoriteNoteContainer()
         {
@@ -45,18 +39,10 @@ namespace UNote.Editor
             return s_favoriteNoteContainerInstance;
         }
 
-        #endregion // Initialize
-
-        #region Get
-
         public static IReadOnlyList<string> GetFavoriteNoteList()
         {
             return GetOwnFavoriteNoteContainer().GetFavoriteNoteList();
         }
-
-        #endregion // Get
-
-        #region Add Favorite
 
         public static void AddFavorite(NoteBase note)
         {
@@ -75,10 +61,6 @@ namespace UNote.Editor
             GetOwnFavoriteNoteContainer().Save();
         }
 
-        #endregion // Add Favorite
-
-        #region Delete Favorite
-
         public static void DeleteFavorite(NoteBase note)
         {
             if (note == null)
@@ -95,7 +77,5 @@ namespace UNote.Editor
             favoriteNoteList.Remove(note.NoteId);
             GetOwnFavoriteNoteContainer().Save();
         }
-
-        #endregion // Delete Favorite
     }
 }

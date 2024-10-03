@@ -9,8 +9,6 @@ namespace UNote.Editor
 {
     public class UNoteEditorLeftPane : UNoteEditorPaneBase
     {
-        #region Field
-
         private UNoteEditor m_noteEditor;
         private Button m_noteAddButton;
         private VisualElement m_customQueryElem;
@@ -19,10 +17,6 @@ namespace UNote.Editor
         
         private Dictionary<NoteQuery, VisualElement> m_presetQueryElemDict = new();
         private Dictionary<NoteQuery, VisualElement> m_customQueryElemDict = new();
-
-        #endregion // Field
-
-        #region Constructor
 
         internal UNoteEditorLeftPane(UNoteEditor noteEditor)
         {
@@ -142,10 +136,6 @@ namespace UNote.Editor
             };
         }
 
-        #endregion // Constructor
-
-        #region Internal Method
-
         internal void SetDefaultQuery()
         {
             NoteQuery query = m_presetQueryElemDict.Keys.First();
@@ -198,10 +188,6 @@ namespace UNote.Editor
             }
         }
         
-        #endregion // Internal Method
-
-        #region Private Method
-        
         private void ShowAddWindow()
         {
             if (EditorWindow.HasOpenInstances<NoteAddWindow>())
@@ -212,7 +198,5 @@ namespace UNote.Editor
             NoteAddWindow addWindow = ScriptableObject.CreateInstance<NoteAddWindow>();
             addWindow.ShowUtility();
         }
-
-        #endregion // Private Method
     }
 }

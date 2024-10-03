@@ -6,14 +6,8 @@ namespace UNote.Editor
 {
     public class UNoteEditor : EditorWindow
     {
-        #region Field
-
         [SerializeField] private NoteEditorModel m_model;
-
-        #endregion // Field
-
-        #region Property
-
+        
         internal static UNoteEditorLeftPane LeftPane { get; private set; }
 
         internal static UNoteEditorCenterPane CenterPane { get; private set; }
@@ -22,19 +16,11 @@ namespace UNote.Editor
 
         public NoteEditorModel Model => m_model;
 
-        #endregion // Property
-
-        #region OpenWindow
-
         [MenuItem("UNote/Note Editor")]
         private static void OpenWindow()
         {
             GetWindow<UNoteEditor>("UNote Editor");
         }
-
-        #endregion OpenWindow
-
-        #region Private Method
 
         private void CreateGUI()
         {
@@ -93,7 +79,5 @@ namespace UNote.Editor
                 EditorUNoteManager.SaveAll();
             };
         }
-
-        #endregion // Private Method
     }
 }

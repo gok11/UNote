@@ -5,13 +5,7 @@ namespace UNote.Editor
 {
     public static class StringUtil
     {
-        #region Static Field
-
         private static StringBuilder s_stringBuilder = new StringBuilder();
-
-        #endregion // Static Field
-
-        #region Static Method
 
         public static StringBuilder StringBuilder
         {
@@ -36,7 +30,5 @@ namespace UNote.Editor
         {
             return string.IsNullOrWhiteSpace(str);
         }
-        
-        #endregion // Static Method
     }
 }

@@ -9,13 +9,7 @@ namespace UNote.Editor
 {
     public class NoteAddWindow : EditorWindow
     {
-        #region Field
-
         private VisualElement m_container;
-
-        #endregion // Field
-
-        #region Private Method
 
         private void OnEnable()
         {
@@ -104,9 +98,5 @@ namespace UNote.Editor
             m_container.AddSpacer();
             m_container.Add(addButton);
         }
-
-        #endregion // Private Method
-        
-
     }
 }

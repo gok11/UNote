@@ -5,8 +5,6 @@ namespace UNote.Editor
 {
     public class AssetNotesQuery : PresetQuery
     {
-        #region Constructor
-
         public AssetNotesQuery()
         {
             QueryID = Guid.NewGuid().ToString();
@@ -21,7 +19,5 @@ namespace UNote.Editor
             SearchTags = searchTags;
             DisplayArchive = displayArchive;
         }
-
-        #endregion // Constructor
     }
 }

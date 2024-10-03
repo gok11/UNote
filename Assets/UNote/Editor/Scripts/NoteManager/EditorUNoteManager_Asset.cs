@@ -12,8 +12,6 @@ namespace UNote.Editor
     /// </summary>
     public partial class EditorUNoteManager
     {
-        #region Field
-
         private static AssetNoteContainer s_assetNoteInstance;
         
         private List<AssetNote> m_assetNoteList = new();
@@ -23,13 +21,9 @@ namespace UNote.Editor
 
         private Dictionary<string, List<AssetNote>> m_assetNoteDict = new();
         private Dictionary<string, List<AssetNoteMessage>> m_assetNoteMessageDict = new();
-
-        #endregion // Field
-
+        
         private static IReadOnlyList<AssetNote> GetAssetNoteAllList() => Instance.m_assetNoteList;
         private static IReadOnlyList<AssetNoteMessage> GetAssetNoteMessageAllList() => Instance.m_assetNoteMessageList;
-
-        #region Initialize
 
         private static AssetNoteContainer GetOwnAssetNoteContainer()
         {
@@ -70,11 +64,7 @@ namespace UNote.Editor
                 Instance.m_assetNoteMessageList.AddRange(tmpContainer.GetAssetNoteMessageList());
             }
         }
-
-        #endregion // Initialize
-
-        #region Add Note
-
+        
         public static AssetNote AddNewAssetNote(string guid, string noteContent)
         {
             AssetNoteContainer container = GetOwnAssetNoteContainer();
@@ -121,10 +111,6 @@ namespace UNote.Editor
             
             return newNote;
         }
-
-        #endregion
-
-        #region Get Note
 
         public static List<AssetNote> GetAssetNoteListByGuid(string guid)
         {
@@ -191,10 +177,6 @@ namespace UNote.Editor
             return newList;
         }
 
-        #endregion
-
-        #region Delete Note
-
         private static void DeleteAssetNote(NoteBase note)
         {
             AssetNoteContainer astContainer = GetOwnAssetNoteContainer();
@@ -222,10 +204,6 @@ namespace UNote.Editor
             ReloadAssetNotes();
         }
 
-        #endregion
-        
-        #region Clear Cache
-
         internal static void ClearAssetNoteCache()
         {
             Instance.m_assetNoteList.Clear();
@@ -234,7 +212,5 @@ namespace UNote.Editor
             Instance.m_assetNoteDict.Clear();
             Instance.m_assetNoteMessageDict.Clear();
         }
-        
-        #endregion
     }
 }

@@ -14,25 +14,15 @@ namespace UNote.Editor
     [InitializeOnLoad]
     public static class NoteInjector
     {
-        #region Field
-
         private static FieldInfo s_trackerField = typeof(UnityEditor.Editor)
             .Assembly.GetType("UnityEditor.InspectorWindow")
             .GetField("m_Tracker", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        #endregion // Field
-
-        #region Constructor
 
         static NoteInjector()
         {
             EditorApplication.update -= TryInjectNoteElement;
             EditorApplication.update += TryInjectNoteElement;
         }
-
-        #endregion // Constructor
-
-        #region Private Static Method
 
         private static void TryInjectNoteElement()
         {
@@ -123,7 +113,5 @@ namespace UNote.Editor
                 }
             }
         }
-
-        #endregion // Private Static Method
     }
 }

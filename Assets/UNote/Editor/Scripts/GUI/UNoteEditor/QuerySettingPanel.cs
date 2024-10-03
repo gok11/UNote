@@ -12,8 +12,6 @@ namespace UNote.Editor
     
     public class QuerySettingPanel : VisualElement
     {
-        #region Field
-
         private NoteQuery m_noteQuery;
 
         private TextField m_searchText;
@@ -24,8 +22,6 @@ namespace UNote.Editor
 
         private Button m_saveQueryButton;
         private Button m_deleteQueryButton;
-        
-        #endregion // Field
 
         internal QuerySettingPanel(NoteQuery noteQuery)
         {

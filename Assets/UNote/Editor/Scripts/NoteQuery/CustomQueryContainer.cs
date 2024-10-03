@@ -8,20 +8,12 @@ namespace UNote.Editor
 {
     public class CustomQueryContainer : ScriptableObject
     {
-        #region Field
-
         [SerializeField] private List<NoteQuery> m_noteQueryList = new();
 
         private static CustomQueryContainer s_instance;
-
-        #endregion // Field
-
-        #region Property
-
+        
         internal List<NoteQuery> NoteQueryList => m_noteQueryList;
-
-        #endregion // Property
-
+        
         internal static CustomQueryContainer Get()
         {
             if (s_instance)

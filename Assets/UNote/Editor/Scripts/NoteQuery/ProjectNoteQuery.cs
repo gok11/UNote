@@ -6,8 +6,6 @@ namespace UNote.Editor
     [Serializable]
     public class ProjectNotesQuery : PresetQuery
     {
-        #region Constructor
-
         public ProjectNotesQuery()
         {
             QueryID = Guid.NewGuid().ToString();
@@ -22,7 +20,5 @@ namespace UNote.Editor
             SearchTags = searchTags;
             DisplayArchive = displayArchive;
         }
-
-        #endregion // Constructor
     }
 }

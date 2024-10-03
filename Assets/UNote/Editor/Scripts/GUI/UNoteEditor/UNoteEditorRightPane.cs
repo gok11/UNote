@@ -17,8 +17,6 @@ namespace UNote.Editor
 
     public class UNoteEditorRightPane : UNoteEditorPaneBase
     {
-        #region Field
-
         private UNoteEditor m_noteEditor;
 
         private Label m_noteTitle;
@@ -37,9 +35,6 @@ namespace UNote.Editor
 
         private float m_lastScrollPosition;
 
-        #endregion // Field
-
-        #region Constructor
         internal UNoteEditorRightPane(UNoteEditor noteEditor)
         {
             name = nameof(UNoteEditorRightPane);
@@ -62,9 +57,6 @@ namespace UNote.Editor
 
             EditorApplication.delayCall += Initialize;
         }
-        #endregion // Constructor
-
-        #region Public Method
 
         public void EnableChangeTitleMode()
         {
@@ -126,10 +118,6 @@ namespace UNote.Editor
                 }
             }
         }        
-
-        #endregion // Public Method
-
-        #region Private Method
 
         private void Initialize()
         {
@@ -324,10 +312,6 @@ namespace UNote.Editor
             }
         }
 
-        #endregion // Private Method
-
-        #region Undo
-
         internal override void OnUndoRedo(string undoName)
         {
             if (undoName.Contains("UNote Change Project Note Title"))
@@ -348,8 +332,6 @@ namespace UNote.Editor
             
             SetupNoteList();
         }
-
-        #endregion // Undo
         
     }
 }

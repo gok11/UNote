@@ -10,8 +10,6 @@ namespace UNote.Editor
 {
     public class UNoteEditorCenterPane : UNoteEditorPaneBase
     {
-        #region Field
-
         private UNoteEditor m_noteEditor;
 
         private Label m_noteQueryLabel;
@@ -20,10 +18,6 @@ namespace UNote.Editor
         private QuerySettingPanel m_querySettingPanel;
         private Button m_openSettingPanelButton;
         private ScrollView m_noteScroll;
-
-        #endregion // Field
-
-        #region Constructor
 
         internal UNoteEditorCenterPane(UNoteEditor noteEditor)
         {
@@ -114,10 +108,6 @@ namespace UNote.Editor
             };
             EditorUNoteManager.OnNoteFavoriteChanged += _ => SetupListItems();
         }
-
-        #endregion // Constructor
-
-        #region Internal Method
 
         internal void EnableChangeQueryNameMode()
         {
@@ -226,10 +216,6 @@ namespace UNote.Editor
             SetupListItems();
         }
 
-        #endregion
-
-        #region Private Method
-
         private void SetNameGUIEditMode(bool enableEdit)
         {
             if (enableEdit)
@@ -259,7 +245,5 @@ namespace UNote.Editor
                 item.SetBackgroundColor(item.BindNote == EditorUNoteManager.CurrentNote);
             }
         }
-        
-        #endregion // Private Method
     }
 }

@@ -8,7 +8,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="Content" style="flex-grow: 1; margin-top: 1px;">
             <ui:VisualElement name="NoteListBorder" style="flex-grow: 1; margin-right: 2px; margin-left: 18px; border-left-color: rgb(87, 87, 87); border-right-color: rgb(87, 87, 87); border-top-color: rgb(87, 87, 87); border-bottom-color: rgb(87, 87, 87); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; max-height: 200px; min-height: 0; display: none;">
-                <ui:ScrollView name="NoteList" style="margin-left: 0; max-height: none; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+                <ui:ScrollView name="NoteList" vertical-scroller-visibility="AlwaysVisible" style="margin-left: 0; max-height: none; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Footer" style="flex-grow: 1; margin-top: 0; margin-right: -16px; margin-left: -16px; border-bottom-color: rgb(25, 25, 25); border-bottom-width: 2px; margin-bottom: 0; padding-bottom: 0; border-top-width: 0; border-right-width: 0; border-left-width: 0;" />

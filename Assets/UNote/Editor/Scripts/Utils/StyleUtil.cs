@@ -6,8 +6,6 @@ namespace UNote.Editor
 {
     public static class StyleUtil
     {
-        #region Const
-
         public static readonly Color UnselectColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
         public static readonly Color SelectColor = new Color(0.1725f, 0.3647f, 0.5294f, 1.0f);
         public static readonly Color GrayColor = new Color(0.7f, 0.7f, 0.7f);
@@ -15,23 +13,13 @@ namespace UNote.Editor
         public static readonly Color WhiteTextColor = new Color(0.8f, 0.8f, 0.8f);
         public static readonly Color TodoInitColor = new Color(0.49f, 0.81f, 1.0f);
         public static readonly Color BugInitColor = new Color(0.82f, 0.1f, 0.12f);
-
-        #endregion // Const
         
-        #region Field
-
         private static Texture2D s_archiveIcon;
         private static Texture2D s_favoriteIcon;
-
-        #endregion // Field
-
-        #region Property
-
+        
         public static Texture2D ArchiveIcon => s_archiveIcon;
         public static Texture2D FavoriteIcon => s_favoriteIcon;
-
-        #endregion // Property
-
+        
         static StyleUtil()
         {
             s_archiveIcon = EditorGUIUtility.IconContent("d_Package Manager").image as Texture2D;

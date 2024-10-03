@@ -9,14 +9,8 @@ namespace UNote.Editor
     [Serializable]
     public class AssetNote : RootNoteBase
     {
-        #region Field
-
         [SerializeField] private string m_bindAssetId;
-
-        #endregion // Field
         
-        #region Property
-
         public override NoteType NoteType => NoteType.Asset;
 
         public override string NoteName
@@ -33,7 +27,5 @@ namespace UNote.Editor
             get => m_bindAssetId;
             set => m_bindAssetId = value;
         }
-
-        #endregion // Property
     }
 }

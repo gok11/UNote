@@ -6,14 +6,8 @@ namespace UNote.Editor
 {
     public class ProjectBrowserDecorator
     {
-        #region Const
-        
         private const string NoteIconGUID = "1c6c4635976f8694bb0178d15ed89627";
         
-        #endregion // Const
-
-        #region Property
-
         private static Texture2D NoteIcon
         {
             get
@@ -30,8 +24,6 @@ namespace UNote.Editor
         }
 
         private static Texture2D s_noteIcon;
-
-        #endregion // Property
         
         [InitializeOnLoadMethod]
         private static void RegisterCallback()

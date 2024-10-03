@@ -8,8 +8,6 @@ namespace UNote.Editor
     [Serializable]
     public static class UNoteSetting
     {
-        #region Property
-
         public static string UserName => UNotePreferences.instance.m_userName;
 
         public static bool InspectorFoldoutOpened
@@ -26,7 +24,5 @@ namespace UNote.Editor
             UNotePreferences.instance.m_attachmentImageMaxSize;
 
         public static List<UNoteTagData> TagList => UNoteProjectSettings.instance.m_tagList;
-
-        #endregion // Property
     }
 }

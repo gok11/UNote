@@ -13,28 +13,14 @@ namespace UNote.Editor
 {
     internal static class PathUtil
     {
-        #region Field
-
         private static bool s_initialized = false;
         private static bool s_isInstalledAsPackage = false;
 
-        #endregion // Field
-
-        #region Const
-
         private const string PackageIdentity = "com.mandarin-box.unote";
-
-        #endregion // Const
-
-        #region Property
-
+        
         internal static bool Initialized => s_initialized;
 
         internal static bool IsInstalledAsPackage => s_initialized && s_isInstalledAsPackage;
-
-        #endregion // Property
-
-        #region Constructor
 
         [InitializeOnLoadMethod]
         internal static void Initialize()
@@ -60,10 +46,6 @@ namespace UNote.Editor
                 s_initialized = true;
             }
         }
-
-        #endregion // Constructor
-
-        #region Function
 
         internal static string GetRootPath()
         {
@@ -92,7 +74,5 @@ namespace UNote.Editor
             string fileName = $"{UNoteSetting.UserName}_{nowStr}.png";
             return Path.Combine(folder, fileName).FullPathToAssetPath();
         }
-
-        #endregion // Function
     }
 }

@@ -14,8 +14,6 @@ namespace UNote.Editor
     [Serializable]
     public partial class EditorUNoteManager
     {
-        #region Field
-
         private NoteType m_currentNoteType = NoteType.Project;
         private NoteBase m_currentNote;
         
@@ -49,11 +47,7 @@ namespace UNote.Editor
 
 
         private static EditorUNoteManager s_instance;
-
-        #endregion // Field
-
-        #region Property
-
+        
         private static EditorUNoteManager Instance => s_instance ??= new EditorUNoteManager();
 
         public static NoteType CurrentNoteType => Instance.m_currentNoteType;
@@ -94,11 +88,7 @@ namespace UNote.Editor
         }
 
         private static string NoteAssetDirectory => Path.Combine("Assets", "UNote", "NoteAssets");
-
-        #endregion // Property
-
-        #region Initialize
-
+        
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
@@ -113,10 +103,6 @@ namespace UNote.Editor
                 ReloadAssetNotes();
             };
         }
-
-        #endregion // Initialize
-
-        #region Public Method
 
         public static void SelectCategory(NoteType noteType)
         {
@@ -420,10 +406,7 @@ namespace UNote.Editor
             GetOwnAssetNoteContainer().Save();
             GetOwnFavoriteNoteContainer().Save();
         }
-        #endregion // Public Method
-
-        #region Private Method
-
+        
         /// <summary>
         /// Generate unique note name for specified note type
         /// </summary>
@@ -479,7 +462,5 @@ namespace UNote.Editor
                     throw new NotImplementedException();
             }
         }
-        
-        #endregion // Private Method
     }
 }
