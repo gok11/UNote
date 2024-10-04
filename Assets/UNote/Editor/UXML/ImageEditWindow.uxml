@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Window" style="flex-grow: 1; flex-direction: row;">
+        <ui:VisualElement name="EditPane" style="flex-grow: 1; flex-shrink: 0; align-items: center; background-color: rgb(32, 32, 32);">
+            <ui:VisualElement name="Display" style="flex-grow: 1; flex-direction: row; align-items: center;">
+                <ui:VisualElement name="Target" style="flex-grow: 1;">
+                    <ui:VisualElement name="Canvas" style="flex-grow: 1;">
+                        <ui:VisualElement name="PaintLayer" style="flex-grow: 1;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="SettingPane" style="flex-grow: 0; width: 200px; min-width: auto; border-left-color: rgb(37, 37, 37); border-left-width: 1px;">
+            <ui:SliderInt label="Brush Size" high-value="10" low-value="1" page-size="0" name="BrushSize" binding-path="m_brushSize" />
+            <ui:VisualElement name="ColorFieldContainer" style="flex-grow: 0;" />
+            <ui:VisualElement name="Spacing" style="flex-grow: 1; align-items: stretch; align-self: stretch; height: 2000px;" />
+            <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="justify-content: flex-start; align-self: auto;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

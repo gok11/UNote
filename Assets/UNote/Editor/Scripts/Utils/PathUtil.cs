@@ -69,7 +69,7 @@ namespace UNote.Editor
 
         internal static string GetScreenshotSavePath()
         {
-            string folder = "Assets/UNote/NoteAssets/ScreenShots/";
+            string folder = "Assets/UNote/NoteAssets/Screenshots/";
             string nowStr = DateTime.Now.ToString("s").Replace(":", "_").Replace("-", "_");
             string fileName = $"{UNoteSetting.UserName}_{nowStr}.png";
             return Path.Combine(folder, fileName).FullPathToAssetPath();

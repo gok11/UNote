@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.IO;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -291,6 +292,27 @@ namespace UNote.Editor
                             VisualElement texElem = new FlexibleImageElem(tex, this);
                             texElem.style.SetMargin(2, 0, 2, 0);
                             m_contents.Add(texElem);
+
+                            // Add edit button if this is owned screenshot
+                            if (m_note.Author == UNoteSetting.UserName)
+                            {
+                                if (Directory.GetParent(path)!.Name == "Screenshots")
+                                {
+                                    VisualElement editButton = CreateEditButton(path);
+                                    editButton.visible = false;
+                                    texElem.Add(editButton);
+                            
+                                    texElem.RegisterCallback<MouseEnterEvent>(_ =>
+                                    {
+                                        editButton.visible = true;
+                                    });
+                            
+                                    texElem.RegisterCallback<MouseLeaveEvent>(_ =>
+                                    {
+                                        editButton.visible = false;
+                                    });      
+                                }
+                            }
                         }
                         
                         if (!restStr.IsNullOrWhiteSpace())
@@ -313,6 +335,30 @@ namespace UNote.Editor
             }
         }
 
+        private VisualElement CreateEditButton(string texPath)
+        {
+            Button editButton = new Button();
+            editButton.name = "EditButton";
+
+            editButton.style.width = editButton.style.height = 20f;
+            editButton.style.SetPadding(2);
+            editButton.style.alignSelf = Align.FlexEnd;
+
+            VisualElement icon = new VisualElement();
+            icon.style.flexGrow = 1;
+            icon.style.backgroundImage =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("brush.png"));
+            icon.style.unityBackgroundImageTintColor = StyleUtil.GrayColor;
+            editButton.Add(icon);
+                            
+            editButton.clicked += () =>
+            {
+                ImageEditWindow.OpenWithTexture(texPath);
+            };
+
+            return editButton;
+        }
+        
         private string CreateEditedText() => "<size=10><color=#999999> (edited)</color></size>";
 
         private Label CreateEditedTextElem() => new(CreateEditedText());

@@ -7,6 +7,7 @@ namespace UNote.Editor
     ///////////////////////////////////////////////////////
     public static class UxmlPath
     {
+        public static readonly string ImageEditWindow = PathUtil.GetUxmlPath("ImageEditWindow.uxml");
         public static readonly string InspectorNoteEditor = PathUtil.GetUxmlPath("InspectorNoteEditor.uxml");
         public static readonly string NoteContent = PathUtil.GetUxmlPath("NoteContent.uxml");
         public static readonly string NoteEditorCenterPane = PathUtil.GetUxmlPath("NoteEditorCenterPane.uxml");
