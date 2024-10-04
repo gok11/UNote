@@ -83,7 +83,8 @@ namespace UNote.Editor
                         default:
                             throw new NotImplementedException();
                     }
-                    
+
+                    UNoteSetting.LastSelectedQuery = null;
                     EditorUNoteManager.SetNoteQuery(query);
                     SelectQueryElem(query);
                     evt.StopPropagation();

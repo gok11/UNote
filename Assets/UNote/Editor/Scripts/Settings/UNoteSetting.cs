@@ -41,7 +41,8 @@ namespace UNote.Editor
             set
             {
                 s_lastSelectedQuery = value;
-                EditorUserSettings.SetConfigValue(LastSelectedQueryKey, value?.QueryID);
+                string queryId = value != null ? value.QueryID : "";
+                EditorUserSettings.SetConfigValue(LastSelectedQueryKey, queryId);
             }
         }
     }
