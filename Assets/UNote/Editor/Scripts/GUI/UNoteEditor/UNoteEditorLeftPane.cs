@@ -54,13 +54,10 @@ namespace UNote.Editor
             VisualElement projectNoteElem = categoryContainer.Q("ProjectNoteElem");
             VisualElement assetNoteElem = categoryContainer.Q("AssetNoteElem");
             
-            AllNotesQuery initQuery = new AllNotesQuery();
-            m_presetQueryElemDict.Add(initQuery, allNoteElem);
+            AllNotesQuery allNoteQuery = new AllNotesQuery();
+            m_presetQueryElemDict.Add(allNoteQuery, allNoteElem);
             m_presetQueryElemDict.Add(new ProjectNotesQuery(), projectNoteElem);
             m_presetQueryElemDict.Add(new AssetNotesQuery(), assetNoteElem);
-
-            EditorUNoteManager.SetNoteQuery(initQuery);
-            SelectQueryElem(initQuery);
 
             // Register select event
             foreach (var pair in m_presetQueryElemDict)
@@ -97,6 +94,23 @@ namespace UNote.Editor
             Button addQueryButton = paneContainer.Q<Button>("AddQueryButton");
             
             LoadCustomQuery();
+            
+            // Select last selected query
+            NoteQuery initQuery = allNoteQuery;
+            
+            NoteQuery lastSelectedQuery = UNoteSetting.LastSelectedQuery;
+            if (lastSelectedQuery != null)
+            {
+                string queryId = lastSelectedQuery.QueryID;
+                NoteQuery cloneQuery = m_customQueryElemDict.Keys.FirstOrDefault(t => t.QueryID == queryId);
+                if (cloneQuery != null)
+                {
+                    initQuery = cloneQuery;
+                }
+            }
+
+            EditorUNoteManager.SetNoteQuery(initQuery);
+            SelectQueryElem(initQuery);
 
             addQueryButton.clicked += () =>
             {

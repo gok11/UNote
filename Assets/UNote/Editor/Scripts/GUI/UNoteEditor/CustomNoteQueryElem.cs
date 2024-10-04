@@ -33,6 +33,8 @@ namespace UNote.Editor
                 {
                     EditorUNoteManager.SetNoteQuery(m_noteQuery);
                     leftPane.SelectQueryElem(m_noteQuery);
+                    
+                    UNoteSetting.LastSelectedQuery = m_noteQuery;
                 }
                 
                 switch (evt.button)

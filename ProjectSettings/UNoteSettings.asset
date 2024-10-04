@@ -15,7 +15,7 @@ MonoBehaviour:
   m_tagList:
   - m_tagId: 31ec0711-8f4f-4116-a2ed-4c35e9ea67d4
     m_tagName: Todo
-    m_color: {r: 0, g: 0.48650703, b: 0.8156863, a: 1}
+    m_color: {r: 0, g: 0.43305507, b: 0.7264151, a: 1}
   - m_tagId: f87a6539-66c4-485a-ade9-8b087cbfcb3f
     m_tagName: Bug
-    m_color: {r: 0.82199997, g: 0.09596953, b: 0.12517758, a: 1}
+    m_color: {r: 0.72300005, g: 0.08262857, b: 0.11017141, a: 1}

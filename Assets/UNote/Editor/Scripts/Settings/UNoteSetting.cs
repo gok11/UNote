@@ -20,9 +20,29 @@ namespace UNote.Editor
             }
         }
 
-        public static Vector2 AttachmentImageMaxSize =>
-            UNotePreferences.instance.m_attachmentImageMaxSize;
-
         public static List<UNoteTagData> TagList => UNoteProjectSettings.instance.m_tagList;
+
+        private const string LastSelectedQueryKey = "UNote.LastSelectedQuery";
+        private static NoteQuery s_lastSelectedQuery;
+        
+        public static NoteQuery LastSelectedQuery
+        {
+            get
+            {
+                if (s_lastSelectedQuery != null)
+                {
+                    return s_lastSelectedQuery;
+                }
+                
+                string queryId = EditorUserSettings.GetConfigValue(LastSelectedQueryKey);
+                NoteQuery noteQuery = CustomQueryContainer.Get().NoteQueryList.Find(t => t.QueryID == queryId);
+                return noteQuery;
+            }
+            set
+            {
+                s_lastSelectedQuery = value;
+                EditorUserSettings.SetConfigValue(LastSelectedQueryKey, value?.QueryID);
+            }
+        }
     }
 }
