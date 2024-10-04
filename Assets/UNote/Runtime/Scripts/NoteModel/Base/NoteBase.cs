@@ -7,8 +7,6 @@ namespace UNote.Runtime
     [Serializable]
     public abstract class NoteBase
     {
-        #region Field
-
         [SerializeField]
         protected string m_noteId;
 
@@ -26,10 +24,6 @@ namespace UNote.Runtime
 
         [SerializeField]
         protected bool m_archived;
-
-        #endregion // Field
-
-        #region Property
 
         public abstract NoteType NoteType { get; }
 
@@ -70,16 +64,10 @@ namespace UNote.Runtime
             set => m_archived = value;
         }
 
-        #endregion // Property
-
-        #region Contructor
-
         protected NoteBase()
         {
             m_noteId = Guid.NewGuid().ToString();
             m_createdDate = m_updatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
         }
-
-        #endregion
     }
 }

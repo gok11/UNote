@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UNote.Editor
@@ -8,6 +9,12 @@ namespace UNote.Editor
     public static class NoteTagsUtl
     {
         private static Dictionary<NoteTags, string> tagIdDict;
+        private static Dictionary<NoteTags, Color> tagColorDict;
+        
+        internal static readonly NoteTags[] ValidTags = Enum.GetValues(typeof(NoteTags))
+            .Cast<NoteTags>()
+            .Where(t => t != NoteTags.None && t != NoteTags.All)
+            .ToArray();
         
         public static string ToNoteId(this NoteTags tags)
         {
@@ -20,13 +27,8 @@ namespace UNote.Editor
 
             List<UNoteTagData> tagList = UNoteSetting.TagList;
             
-            foreach (NoteTags tag in Enum.GetValues(typeof(NoteTags)))
+            foreach (NoteTags tag in ValidTags)
             {
-                if (tag == NoteTags.All || tag == NoteTags.None)
-                {
-                    continue;
-                }
-
                 UNoteTagData tagData = tagList.Find(t => t.TagName == tag.ToString());
                 if (tagData == null)
                 {
@@ -37,6 +39,31 @@ namespace UNote.Editor
             }
 
             return tagIdDict[tags];
+        }
+        
+        public static Color ToColor(this NoteTags tags)
+        {
+            if (tagColorDict != null)
+            {
+                return tagColorDict[tags];
+            }
+
+            tagColorDict = new();
+
+            List<UNoteTagData> tagList = UNoteSetting.TagList;
+            
+            foreach (NoteTags tag in ValidTags)
+            {
+                UNoteTagData tagData = tagList.Find(t => t.TagName == tag.ToString());
+                if (tagData == null)
+                {
+                    continue;
+                }
+                
+                tagColorDict.Add(tag, tagData.Color);
+            }
+
+            return tagColorDict[tags];
         }
     }
 }

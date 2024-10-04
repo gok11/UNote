@@ -5,16 +5,10 @@ namespace UNote.Runtime
 {
     public abstract class NoteMessageBase : NoteBase
     {
-        #region Field
-
         [SerializeField] private string m_referenceNoteId;
 
         [SerializeField] private List<string> noteTagDataIdList;
-
-        #endregion // Field
-
-        #region Property
-
+        
         public string ReferenceNoteId
         {
             get => m_referenceNoteId;
@@ -26,7 +20,5 @@ namespace UNote.Runtime
             get => noteTagDataIdList;
             set => noteTagDataIdList = value;
         }
-
-        #endregion // Property
     }
 }

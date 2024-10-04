@@ -138,7 +138,7 @@ namespace UNote.Editor
         /// </summary>
         public static IEnumerable<NoteBase> GetFilteredNotes(NoteQuery noteQuery)
         {
-            List<NoteBase> noteList = new List<NoteBase>();
+            List<RootNoteBase> noteList = new List<RootNoteBase>();
 
             switch (noteQuery.NoteTypeFilter)
             {
@@ -156,7 +156,7 @@ namespace UNote.Editor
                     break;
             }
 
-            IEnumerable<NoteBase> notes = noteList;
+            IEnumerable<RootNoteBase> notes = noteList;
 
             // Filter by archive state
             if (!noteQuery.DisplayArchive)
@@ -184,11 +184,12 @@ namespace UNote.Editor
 
         /// <summary>
         /// Check messages has specified tag
+        /// tags must be specified single tag
         /// </summary>
-        private static bool CheckTagInMessages(NoteBase note, NoteTags tags)
+        internal static bool CheckTagInMessages(NoteBase note, NoteTags tags)
         {
-            NoteTags[] filterTags = Enum.GetValues(typeof(NoteTags)).Cast<NoteTags>()
-                .Where(t => t != NoteTags.All && t != NoteTags.None && (t & tags) != 0)
+            NoteTags[] filterTags = NoteTagsUtl.ValidTags
+                .Where(t => (t & tags) != 0)
                 .ToArray();
             
             switch (note.NoteType)

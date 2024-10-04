@@ -4,11 +4,7 @@ namespace UNote.Runtime
 {
     public abstract class RootNoteBase : NoteBase
     {
-        #region Field
-
         [SerializeField] private string m_noteName;
-
-        #endregion
         
         public override NoteType NoteType => NoteType.Project;
         

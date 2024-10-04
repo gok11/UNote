@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace UNote.Editor
 
         private VisualElement m_archvieLabel;
         private VisualElement m_favoriteLabel;
+        private VisualElement m_tagLine;
         private Label m_nameLabel;
         private Label m_noteContentLabel;
         private Button m_contextButton;
@@ -30,6 +32,7 @@ namespace UNote.Editor
 
             m_archvieLabel = template.Q<VisualElement>("ArchiveLabel");
             m_favoriteLabel = template.Q<VisualElement>("FavoriteLabel");
+            m_tagLine = template.Q("TagLine");
             m_nameLabel = template.Q<Label>("Name");
             m_noteContentLabel = template.Q<Label>("ContentLine");
             m_contextButton = template.Q<Button>("ContextButton");
@@ -77,9 +80,20 @@ namespace UNote.Editor
 
             m_nameLabel.text = note.NoteName;
 
+            // Note tag label
+            foreach (var tag in NoteTagsUtl.ValidTags)
+            {
+                if (EditorUNoteManager.CheckTagInMessages(note, tag))
+                {
+                    m_tagLine.Add(CreateTagElem(tag));
+                }
+            }
+            
+            // Icon
             m_favoriteLabel.style.display = note.IsFavorite() ? DisplayStyle.Flex : DisplayStyle.None;
             m_archvieLabel.style.display = note.Archived ? DisplayStyle.Flex : DisplayStyle.None;
 
+            // Label
             switch (note.NoteType)
             {
                 case NoteType.Project:
@@ -150,7 +164,18 @@ namespace UNote.Editor
             m_contextButton.clicked += ShowContextMenu;
         }
 
-        public void SetBackgroundColor(bool select)
+        private VisualElement CreateTagElem(NoteTags tag)
+        {
+            VisualElement tagElem = new VisualElement();
+            tagElem.style.backgroundImage = Texture2D.whiteTexture;
+            tagElem.style.unityBackgroundImageTintColor = tag.ToColor();
+            tagElem.style.width = 20;
+            tagElem.style.height = 1;
+            tagElem.style.marginRight = 2;
+            return tagElem;
+        }
+        
+        internal void SetBackgroundColor(bool select)
         {
             m_noteListItem.style.backgroundColor = select ?
                 StyleUtil.SelectColor : StyleUtil.UnselectColor;
