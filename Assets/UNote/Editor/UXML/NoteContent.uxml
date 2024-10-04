@@ -10,6 +10,12 @@
         </ui:VisualElement>
         <ui:VisualElement name="Contents" style="flex-grow: 1; margin-top: 0; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; padding-top: 3px; padding-right: 4px; padding-bottom: 3px; padding-left: 8px; border-top-color: rgb(64, 64, 64); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;" />
         <ui:VisualElement name="EditNoteElem" style="flex-grow: 1; display: none;">
+            <ui:VisualElement name="TagArea" style="flex-grow: 1; flex-direction: row; margin-bottom: 2px;">
+                <ui:Button text="&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddTagButton" style="font-size: 12px; height: 16px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-shrink: 1; margin-top: 2px; margin-right: 4px; margin-bottom: 0; margin-left: 4px; width: 24px;">
+                    <ui:VisualElement name="Icon" style="flex-grow: 1; margin-top: 1px; margin-right: 4px; margin-bottom: 1px; margin-left: 4px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                </ui:Button>
+                <ui:VisualElement name="Tags" style="flex-grow: 1; flex-direction: row;" />
+            </ui:VisualElement>
             <ui:TextField picking-mode="Ignore" name="EditField" multiline="true" style="font-size: 12px; flex-wrap: nowrap; white-space: normal;" />
             <ui:VisualElement name="FooterElem" style="flex-grow: 1; flex-direction: row; display: flex;">
                 <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddButton" />

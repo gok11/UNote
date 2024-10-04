@@ -85,7 +85,7 @@ namespace UNote.Editor
             {
                 if (EditorUNoteManager.CheckTagInMessages(note, tag))
                 {
-                    m_tagLine.Add(CreateTagElem(tag));
+                    m_tagLine.Add(CreateTagLineElem(tag));
                 }
             }
             
@@ -164,7 +164,10 @@ namespace UNote.Editor
             m_contextButton.clicked += ShowContextMenu;
         }
 
-        private VisualElement CreateTagElem(NoteTags tag)
+        /// <summary>
+        /// Create tag line visual element
+        /// </summary>
+        private VisualElement CreateTagLineElem(NoteTags tag)
         {
             VisualElement tagElem = new VisualElement();
             tagElem.style.backgroundImage = Texture2D.whiteTexture;

@@ -57,5 +57,40 @@ namespace UNote.Editor
                 dropAreaElement.StretchToParentSize();
             });
         }
+        
+        internal static void ShowAddTagMenu(VisualElement container)
+        {
+            VisualElement tags = container.Q("Tags");
+
+            List<UNoteTag> tempList = new();
+            tags.Query<UNoteTag>().ToList(tempList);
+            
+            GenericMenu menu = new GenericMenu();
+
+            List<UNoteTagData> tagList = UNoteSetting.TagList;
+            foreach (var tagData in tagList)
+            {
+                // Overlap check
+                if (tempList.Find(t => t.TagId == tagData.TagId) != null)
+                {
+                    continue;
+                }
+                
+                // Add item
+                menu.AddItem(new GUIContent(tagData.TagName), false, () =>
+                {
+                    tags.Add(new UNoteTag(tagData.TagId, true));
+                });
+            }
+            
+            menu.AddSeparator("");
+            
+            menu.AddItem(new GUIContent("Open Tag Setting"), false, ()=>
+            {
+                SettingsService.OpenProjectSettings("Project/UNote");
+            });
+            
+            menu.ShowAsContext();
+        }
     }
 }

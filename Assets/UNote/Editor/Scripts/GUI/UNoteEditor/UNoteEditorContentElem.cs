@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using UnityEditor;
@@ -12,9 +13,10 @@ namespace UNote.Editor
 {
     public class UNoteEditorContentElem : VisualElement
     {
-        private NoteBase m_note;
+        private NoteMessageBase m_message;
 
         private VisualElement m_noteTag;
+        private Button m_addTagButton;
         private VisualElement m_contents;
         private VisualElement m_editNoteElem;
         private Button m_contextButton;
@@ -23,9 +25,9 @@ namespace UNote.Editor
         private Button m_addButton;
         private Button m_sendButton;
 
-        internal UNoteEditorContentElem(NoteBase note)
+        internal UNoteEditorContentElem(NoteMessageBase message)
         {
-            m_note = note;
+            m_message = message;
             
             VisualTreeAsset noteContentTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteContent
@@ -35,6 +37,7 @@ namespace UNote.Editor
             contentContainer.Add(noteElement);
 
             m_noteTag = noteElement.Q("NoteTag");
+            m_addTagButton = noteElement.Q<Button>("AddTagButton");
             m_contents = noteElement.Q("Contents");
             m_editNoteElem = noteElement.Q<VisualElement>("EditNoteElem");
             m_contextButton = noteElement.Q<Button>("ContextButton");
@@ -43,23 +46,31 @@ namespace UNote.Editor
             m_addButton = noteElement.Q<Button>("AddButton");
             m_sendButton = noteElement.Q<Button>("SendButton");
             
-            noteElement.Q<Label>("AuthorLabel").text = note.Author;
-            noteElement.Q<Label>("CreatedDate").text = note.CreatedDate;
+            noteElement.Q<Label>("AuthorLabel").text = message.Author;
+            noteElement.Q<Label>("CreatedDate").text = message.CreatedDate;
             
             // Set style
             m_contents.style.SetPadding(3, 4, 3, 8);
             m_contents.style.whiteSpace = WhiteSpace.Normal;
             
+            m_addTagButton.Q("Icon").style.backgroundImage 
+                = AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("tag.png"));
+            
             // Load tags
-            LoadTags();
+            LoadTags(m_noteTag);
             
             // Parse text and insert elem
-            ParseTextElements(note.NoteContent);
+            ParseTextElements(message.NoteContent);
 
-            // register context button event
+            // register button event
+            m_addTagButton.clicked += () =>
+            {
+                VisualElementUtil.ShowAddTagMenu(m_editNoteElem);
+            };
+            
             m_contextButton.clicked += () =>
             {
-                ShowContextMenu(note);
+                ShowContextMenu(message);
             };
             
             // edit event
@@ -82,7 +93,7 @@ namespace UNote.Editor
             VisualElementUtil.CreateDropAreaElem(m_editField);
 
             // show menu if this is an own note
-            bool isOwnNote = note.Author == UNoteSetting.UserName;
+            bool isOwnNote = message.Author == UNoteSetting.UserName;
             
             if (isOwnNote)
             {
@@ -100,7 +111,7 @@ namespace UNote.Editor
                 {
                     if (evt.button == 1)
                     {
-                        ShowContextMenu(note);
+                        ShowContextMenu(message);
                     }
                 });
             }
@@ -128,56 +139,68 @@ namespace UNote.Editor
             menu.ShowAsContext();
         }
 
-        private void LoadTags()
+        private void LoadTags(VisualElement container, bool allowTagRemove = false)
         {
-            VisualElement tags = m_noteTag.Q("Tags");
+            VisualElement tags = container.Q("Tags");
             tags.Clear();
-            
-            NoteMessageBase message = m_note as NoteMessageBase;
-            if (message == null)
-            {
-                return;
-            }
 
-            foreach (var id in message.NoteTagDataIdList)
+            foreach (var id in m_message.NoteTagDataIdList)
             {
-                tags.Add(new UNoteTag(id, false));
+                tags.Add(new UNoteTag(id, allowTagRemove));
             }
         }
         
         private void EnableEditText()
         {
+            m_noteTag.style.display = DisplayStyle.None;
             m_contents.style.display = DisplayStyle.None;
             m_editNoteElem.style.display = DisplayStyle.Flex;
             m_contextButton.style.display = DisplayStyle.None;
 
-            m_editField.value = m_note.NoteContent;
+            LoadTags(m_editNoteElem, true);
+            
+            m_editField.value = m_message.NoteContent;
             m_editField.Focus();
         }
 
         private void QuitEditText()
         {
+            m_noteTag.style.display = DisplayStyle.Flex;
             m_contents.style.display = DisplayStyle.Flex;
             m_editNoteElem.style.display = DisplayStyle.None;
             m_contextButton.style.display = DisplayStyle.Flex;
+            
+            LoadTags(m_noteTag);
         }
 
         private void FinishEditText()
         {
+            m_noteTag.style.display = DisplayStyle.Flex;
             m_contents.style.display = DisplayStyle.Flex;
             m_editNoteElem.style.display = DisplayStyle.None;
             m_contextButton.style.display = DisplayStyle.Flex;
-
-            if (m_note.NoteContent != m_editField.value)
+            
+            // Update tag
+            List<string> tagIdList = new List<string>();
+            foreach (var noteTag in m_editNoteElem.Q("Tags").Query<UNoteTag>().Build())
             {
-                m_note.NoteContent = m_editField.value;
+                tagIdList.Add(noteTag.TagId);
+            }
+            m_message.NoteTagDataIdList = tagIdList;
+            
+            LoadTags(m_noteTag);
+
+            // Update text
+            if (m_message.NoteContent != m_editField.value)
+            {
+                m_message.NoteContent = m_editField.value;
 
                 // Reset field
                 m_contents.Clear();
-                ParseTextElements(m_note.NoteContent);
+                ParseTextElements(m_message.NoteContent);
                 
                 // Update note last updated date
-                m_note.UpdatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+                m_message.UpdatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
                 EditorUNoteManager.SaveAll();
                     
                 UNoteEditor.CenterPane?.SetupListItems();
@@ -294,7 +317,7 @@ namespace UNote.Editor
                             m_contents.Add(texElem);
 
                             // Add edit button if this is owned screenshot
-                            if (m_note.Author == UNoteSetting.UserName)
+                            if (m_message.Author == UNoteSetting.UserName)
                             {
                                 if (Directory.GetParent(path)!.Name == "Screenshots")
                                 {

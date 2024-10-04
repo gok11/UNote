@@ -58,7 +58,10 @@ namespace UNote.Editor
             VisualElementUtil.CreateDropAreaElem(m_inputText);
             
             // show add menu when button clicked
-            m_addTagButton.clicked += ShowAddTagMenu;
+            m_addTagButton.clicked += () =>
+            {
+                VisualElementUtil.ShowAddTagMenu(contentContainer);
+            };
             m_addButton.clicked += ShowAddMenu;
             
             // create note when button clicked
@@ -110,41 +113,6 @@ namespace UNote.Editor
             {
                 SendNote();
             }
-        }
-
-        void ShowAddTagMenu()
-        {
-            VisualElement tags = contentContainer.Q("Tags");
-
-            List<UNoteTag> tempList = new();
-            tags.Query<UNoteTag>().ToList(tempList);
-            
-            GenericMenu menu = new GenericMenu();
-
-            List<UNoteTagData> tagList = UNoteSetting.TagList;
-            foreach (var tagData in tagList)
-            {
-                // Overlap check
-                if (tempList.Find(t => t.TagId == tagData.TagId) != null)
-                {
-                    continue;
-                }
-                
-                // Add item
-                menu.AddItem(new GUIContent(tagData.TagName), false, () =>
-                {
-                    tags.Add(new UNoteTag(tagData.TagId, true));
-                });
-            }
-            
-            menu.AddSeparator("");
-            
-            menu.AddItem(new GUIContent("Open Tag Setting"), false, ()=>
-            {
-                SettingsService.OpenProjectSettings("Project/UNote");
-            });
-            
-            menu.ShowAsContext();
         }
 
         internal void ShowAddMenu()
