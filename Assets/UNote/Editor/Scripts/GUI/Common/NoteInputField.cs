@@ -5,6 +5,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UNote.Runtime;
+using Object = UnityEngine.Object;
 
 namespace UNote.Editor
 {
@@ -133,6 +134,8 @@ namespace UNote.Editor
             
             menu.AddItem(new GUIContent("Screenshot/GameView"), false, () =>
             {
+                InputGameViewInfo();
+                
                 string ssSavePath = PathUtil.GetScreenshotSavePath();
                 Utility.TakeScreenShot(ScreenshotTarget.GameView, ssSavePath);
                 ParsePathToGuidAndInput(ssSavePath);
@@ -140,6 +143,8 @@ namespace UNote.Editor
             
             menu.AddItem(new GUIContent("Screenshot/SceneView"), false, () =>
             {
+                InputSceneViewInfo();
+                
                 string ssSavePath = PathUtil.GetScreenshotSavePath();
                 Utility.TakeScreenShot(ScreenshotTarget.SceneView, ssSavePath);
                 ParsePathToGuidAndInput(ssSavePath);
@@ -147,12 +152,60 @@ namespace UNote.Editor
             
             menu.ShowAsContext();
         }
+
+        /// <summary>
+        /// Input game view camera info
+        /// </summary>
+        private void InputGameViewInfo()
+        {
+            Camera cam = Camera.main;
+            if (!cam)
+            {
+                cam = Object.FindObjectOfType<Camera>();
+            }
+
+            if (cam)
+            {
+                if (!m_inputText.value.IsNullOrEmpty())
+                {
+                    m_inputText.value += "\n";
+                }
+
+                Vector3 pos = cam.transform.position;
+                Vector3 rot = cam.transform.rotation.eulerAngles;
+                float size = cam.fieldOfView;
+
+                m_inputText.value +=
+                    $"[unatt-game-camera:({pos.x}, {pos.y}, {pos.z}), ({rot.x}, {rot.y}, {rot.z}), ({size})]";
+            }
+        }
+        
+        /// <summary>
+        /// Input scene view camera info
+        /// </summary>
+        private void InputSceneViewInfo()
+        {
+            SceneView sceneView = SceneView.lastActiveSceneView;
+            if (sceneView)
+            {
+                if (!m_inputText.value.IsNullOrEmpty())
+                {
+                    m_inputText.value += "\n";
+                }
+
+                Vector3 pos = sceneView.pivot;
+                Vector3 rot = sceneView.rotation.eulerAngles;
+                float size = sceneView.size;
+                m_inputText.value +=
+                    $"[unatt-scene-camera:({pos.x}, {pos.y}, {pos.z}), ({rot.x}, {rot.y}, {rot.z}), ({size})]";
+            }
+        }
         
         /// <summary>
         /// Parse file or folder path to guid and insert it to InputText
         /// </summary>
         /// <param name="path"></param>
-        void ParsePathToGuidAndInput(string path)
+        private void ParsePathToGuidAndInput(string path)
         {
             string guid = AssetDatabase.AssetPathToGUID(path.FullPathToAssetPath());
             if (!string.IsNullOrEmpty(guid))

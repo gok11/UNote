@@ -13,6 +13,7 @@ namespace UNote.Editor
         public static readonly Color WhiteTextColor = new Color(0.75f, 0.75f, 0.75f);
         public static readonly Color TodoInitColor = new Color(0.43f, 0.73f, 1.0f);
         public static readonly Color BugInitColor = new Color(0.72f, 0.08f, 0.11f);
+        public static readonly Color GrayBorderColor = new Color(0.30f, 0.30f, 0.30f);
         
         private static Texture2D s_archiveIcon;
         private static Texture2D s_favoriteIcon;
@@ -57,6 +58,12 @@ namespace UNote.Editor
         public static void SetBorderWidth(this IStyle style, float width)
         {
             style.borderTopWidth = style.borderBottomWidth = style.borderLeftWidth = style.borderRightWidth = width;
+        }
+
+        public static void SetBorderColor(this IStyle style, Color color)
+        {
+            style.borderTopColor = style.borderRightColor = 
+                style.borderBottomColor = style.borderLeftColor = color;
         }
     }
 }
