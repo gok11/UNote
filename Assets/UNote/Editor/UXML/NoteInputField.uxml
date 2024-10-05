@@ -5,7 +5,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="TagArea" style="flex-grow: 1; flex-direction: row;">
             <ui:Button text="&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddTagButton" style="font-size: 12px; height: 16px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-shrink: 1; margin-top: 2px; margin-right: 4px; margin-bottom: 0; margin-left: 4px; width: 24px;">
-                <ui:VisualElement name="Icon" style="flex-grow: 1; margin-top: 1px; margin-right: 4px; margin-bottom: 1px; margin-left: 4px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                <ui:VisualElement name="Icon" style="flex-grow: 1; margin-top: 1px; margin-right: 4px; margin-bottom: 1px; margin-left: 4px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-image-tint-color: rgb(219, 219, 219);" />
             </ui:Button>
             <ui:VisualElement name="Tags" style="flex-grow: 1; flex-direction: row;" />
         </ui:VisualElement>

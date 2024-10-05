@@ -60,7 +60,7 @@ namespace UNote.Editor
             LoadTags(m_noteTag);
             
             // Parse text and insert elem
-            ParseTextElements(message.NoteContent);
+            NoteTextParser.ParseToElements(m_message, m_contents);
 
             // register button event
             m_addTagButton.clicked += () =>
@@ -198,7 +198,7 @@ namespace UNote.Editor
 
                 // Reset field
                 m_contents.Clear();
-                ParseTextElements(m_message.NoteContent);
+                NoteTextParser.ParseToElements(m_message, m_contents);
                 
                 // Update note last updated date
                 m_message.UpdatedDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
@@ -258,131 +258,131 @@ namespace UNote.Editor
             }
         }
 
-        private void ParseTextElements(string text)
-        {
-            const string SplitKey = "[unatt-";
-            string[] splitTexts = text.Split(SplitKey, StringSplitOptions.RemoveEmptyEntries);
-            
-            foreach (var splitText in splitTexts)
-            {
-                // Object ref
-                const string objectKey = "guid:";
-                if (splitText.StartsWith(objectKey))
-                {
-                    int startIndex = splitText.IndexOf(objectKey);
-
-                    if (startIndex == -1)
-                    {
-                        InsertAsLabel(splitText);
-                        continue;
-                    }
-
-                    int keyLength = objectKey.Length;
-                    int endIndex = splitText.IndexOf("]", startIndex + keyLength);
-                    if (endIndex == -1)
-                    {
-                        InsertAsLabel(splitText);
-                        continue;
-                    }
-
-                    string guid = splitText.Substring(startIndex + keyLength, endIndex - startIndex - keyLength);
-                    string restStr = splitText.Substring(endIndex + 1).Trim();
-                    if (string.IsNullOrWhiteSpace(guid))
-                    {
-                        InsertAsLabel(splitText);
-                        if (!restStr.IsNullOrWhiteSpace())
-                        {
-                            InsertAsLabel(restStr);   
-                        }
-                        continue;
-                    }
-
-                    // Object field
-                    string path = AssetDatabase.GUIDToAssetPath(guid);
-                    if (!string.IsNullOrWhiteSpace(path))
-                    {
-                        Object obj = AssetDatabase.LoadAssetAtPath<Object>(path);
-
-                        // Add ObjectField 
-                        ObjectField objectField = new ObjectField();
-                        objectField.SetEnabled(false);
-                        objectField.SetValueWithoutNotify(obj);
-
-                        m_contents.Add(objectField);   
-                        
-                        // Draw texture
-                        if (obj is Texture2D tex)
-                        {
-                            VisualElement texElem = new FlexibleImageElem(tex, this);
-                            texElem.style.SetMargin(2, 0, 2, 0);
-                            m_contents.Add(texElem);
-
-                            // Add edit button if this is owned screenshot
-                            if (m_message.Author == UNoteSetting.UserName)
-                            {
-                                if (Directory.GetParent(path)!.Name == "Screenshots")
-                                {
-                                    VisualElement editButton = CreateEditButton(path);
-                                    editButton.visible = false;
-                                    texElem.Add(editButton);
-                            
-                                    texElem.RegisterCallback<MouseEnterEvent>(_ =>
-                                    {
-                                        editButton.visible = true;
-                                    });
-                            
-                                    texElem.RegisterCallback<MouseLeaveEvent>(_ =>
-                                    {
-                                        editButton.visible = false;
-                                    });      
-                                }
-                            }
-                        }
-                        
-                        if (!restStr.IsNullOrWhiteSpace())
-                        {
-                            InsertAsLabel(restStr);   
-                        }
-                        continue;
-                    }
-                }
-                
-                // Default
-                InsertAsLabel(splitText);
-
-                void InsertAsLabel(string text)
-                {
-                    Label label = new Label(text.Trim());
-                    label.style.SetMargin(2, 0, 2, 0);
-                    m_contents.Add(label);
-                }
-            }
-        }
-
-        private VisualElement CreateEditButton(string texPath)
-        {
-            Button editButton = new Button();
-            editButton.name = "EditButton";
-
-            editButton.style.width = editButton.style.height = 20f;
-            editButton.style.SetPadding(2);
-            editButton.style.alignSelf = Align.FlexEnd;
-
-            VisualElement icon = new VisualElement();
-            icon.style.flexGrow = 1;
-            icon.style.backgroundImage =
-                AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("brush.png"));
-            icon.style.unityBackgroundImageTintColor = StyleUtil.GrayColor;
-            editButton.Add(icon);
-                            
-            editButton.clicked += () =>
-            {
-                ImageEditWindow.OpenWithTexture(texPath);
-            };
-
-            return editButton;
-        }
-        
+        // private void ParseTextElements(string text)
+        // {
+        //     const string SplitKey = "[unatt-";
+        //     string[] splitTexts = text.Split(SplitKey, StringSplitOptions.RemoveEmptyEntries);
+        //     
+        //     foreach (var splitText in splitTexts)
+        //     {
+        //         // Object ref
+        //         const string ObjectKey = "guid:";
+        //         if (splitText.StartsWith(ObjectKey))
+        //         {
+        //             int startIndex = splitText.IndexOf(ObjectKey);
+        //
+        //             if (startIndex == -1)
+        //             {
+        //                 InsertAsLabel(splitText);
+        //                 continue;
+        //             }
+        //
+        //             int keyLength = ObjectKey.Length;
+        //             int endIndex = splitText.IndexOf("]", startIndex + keyLength);
+        //             if (endIndex == -1)
+        //             {
+        //                 InsertAsLabel(splitText);
+        //                 continue;
+        //             }
+        //
+        //             string guid = splitText.Substring(startIndex + keyLength, endIndex - startIndex - keyLength);
+        //             string restStr = splitText.Substring(endIndex + 1).Trim();
+        //             if (string.IsNullOrWhiteSpace(guid))
+        //             {
+        //                 InsertAsLabel(splitText);
+        //                 if (!restStr.IsNullOrWhiteSpace())
+        //                 {
+        //                     InsertAsLabel(restStr);   
+        //                 }
+        //                 continue;
+        //             }
+        //
+        //             // Object field
+        //             string path = AssetDatabase.GUIDToAssetPath(guid);
+        //             if (!string.IsNullOrWhiteSpace(path))
+        //             {
+        //                 Object obj = AssetDatabase.LoadAssetAtPath<Object>(path);
+        //
+        //                 // Add ObjectField 
+        //                 ObjectField objectField = new ObjectField();
+        //                 objectField.SetEnabled(false);
+        //                 objectField.SetValueWithoutNotify(obj);
+        //
+        //                 m_contents.Add(objectField);   
+        //                 
+        //                 // Draw texture
+        //                 if (obj is Texture2D tex)
+        //                 {
+        //                     VisualElement texElem = new FlexibleImageElem(tex, this);
+        //                     texElem.style.SetMargin(2, 0, 2, 0);
+        //                     m_contents.Add(texElem);
+        //
+        //                     // Add edit button if this is owned screenshot
+        //                     if (m_message.Author == UNoteSetting.UserName)
+        //                     {
+        //                         if (Directory.GetParent(path)!.Name == "Screenshots")
+        //                         {
+        //                             VisualElement editButton = CreateEditButton(path);
+        //                             editButton.visible = false;
+        //                             texElem.Add(editButton);
+        //                     
+        //                             texElem.RegisterCallback<MouseEnterEvent>(_ =>
+        //                             {
+        //                                 editButton.visible = true;
+        //                             });
+        //                     
+        //                             texElem.RegisterCallback<MouseLeaveEvent>(_ =>
+        //                             {
+        //                                 editButton.visible = false;
+        //                             });      
+        //                         }
+        //                     }
+        //                 }
+        //                 
+        //                 if (!restStr.IsNullOrWhiteSpace())
+        //                 {
+        //                     InsertAsLabel(restStr);   
+        //                 }
+        //                 continue;
+        //             }
+        //         }
+        //         
+        //         // Default
+        //         InsertAsLabel(splitText);
+        //
+        //         void InsertAsLabel(string text)
+        //         {
+        //             Label label = new Label(text.Trim());
+        //             label.style.SetMargin(2, 0, 2, 0);
+        //             m_contents.Add(label);
+        //         }
+        //     }
+        // }
+        //
+        // private VisualElement CreateEditButton(string texPath)
+        // {
+        //     Button editButton = new Button();
+        //     editButton.name = "EditButton";
+        //
+        //     editButton.style.width = editButton.style.height = 20f;
+        //     editButton.style.SetPadding(2);
+        //     editButton.style.alignSelf = Align.FlexEnd;
+        //
+        //     VisualElement icon = new VisualElement();
+        //     icon.style.flexGrow = 1;
+        //     icon.style.backgroundImage =
+        //         AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("brush.png"));
+        //     icon.style.unityBackgroundImageTintColor = StyleUtil.GrayColor;
+        //     editButton.Add(icon);
+        //                     
+        //     editButton.clicked += () =>
+        //     {
+        //         ImageEditWindow.OpenWithTexture(texPath);
+        //     };
+        //
+        //     return editButton;
+        // }
+        //
         private string CreateEditedText() => "<size=10><color=#999999> (edited)</color></size>";
 
         private Label CreateEditedTextElem() => new(CreateEditedText());

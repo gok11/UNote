@@ -6,7 +6,7 @@
             <ui:VisualElement name="NoteTag" style="flex-grow: 1; flex-direction: row; height: auto; margin-top: 2px; margin-right: 0; margin-bottom: 0; margin-left: 0;">
                 <ui:VisualElement name="Tags" style="flex-grow: 1; flex-direction: row-reverse;" />
             </ui:VisualElement>
-            <ui:Button text="…" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContextButton" style="width: 20px; height: 18px; visibility: hidden; margin-top: 2px; margin-left: 2px;" />
+            <ui:Button text="…" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContextButton" style="width: 20px; height: 18px; visibility: hidden; margin-top: 3px; margin-left: 2px;" />
         </ui:VisualElement>
         <ui:VisualElement name="Contents" style="flex-grow: 1; margin-top: 0; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; padding-top: 3px; padding-right: 4px; padding-bottom: 3px; padding-left: 8px; border-top-color: rgb(64, 64, 64); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;" />
         <ui:VisualElement name="EditNoteElem" style="flex-grow: 1; display: none;">

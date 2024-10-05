@@ -172,7 +172,7 @@ namespace UNote.Editor
             VisualElement tagElem = new VisualElement();
             tagElem.style.backgroundImage = Texture2D.whiteTexture;
             tagElem.style.unityBackgroundImageTintColor = tag.ToColor();
-            tagElem.style.width = 20;
+            tagElem.style.width = 18;
             tagElem.style.height = 1;
             tagElem.style.marginRight = 2;
             return tagElem;

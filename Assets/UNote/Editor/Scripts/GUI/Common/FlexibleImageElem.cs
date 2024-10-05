@@ -26,7 +26,7 @@ namespace UNote.Editor
                 }
                 
                 float width = evt.newRect.width;
-                float maxWidth = width - 24;
+                float maxWidth = width - 16;
                     
                 CalcSize(maxWidth);
 
