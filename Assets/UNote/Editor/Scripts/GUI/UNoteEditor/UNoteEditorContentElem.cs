@@ -189,6 +189,7 @@ namespace UNote.Editor
             m_message.NoteTagDataIdList = tagIdList;
             
             LoadTags(m_noteTag);
+            UNoteEditor.CenterPane.SetupListItems();
 
             // Update text
             if (m_message.NoteContent != m_editField.value)

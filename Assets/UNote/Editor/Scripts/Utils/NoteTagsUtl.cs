@@ -11,11 +11,17 @@ namespace UNote.Editor
         private static Dictionary<NoteTags, string> tagIdDict;
         private static Dictionary<NoteTags, Color> tagColorDict;
         
+        /// <summary>
+        /// All tags except None and All
+        /// </summary>
         internal static readonly NoteTags[] ValidTags = Enum.GetValues(typeof(NoteTags))
             .Cast<NoteTags>()
             .Where(t => t != NoteTags.None && t != NoteTags.All)
             .ToArray();
         
+        /// <summary>
+        /// Tag to UNoteTagData.TagId
+        /// </summary>
         public static string ToNoteId(this NoteTags tags)
         {
             if (tagIdDict != null)
@@ -41,6 +47,9 @@ namespace UNote.Editor
             return tagIdDict[tags];
         }
         
+        /// <summary>
+        /// Tag to UNoteTagData.Color
+        /// </summary>
         public static Color ToColor(this NoteTags tags)
         {
             if (tagColorDict != null)

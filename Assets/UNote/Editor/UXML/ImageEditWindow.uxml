@@ -9,7 +9,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="SettingPane" style="flex-grow: 0; width: 200px; min-width: auto; border-left-color: rgb(37, 37, 37); border-left-width: 1px;">
+        <ui:VisualElement name="SettingPane" style="flex-grow: 0; width: 200px; min-width: auto; border-left-color: rgb(37, 37, 37); border-left-width: 1px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;">
             <ui:SliderInt label="Brush Size" high-value="10" low-value="1" page-size="0" name="BrushSize" binding-path="m_brushSize" />
             <ui:VisualElement name="ColorFieldContainer" style="flex-grow: 0;" />
             <ui:VisualElement name="Spacing" style="flex-grow: 1; align-items: stretch; align-self: stretch; height: 2000px;" />

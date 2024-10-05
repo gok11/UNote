@@ -87,6 +87,11 @@ public class ImageEditWindow : EditorWindow
 
 		EditorApplication.delayCall += () =>
 		{
+			if (m_editTargetTex == null)
+			{
+				Close();
+			}
+			
 			SetupStyle();
 			RegisterCallbacks();
 		};
