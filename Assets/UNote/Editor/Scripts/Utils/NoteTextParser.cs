@@ -286,6 +286,7 @@ namespace UNote.Editor
 
             applyButton.clicked += () =>
             {
+                // Apply camera info to camera
                 if (isGameView)
                 {
                     Camera cam = Camera.main;

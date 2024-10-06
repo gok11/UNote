@@ -35,6 +35,9 @@ namespace UNote.Editor
 		private bool m_isDirty;
 		private bool m_isPainting;
 
+		/// <summary>
+		/// Open window
+		/// </summary>
 		public static void OpenWithTexture(string texturePath)
 		{
 			// Make texture editable

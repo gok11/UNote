@@ -7,7 +7,10 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
-    public class UNoteEditorListItem : VisualElement
+    /// <summary>
+    /// NoteEditor part VisualElement. Center pane list items
+    /// </summary>
+    internal class UNoteEditorListItem : VisualElement
     {
         private VisualElement m_parentContainer;
 
@@ -21,10 +24,11 @@ namespace UNote.Editor
         private Button m_contextButton;
         private VisualElement m_noteListItem;
 
-        public NoteBase BindNote => m_note;
+        internal NoteBase BindNote => m_note;
 
-        public UNoteEditorListItem(UNoteEditor noteEditor)
+        internal UNoteEditorListItem(UNoteEditor noteEditor)
         {
+            // VisualElements
             VisualTreeAsset listItem = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteListItem
             );
@@ -41,11 +45,13 @@ namespace UNote.Editor
 
             m_noteListItem = contentContainer.Q("NoteListItem");
 
+            // Style
             m_contextButton.visible = false;
 
             m_archvieLabel.style.backgroundImage = StyleUtil.ArchiveIcon;
             m_favoriteLabel.style.backgroundImage = StyleUtil.FavoriteIcon;
 
+            // Event callbacks
             EditorUNoteManager.OnNoteFavoriteChanged += note =>
             {
                 if (note == m_note)
@@ -130,6 +136,9 @@ namespace UNote.Editor
             Focus();
         }
 
+        /// <summary>
+        /// GUI event
+        /// </summary>
         private void RegisterMouseEvent()
         {
             // Handle mouse event
@@ -178,12 +187,19 @@ namespace UNote.Editor
             return tagElem;
         }
         
+        /// <summary>
+        /// Set background color for item
+        /// </summary>
+        /// <param name="select"></param>
         internal void SetBackgroundColor(bool select)
         {
             m_noteListItem.style.backgroundColor = select ?
                 StyleUtil.SelectColor : StyleUtil.UnselectColor;
         }
 
+        /// <summary>
+        /// Show context menu for editing note status
+        /// </summary>
         private void ShowContextMenu()
         {
             GenericMenu menu = new GenericMenu();
@@ -245,11 +261,6 @@ namespace UNote.Editor
             }
             
             menu.ShowAsContext();
-        }
-
-        private void ShowArchiveLabel()
-        {
-            
         }
     }
 }
