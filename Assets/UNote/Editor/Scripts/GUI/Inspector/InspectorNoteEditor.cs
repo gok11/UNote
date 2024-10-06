@@ -9,6 +9,9 @@ using Object = UnityEngine.Object;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// NoteEditor part VisualElement. Note editor in Inspector
+    /// </summary>
     public sealed class InspectorNoteEditor : VisualElement
     {
         private Foldout m_foldout;
@@ -27,8 +30,9 @@ namespace UNote.Editor
             name = nameof(InspectorNoteEditor);
 
             NoteType noteType = GetTargetNoteType(target);
-            (string, string) ids = GetBindId(noteType, target);
-            
+            (string bindId, string objectId) ids = GetBindId(noteType, target);
+
+            // Get VisualElements
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.InspectorNoteEditor
             );
@@ -41,16 +45,18 @@ namespace UNote.Editor
             m_noteListBorder = contentContainer.Q("NoteListBorder");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
 
-            m_noteInputField = new NoteInputField(noteType, ids.Item1, ids.Item2);
+            m_noteInputField = new NoteInputField(noteType, ids.bindId, ids.objectId);
             m_noteInputField.style.marginLeft = 16;
             m_content.Add(m_noteInputField);
             
+            // Load messages
             EditorApplication.delayCall += () =>
             EditorApplication.delayCall += () =>
             {
-                SetupNoteList(noteType, target);
+                SetupMessageList(noteType, target);
             };
 
+            // Register callback
             m_foldout.RegisterValueChangedCallback(opened =>
             {
                 m_content.style.display = opened.newValue ? DisplayStyle.Flex : DisplayStyle.None;
@@ -66,10 +72,12 @@ namespace UNote.Editor
                 UNoteSetting.InspectorFoldoutOpened = opened.newValue;
             });
 
+            // Foldout
             bool foldout = UNoteSetting.InspectorFoldoutOpened;
             m_foldout.value = foldout;
             m_content.style.display = foldout ? DisplayStyle.Flex : DisplayStyle.None;
 
+            // NoteEditor for current target open button
             m_openButton.Q("Visual").style.backgroundImage =
                 AssetDatabase.LoadAssetAtPath<Texture2D>(PathUtil.GetTexturePath("editor.png"));
             m_openButton.SetEnabled(false);
@@ -93,10 +101,16 @@ namespace UNote.Editor
                 }
             };
 
-            EditorUNoteManager.OnNoteAdded += _ => SetupNoteList(noteType, target);
-            EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList(noteType, target);
+            // Event callback
+            EditorUNoteManager.OnNoteAdded += _ => SetupMessageList(noteType, target);
+            EditorUNoteManager.OnNoteDeleted += _ => SetupMessageList(noteType, target);
         }
 
+        /// <summary>
+        /// Get NoteType for specified target
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         private NoteType GetTargetNoteType(Object target)
         {
             if (PrefabUtility.IsPartOfPrefabAsset(target))
@@ -112,6 +126,12 @@ namespace UNote.Editor
             return NoteType.Asset;
         }
 
+        /// <summary>
+        /// Get ID for specified target
+        /// </summary>
+        /// <param name="noteType"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
         private (string, string) GetBindId(NoteType noteType, Object target)
         {
             switch (noteType)
@@ -127,7 +147,13 @@ namespace UNote.Editor
             }
         }
         
-        private void SetupNoteList(NoteType noteType, Object target)
+        /// <summary>
+        /// Load messages
+        /// </summary>
+        /// <param name="noteType"></param>
+        /// <param name="target"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void SetupMessageList(NoteType noteType, Object target)
         {
             m_noteList.contentContainer.Clear();
             m_openButton.SetEnabled(false);
@@ -162,6 +188,7 @@ namespace UNote.Editor
                     throw new NotImplementedException();
             }
             
+            // Scroll to latest message
             if (m_noteList != null)
             {
                 EditorApplication.delayCall += () =>

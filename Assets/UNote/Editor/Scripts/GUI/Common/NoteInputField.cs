@@ -9,6 +9,9 @@ using Object = UnityEngine.Object;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Input field in NoteEditor and Inspector
+    /// </summary>
     [Serializable]
     public class NoteInputField : VisualElement
     {
@@ -101,13 +104,19 @@ namespace UNote.Editor
             };
         }
 
-        public void SetNoteInfo(NoteType noteType, string bindId, string objectId = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        internal void SetNoteInfo(NoteType noteType, string bindId, string objectId = null)
         {
             m_bindNoteType = noteType;
             m_bindId = bindId;
             m_objectId = objectId;
         }
 
+        /// <summary>
+        /// Key event
+        /// </summary>
         private void OnKeyDown(KeyDownEvent evt)
         {
             if (evt.keyCode == KeyCode.Return && (evt.ctrlKey || evt.commandKey))
@@ -116,22 +125,28 @@ namespace UNote.Editor
             }
         }
 
+        /// <summary>
+        /// Add menu for reference/screenshot text
+        /// </summary>
         internal void ShowAddMenu()
         {
             GenericMenu menu = new GenericMenu();
             
+            // Object field for asset
             menu.AddItem(new GUIContent("Reference/Asset"), false, () =>
             {
                 string filePath = EditorUtility.OpenFilePanel("Select Asset", Application.dataPath, "*");
                 ParsePathToGuidAndInput(filePath);
             });
             
+            // Object field for folder
             menu.AddItem(new GUIContent("Reference/Folder"), false, () =>
             {
                 string folderPath = EditorUtility.OpenFolderPanel("Select Folder", Application.dataPath, "");
                 ParsePathToGuidAndInput(folderPath);
             });
             
+            // Screenshot in GameView
             menu.AddItem(new GUIContent("Screenshot/GameView"), false, () =>
             {
                 InputGameViewInfo();
@@ -141,6 +156,7 @@ namespace UNote.Editor
                 ParsePathToGuidAndInput(ssSavePath);
             });
             
+            // Screenshot in SceneView
             menu.AddItem(new GUIContent("Screenshot/SceneView"), false, () =>
             {
                 InputSceneViewInfo();
@@ -175,6 +191,7 @@ namespace UNote.Editor
                 Vector3 rot = cam.transform.rotation.eulerAngles;
                 float size = cam.fieldOfView;
 
+                // (position), (rotation), (size)
                 m_inputText.value +=
                     $"[unatt-game-camera:({pos.x}, {pos.y}, {pos.z}), ({rot.x}, {rot.y}, {rot.z}), ({size})]";
             }
@@ -218,6 +235,10 @@ namespace UNote.Editor
             }
         }
         
+        /// <summary>
+        /// Send note to container
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         private void SendNote()
         {
             if (string.IsNullOrWhiteSpace(m_inputText.value))
@@ -235,6 +256,7 @@ namespace UNote.Editor
                 tagIdList.Add(noteTag.TagId);
             }
 
+            // Add note internal
             switch (m_bindNoteType)
             {
                 case NoteType.Project:
@@ -246,7 +268,7 @@ namespace UNote.Editor
                     break;
                 
                 case NoteType.Asset:
-                    // TODO
+                    // TODO thread feature
                     // Add parent note if needed
                     if (m_bindId.IsNullOrEmpty())
                     {

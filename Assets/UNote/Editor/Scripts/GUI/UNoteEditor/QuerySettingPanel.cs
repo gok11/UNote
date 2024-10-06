@@ -9,7 +9,9 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
-    
+    /// <summary>
+    /// NoteEditor part VisualElement. Query panel for filtering notes
+    /// </summary>
     public class QuerySettingPanel : VisualElement
     {
         private NoteQuery m_noteQuery;
@@ -27,6 +29,7 @@ namespace UNote.Editor
         {
             name = nameof(QuerySettingPanel);
 
+            // Get VisualElements
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteEditorQuerySettingPanel
             );
@@ -89,6 +92,7 @@ namespace UNote.Editor
 
             m_saveQueryButton.clicked += () =>
             {
+                // Save custom query
                 CustomQueryContainer container = CustomQueryContainer.Get();
                 int sourceIndex = container.NoteQueryList.FindIndex(t => t.QueryID == m_noteQuery.QueryID);
                 if (sourceIndex >= 0)
@@ -100,6 +104,7 @@ namespace UNote.Editor
 
             m_deleteQueryButton.clicked += () =>
             {
+                // Delete custom query
                 CustomQueryContainer container = CustomQueryContainer.Get();
                 int sourceIndex = container.NoteQueryList.FindIndex(t => t.QueryID == m_noteQuery.QueryID);
                 if (sourceIndex >= 0)
@@ -107,9 +112,11 @@ namespace UNote.Editor
                     container.NoteQueryList.RemoveAt(sourceIndex);   
                 }
 
+                // Update view
                 UNoteEditorLeftPane leftPane = UNoteEditor.LeftPane;
                 leftPane.LoadCustomQuery();
                 
+                // Set next query
                 if (container.NoteQueryList.Count > 0)
                 {
                     EditorUNoteManager.SetNoteQuery(container.NoteQueryList[0]);
@@ -144,6 +151,9 @@ namespace UNote.Editor
             m_deleteQueryButton.style.display = isNotPreset ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
+        /// <summary>
+        /// Toggle display state
+        /// </summary>
         internal void ToggleDisplay()
         {
             contentContainer.style.display =

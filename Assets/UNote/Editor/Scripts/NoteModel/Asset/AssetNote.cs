@@ -6,6 +6,9 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Asset note
+    /// </summary>
     [Serializable]
     public class AssetNote : RootNoteBase
     {

@@ -6,6 +6,9 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Auto scaled image display visual element
+    /// </summary>
     public class FlexibleImageElem : VisualElement
     {
         private double m_lastCalcTime;
@@ -33,6 +36,7 @@ namespace UNote.Editor
                 m_lastCalcTime = currentTime;
             });
 
+            // Calc size and resize
             void CalcSize(float maxWidth)
             {
                 if (maxWidth <= 0)

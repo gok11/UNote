@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Colored note tag element
+    /// </summary>
     public class UNoteTag : VisualElement
     {
         private VisualElement m_tagBackground;
@@ -20,6 +23,9 @@ namespace UNote.Editor
             set => tagId = value;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public UNoteTag(string tagId, bool ifRegisterEvent)
         {
             name = nameof(UNoteTag);
@@ -33,6 +39,7 @@ namespace UNote.Editor
                 return;
             }
             
+            // UXML, Style
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteTag
             );

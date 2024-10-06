@@ -5,10 +5,13 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// VisualElement extensions
+    /// </summary>
     public class VisualElementUtil
     {
         /// <summary>
-        /// Create drop area for asset path to guid
+        /// Create drop area to convert asset path into guid
         /// </summary>
         /// <returns></returns>
         internal static void CreateDropAreaElem(TextField parentTextField)
@@ -57,6 +60,10 @@ namespace UNote.Editor
             });
         }
         
+        /// <summary>
+        /// Show Generic menu for adding tag
+        /// </summary>
+        /// <param name="container"></param>
         internal static void ShowAddTagMenu(VisualElement container)
         {
             VisualElement tags = container.Q("Tags");

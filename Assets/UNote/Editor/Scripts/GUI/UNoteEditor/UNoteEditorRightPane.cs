@@ -15,6 +15,9 @@ namespace UNote.Editor
         public SerializedProperty EditingText => ModelObject.FindProperty(nameof(editingText));
     }
 
+    /// <summary>
+    /// NoteEditor part VisualElement. Note editor right pane. Display and edit messages for note
+    /// </summary>
     public class UNoteEditorRightPane : UNoteEditorPaneBase
     {
         private UNoteEditor m_noteEditor;
@@ -41,6 +44,7 @@ namespace UNote.Editor
 
             m_noteEditor = noteEditor;
 
+            // Get VisualElements
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteEditorRightPane
             );
@@ -55,6 +59,7 @@ namespace UNote.Editor
             m_tabList = contentContainer.Q<ScrollView>("TabList");
             m_noteList = contentContainer.Q<ScrollView>("NoteList");
 
+            // 
             EditorApplication.delayCall += Initialize;
         }
 
@@ -136,7 +141,7 @@ namespace UNote.Editor
             m_noteInputField.SetEnabled(currentNote != null);
             
             // Show note list by created date
-            SetupNoteList();
+            SetupMessageList();
 
             // Enter edit mode on click title label
             m_noteTitle.RegisterCallback<MouseDownEvent>(_ =>
@@ -156,15 +161,15 @@ namespace UNote.Editor
             }
 
             // Register note event
-            EditorUNoteManager.OnNoteAdded += _ => SetupNoteList();
-            EditorUNoteManager.OnNoteDeleted += _ => SetupNoteList();
+            EditorUNoteManager.OnNoteAdded += _ => SetupMessageList();
+            EditorUNoteManager.OnNoteDeleted += _ => SetupMessageList();
             
             EditorUNoteManager.OnNoteSelected += note =>
             {
                 if (note != null)
                 {
                     m_noteInputField?.SetNoteInfo(note.NoteType, note.NoteId);
-                    SetupNoteList();   
+                    SetupMessageList();   
                     SetEnabled(!note.Archived);
                 }
                 else
@@ -191,7 +196,10 @@ namespace UNote.Editor
             };
         }
 
-        private void SetupNoteList()
+        /// <summary>
+        /// Load messages
+        /// </summary>
+        private void SetupMessageList()
         {
             // disable to edit title
             SetTitleGUIEditMode(false);
@@ -280,6 +288,9 @@ namespace UNote.Editor
             };
         }
 
+        /// <summary>
+        /// Toggle display and edit elements
+        /// </summary>
         private void SetTitleGUIEditMode(bool enableEdit)
         {
             if (enableEdit)
@@ -294,6 +305,10 @@ namespace UNote.Editor
             }
         }
 
+        /// <summary>
+        /// Set sub info style
+        /// </summary>
+        /// <param name="lineCount">sub info line counts</param>
         private void SetSubInfoStyle(int lineCount)
         {
             IStyle subInfoStyle = m_subInfoArea.style;
@@ -312,6 +327,10 @@ namespace UNote.Editor
             }
         }
 
+        /// <summary>
+        /// UndoRedo callbacks
+        /// </summary>
+        /// <param name="undoName"></param>
         internal override void OnUndoRedo(string undoName)
         {
             if (undoName.Contains("UNote Change Project Note Title"))
@@ -330,7 +349,7 @@ namespace UNote.Editor
                     break;
             }
             
-            SetupNoteList();
+            SetupMessageList();
         }
         
     }

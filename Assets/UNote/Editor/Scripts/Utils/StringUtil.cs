@@ -3,11 +3,17 @@ using UnityEngine;
 
 namespace UNote.Editor
 {
-    public static class StringUtil
+    /// <summary>
+    /// String utils and extensions
+    /// </summary>
+    internal static class StringUtil
     {
         private static StringBuilder s_stringBuilder = new StringBuilder();
 
-        public static StringBuilder StringBuilder
+        /// <summary>
+        /// Get cleared StringBuilder cache
+        /// </summary>
+        internal static StringBuilder StringBuilder
         {
             get
             {
@@ -16,17 +22,26 @@ namespace UNote.Editor
             }
         }
 
-        public static string FullPathToAssetPath(this string absolutePath)
+        /// <summary>
+        /// Full path to Assets path for AssetDatabase API
+        /// </summary>
+        internal static string FullPathToAssetPath(this string absolutePath)
         {
             return absolutePath.Replace("\\", "/").Replace(Application.dataPath, "Assets");
         }
 
-        public static bool IsNullOrEmpty(this string str)
+        /// <summary>
+        /// String.IsNullOrEmpty()
+        /// </summary>
+        internal static bool IsNullOrEmpty(this string str)
         {
             return string.IsNullOrEmpty(str);
         }
         
-        public static bool IsNullOrWhiteSpace(this string str)
+        /// <summary>
+        /// String.IsNullOrWhiteSpace()
+        /// </summary>
+        internal static bool IsNullOrWhiteSpace(this string str)
         {
             return string.IsNullOrWhiteSpace(str);
         }
