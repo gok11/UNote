@@ -184,7 +184,7 @@ namespace UNote.Editor
 
         /// <summary>
         /// Check messages has specified tag
-        /// tags must be specified single tag
+        /// "tags" must be specified single tag
         /// </summary>
         internal static bool CheckTagInMessages(NoteBase note, NoteTags tags)
         {
@@ -242,6 +242,13 @@ namespace UNote.Editor
             }
         }
 
+        /// <summary>
+        /// Sort notes by NoteQuery
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <param name="noteQuery"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static IEnumerable<NoteBase> SortNotes(IEnumerable<NoteBase> notes, NoteQuery noteQuery)
         {
             // Sort
@@ -266,6 +273,12 @@ namespace UNote.Editor
             return notes.OrderByDescending(t => t.IsFavorite());
         }
         
+        /// <summary>
+        /// Get updated date of the message associated with note
+        /// </summary>
+        /// <param name="note"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static string GetUpdatedDate(NoteBase note)
         {
             switch (note.NoteType)
@@ -291,6 +304,13 @@ namespace UNote.Editor
             }
         }
         
+        /// <summary>
+        /// Get if the note contains specified text
+        /// </summary>
+        /// <param name="note"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static bool ContainsSearchTextInMessages(NoteBase note, string text)
         {
             switch (note.NoteType)
@@ -312,6 +332,11 @@ namespace UNote.Editor
             }
         }
         
+        /// <summary>
+        /// Change note name
+        /// </summary>
+        /// <param name="note"></param>
+        /// <param name="noteName"></param>
         public static void ChangeNoteName(NoteBase note, string noteName)
         {
             switch (note?.NoteType)
@@ -328,6 +353,11 @@ namespace UNote.Editor
             }
         }
 
+        /// <summary>
+        /// Delete note from container
+        /// </summary>
+        /// <param name="note"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public static void DeleteNote(NoteBase note)
         {
             switch (note.NoteType)
@@ -354,6 +384,10 @@ namespace UNote.Editor
             OnNoteDeleted?.Invoke(note);
         }
 
+        /// <summary>
+        /// Toggle favorite state
+        /// </summary>
+        /// <param name="note"></param>
         public static void ToggleFavorite(NoteBase note)
         {
             bool isFavorite = note.IsFavorite();
@@ -369,6 +403,10 @@ namespace UNote.Editor
             GetOwnFavoriteNoteContainer().Save();
         }
 
+        /// <summary>
+        /// Toggle archive state
+        /// </summary>
+        /// <param name="note"></param>
         public static void ToggleArchived(NoteBase note)
         {
             note.Archived = !note.Archived;
@@ -376,6 +414,10 @@ namespace UNote.Editor
             SaveContainerByNoteType(note);
         }
 
+        /// <summary>
+        /// Add query into container
+        /// </summary>
+        /// <returns></returns>
         public static NoteQuery AddQuery()
         {
             CustomQueryContainer container = CustomQueryContainer.Get();
@@ -388,6 +430,10 @@ namespace UNote.Editor
             return newQuery;
         }
 
+        /// <summary>
+        /// Delete query from container
+        /// </summary>
+        /// <param name="noteQuery"></param>
         public static void DeleteQuery(NoteQuery noteQuery)
         {
             CustomQueryContainer container = CustomQueryContainer.Get();
@@ -401,6 +447,9 @@ namespace UNote.Editor
             OnNoteQueryDeleted?.Invoke(noteQuery);
         }
         
+        /// <summary>
+        /// Save all note container 
+        /// </summary>
         public static void SaveAll()
         {
             GetOwnProjectNoteContainer().Save();
@@ -447,6 +496,11 @@ namespace UNote.Editor
             }
         }
 
+        /// <summary>
+        /// Save container by note type
+        /// </summary>
+        /// <param name="note"></param>
+        /// <exception cref="NotImplementedException"></exception>
         private static void SaveContainerByNoteType(NoteBase note)
         {
             switch (note.NoteType)

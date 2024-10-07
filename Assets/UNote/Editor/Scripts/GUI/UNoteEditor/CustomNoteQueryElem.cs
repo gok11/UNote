@@ -6,6 +6,9 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// NoteEditor part VisualElement. Custom query list item.
+    /// </summary>
     public class CustomNoteQueryElem : VisualElement
     {
         private NoteQuery m_noteQuery;
@@ -71,6 +74,9 @@ namespace UNote.Editor
             };
         }
 
+        /// <summary>
+        /// Edit query menu
+        /// </summary>
         private void ShowContextMenu()
         {
             GenericMenu menu = new GenericMenu();

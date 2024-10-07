@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// NoteEditor part VisualElement. Query list.
+    /// </summary>
     public class UNoteEditorLeftPane : UNoteEditorPaneBase
     {
         private UNoteEditor m_noteEditor;
@@ -26,7 +29,7 @@ namespace UNote.Editor
 
             style.backgroundColor = new Color(0.17f, 0.17f, 0.17f);
             
-            // Pane
+            // Load elem
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 UxmlPath.NoteEditorLeftPane
             );
@@ -151,12 +154,18 @@ namespace UNote.Editor
             };
         }
 
+        /// <summary>
+        /// Set All Query (Default) as next query.
+        /// </summary>
         internal void SetDefaultQuery()
         {
             NoteQuery query = m_presetQueryElemDict.Keys.First();
             EditorUNoteManager.SetNoteQuery(query);
         }
         
+        /// <summary>
+        /// Load all user defined queries.
+        /// </summary>
         internal void LoadCustomQuery()
         {
             m_customQueryElem.Clear();
@@ -173,6 +182,10 @@ namespace UNote.Editor
             }
         }
 
+        /// <summary>
+        /// Select query elem
+        /// </summary>
+        /// <param name="noteQuery"></param>
         internal void SelectQueryElem(NoteQuery noteQuery)
         {
             UpdateElemBackgroundColor(noteQuery);
@@ -187,6 +200,10 @@ namespace UNote.Editor
             m_currentQuery = noteQuery;
         }
 
+        /// <summary>
+        /// Update all queries background color.
+        /// </summary>
+        /// <param name="noteQuery"></param>
         internal void UpdateElemBackgroundColor(NoteQuery noteQuery)
         {
             // Set background color
@@ -203,6 +220,9 @@ namespace UNote.Editor
             }
         }
         
+        /// <summary>
+        /// Open NoteAddWindow
+        /// </summary>
         private void ShowAddWindow()
         {
             if (EditorWindow.HasOpenInstances<NoteAddWindow>())

@@ -4,6 +4,9 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// NoteEditor
+    /// </summary>
     public class UNoteEditor : EditorWindow
     {
         [SerializeField] private NoteEditorModel m_model;

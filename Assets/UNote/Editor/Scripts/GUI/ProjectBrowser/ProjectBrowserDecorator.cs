@@ -4,10 +4,11 @@ using UnityEngine;
 
 namespace UNote.Editor
 {
-    public class ProjectBrowserDecorator
+    /// <summary>
+    /// Draw note icon on assets have AssetNote in ProjectBrowser
+    /// </summary>
+    internal static class ProjectBrowserDecorator
     {
-        private const string NoteIconGUID = "1c6c4635976f8694bb0178d15ed89627";
-        
         private static Texture2D NoteIcon
         {
             get
@@ -17,7 +18,7 @@ namespace UNote.Editor
                     return s_noteIcon;
                 }
 
-                string path = AssetDatabase.GUIDToAssetPath(NoteIconGUID);
+                string path = PathUtil.GetTexturePath("note.png");
                 s_noteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
                 return s_noteIcon;
             }
@@ -40,7 +41,7 @@ namespace UNote.Editor
                 return;
             }
 
-            IReadOnlyList<AssetNoteMessage> noteList = EditorUNoteManager.GetAssetNoteMessageListByNoteId(guid);
+            List<AssetNote> noteList = EditorUNoteManager.GetAssetNoteListByGuid(guid);
             if (noteList == null || noteList.Count == 0)
             {
                 return;   
@@ -57,7 +58,7 @@ namespace UNote.Editor
             }
         }
         
-        private static void DrawCountAtRightEdge(IReadOnlyList<AssetNoteMessage> noteList, Rect rect)
+        private static void DrawCountAtRightEdge(List<AssetNote> noteList, Rect rect)
         {
             // background
             rect.x = rect.xMax - 16;
@@ -74,7 +75,7 @@ namespace UNote.Editor
             GUI.DrawTexture(noteIconRect, NoteIcon);
         }
 
-        private static void DrawCountAtLeftTop(IReadOnlyList<AssetNoteMessage> noteList, Rect rect)
+        private static void DrawCountAtLeftTop(List<AssetNote> noteList, Rect rect)
         {
             // background
             rect.x = rect.xMin - 2;

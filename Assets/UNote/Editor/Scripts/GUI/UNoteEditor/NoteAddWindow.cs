@@ -7,6 +7,9 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// NoteEditor part VisualElement. New note add window.
+    /// </summary>
     public class NoteAddWindow : EditorWindow
     {
         private VisualElement m_container;

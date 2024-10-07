@@ -4,6 +4,9 @@ using UnityEngine.UIElements;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Constants and extensions for style
+    /// </summary>
     internal static class StyleUtil
     {
         internal static readonly Color UnselectColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);

@@ -8,6 +8,9 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// NoteEditor part VisualElement. Note list for current query.
+    /// </summary>
     public class UNoteEditorCenterPane : UNoteEditorPaneBase
     {
         private UNoteEditor m_noteEditor;
@@ -109,6 +112,9 @@ namespace UNote.Editor
             EditorUNoteManager.OnNoteFavoriteChanged += _ => SetupListItems();
         }
 
+        /// <summary>
+        /// Enable NoteQuery edit mode.
+        /// </summary>
         internal void EnableChangeQueryNameMode()
         {
             NoteQuery noteQuery = EditorUNoteManager.CurrentNoteQuery;
@@ -131,6 +137,7 @@ namespace UNote.Editor
             m_noteQueryField.UnregisterCallback<KeyDownEvent>(TryChangeName);
             m_noteQueryField.RegisterCallback<KeyDownEvent>(TryChangeName);
             
+            // Change mode
             void TryChangeName(KeyDownEvent evt)
             {
                 // Save query name
@@ -170,6 +177,9 @@ namespace UNote.Editor
             }
         }
         
+        /// <summary>
+        /// Load note list
+        /// </summary>
         internal void SetupListItems()
         {
             NoteQuery noteQuery = EditorUNoteManager.CurrentNoteQuery;
@@ -216,6 +226,10 @@ namespace UNote.Editor
             SetupListItems();
         }
 
+        /// <summary>
+        /// Enable note edit mode.
+        /// </summary>
+        /// <param name="enableEdit"></param>
         private void SetNameGUIEditMode(bool enableEdit)
         {
             if (enableEdit)
@@ -230,6 +244,9 @@ namespace UNote.Editor
             }
         }
         
+        /// <summary>
+        /// Update background color of each element
+        /// </summary>
         private void UpdateNoteBackground()
         {
             if (EditorUNoteManager.CurrentNote == null)
