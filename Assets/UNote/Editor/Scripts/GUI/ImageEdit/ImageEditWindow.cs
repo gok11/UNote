@@ -253,32 +253,7 @@ namespace UNote.Editor
 		/// <param name="evt"></param>
 		private void OnMouseUp(MouseUpEvent evt)
 		{
-			if (!m_isPainting)
-			{
-				return;
-			}
-
-			// Apply
-			for (int px = 0; px < m_canvasBuffer.width; ++px)
-			{
-				for (int py = 0; py < m_canvasBuffer.height; ++py)
-				{
-					Color canvasColor = m_canvasBuffer.GetPixel(px, py);
-					Color paintColor = m_paintBuffer.GetPixel(px, py);
-
-					m_canvasBuffer.SetPixel(px, py, BlendColor(canvasColor, paintColor));
-				}
-			}
-			m_canvasBuffer.Apply();
-			Graphics.CopyTexture(m_clearBuffer, m_paintBuffer);
-
-			// Cache
-			Texture2D copyTex = new Texture2D(m_canvasBuffer.width, m_canvasBuffer.height, TextureFormat.RGBA32, false);
-			Graphics.CopyTexture(m_canvasBuffer, copyTex);
-			m_texCacheList.Add(copyTex);
-
-			m_prevMousePos = null;
-			m_isPainting = false;
+			FinishPaint();
 		}
 
 		/// <summary>
@@ -287,10 +262,38 @@ namespace UNote.Editor
 		/// <param name="evt"></param>
 		private void OnMouseLeave(MouseLeaveEvent evt)
 		{
+			FinishPaint();
+		}
+
+		/// <summary>
+		/// Apply and cache paint
+		/// </summary>
+		private void FinishPaint()
+		{
 			if (!m_isPainting)
 			{
 				return;
 			}
+
+			// Apply
+			Color[] canvasColors = m_canvasBuffer.GetPixels();
+			Color[] paintColors = m_paintBuffer.GetPixels();
+			
+			for (int i = 0; i < canvasColors.Length; i++)
+			{
+				canvasColors[i] = BlendColor(canvasColors[i], paintColors[i]);
+			}
+			
+			m_canvasBuffer.SetPixels(canvasColors);
+			m_canvasBuffer.Apply();
+
+			m_paintBuffer.SetPixels(m_clearBuffer.GetPixels());
+			m_paintBuffer.Apply();
+
+			// Cache
+			Texture2D copyTex = new Texture2D(m_canvasBuffer.width, m_canvasBuffer.height, TextureFormat.RGBA32, false);
+			Graphics.CopyTexture(m_canvasBuffer, copyTex);
+			m_texCacheList.Add(copyTex);
 
 			m_prevMousePos = null;
 			m_isPainting = false;
