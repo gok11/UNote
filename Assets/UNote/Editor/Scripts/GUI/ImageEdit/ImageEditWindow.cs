@@ -10,7 +10,7 @@ using UNote.Editor;
 namespace UNote.Editor
 {
 	/// <summary>
-	/// NoteEditor part VisualElement. Note editor in Inspector
+	/// Image editor and exporter
 	/// </summary>
 	public class ImageEditWindow : EditorWindow
 	{
