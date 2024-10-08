@@ -5,3 +5,7 @@
 .noteSelectable:focus {
     background-color: rgba(44, 93, 135, 255);
 }
+
+Label {
+    overflow: hidden;
+}

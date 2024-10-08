@@ -333,6 +333,7 @@ namespace UNote.Editor
             {
                 Label label = new Label(text.Trim());
                 label.style.SetMargin(2, 0, 2, 0);
+                label.style.whiteSpace = WhiteSpace.Normal;
                 parentElem.Add(label);   
             }
         }

@@ -10,12 +10,12 @@ UNote is a tool for creating and editing notes in Unity. Notes can include addit
 
 <h2>Features</h2>
 
-* Note Editor: Add, delete, and edit notes
-* Inspector Editing: Notes linked to assets can also be edited from the Inspector
-* Note Properties: Categorize by tags, prioritize with favorites, and restrict editing or display with archive options
-* Embedding Additional Information: Add information such as asset references to notes
-* Screenshots: Take screenshots and embed them as additional information; edit them with a simple image editor
-* Search: Filter and sort by text content or note properties; search conditions are user-defined
+* <b>Note Editor</b>: Add, delete, and edit notes
+* <b>Inspector Editing</b>: Notes linked to assets can also be edited from the Inspector
+* <b>Note Properties</b>: Categorize by tags, prioritize with favorites, and restrict editing or display with archive options
+* <b>Embedding Additional Information</b>: Add information such as asset references to notes
+* <b>Screenshots</b>: Take screenshots and embed them as additional information; edit them with a simple image editor
+* <b>Search</b>: Filter and sort by text content or note properties; search conditions are user-defined
 
 For an overview of planned features, please refer to [TODO.md](Doc/En/TODO.md).
 
@@ -43,6 +43,8 @@ By default, the PC’s username is set.
 
 <h3>Adding Project Notes and Messages</h3>
 
+<img width="70%" src="Doc/readme_03.gif" alt="03">
+
 1. Select UNote > Note Editor from the menu bar
 2. Open the note addition window from the Add Note... button in the bottom left
 3. Set the note type to Project and select Add New Note
@@ -53,12 +55,16 @@ You can edit your added note names and messages later.
 
 <h3>Adding Asset Notes</h3>
 
+<img width="70%" src="Doc/readme_04.gif" alt="04">
+
 1. Select the asset where you want to add a note
 2. Add a message from the input field
 
 You can also add notes from the Note Editor, as with project notes, but it's recommended to add them directly from the Inspector for fewer steps.
 
 <h3>Screenshots</h3>
+
+<img width="70%" src="Doc/readme_05.gif" alt="05">
 
 Select + button > Screenshot > GameView in the input field on the right pane to take a screenshot, which will add reference information to the input field.
 
