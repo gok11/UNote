@@ -112,6 +112,8 @@ namespace UNote.Editor
                     m_noteTitle.text = EditorUNoteManager.CurrentNote.NoteName;
                     
                     UNoteEditor.CenterPane.SetupListItems();
+                    
+                    m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
                 }
 
                 
