@@ -220,6 +220,15 @@ namespace UNote.Editor
             
             menu.AddSeparator("");
 
+            menu.AddItem(
+                new GUIContent("Copy ID"),
+                false,
+                () =>
+                {
+                    EditorGUIUtility.systemCopyBuffer = $"nid:{m_note.NoteId}";
+                }
+            );
+            
             // Rename
             if (m_note.NoteType == NoteType.Project && isOwnNote)
             {

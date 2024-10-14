@@ -131,7 +131,30 @@ namespace UNote.Editor
             menu.AddItem(
                 new GUIContent("Edit"),
                 false,
-                EnableEditText);
+                EnableEditText
+            );
+            
+            menu.AddSeparator("");
+            
+            menu.AddItem(
+                new GUIContent("Copy ID"),
+                false,
+                () =>
+                {
+                    EditorGUIUtility.systemCopyBuffer = $"nid:{m_message.ReferenceNoteId}";
+                }
+            );
+            
+            menu.AddItem(
+                new GUIContent("Copy Text"),
+                false,
+                () =>
+                {
+                    EditorGUIUtility.systemCopyBuffer = m_message.NoteContent;
+                }
+            );
+            
+            menu.AddSeparator("");
             
             menu.AddItem(
                 new GUIContent("Delete"),

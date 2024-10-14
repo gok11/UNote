@@ -74,7 +74,6 @@ namespace UNote.Editor
             AssetNote newNote = new AssetNote
             {
                 Author = UNoteSetting.UserName,
-                NoteContent = noteContent,
                 BindAssetId = guid
             };
 

@@ -176,7 +176,18 @@ namespace UNote.Editor
             string searchText = noteQuery.SearchText;
             if (!searchText.IsNullOrWhiteSpace())
             {
-                notes = notes.Where(t => t.NoteName.Contains(searchText) || ContainsSearchTextInMessages(t, searchText));
+                IEnumerable<RootNoteBase> rootNotes = notes as RootNoteBase[] ?? notes.ToArray();
+                
+                // Return note with matching ID
+                RootNoteBase idNote = GetNoteByIdInMessages(rootNotes, searchText);
+                if (idNote != null)
+                {
+                    noteList.Clear();
+                    noteList.Add(idNote);
+                    return noteList;
+                }
+                
+                notes = rootNotes.Where(t => t.NoteName.Contains(searchText) || ContainsSearchTextInMessages(t, searchText));
             }
             
             return notes;
@@ -278,7 +289,6 @@ namespace UNote.Editor
         /// </summary>
         /// <param name="note"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static string GetUpdatedDate(NoteBase note)
         {
             switch (note.NoteType)
@@ -303,6 +313,26 @@ namespace UNote.Editor
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        /// <summary>
+        /// Get a note with an equal ID 
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <param name="idText"></param>
+        /// <returns></returns>
+        private static RootNoteBase GetNoteByIdInMessages(IEnumerable<RootNoteBase> notes, string idText)
+        {
+            idText = idText.TrimStart();
+            
+            if (!idText.StartsWith("nid:"))
+            {
+                return null;
+            }
+
+            idText = idText.Substring("nid:".Length);
+            
+            return notes.FirstOrDefault(t => t.NoteId == idText);
+        }
         
         /// <summary>
         /// Get if the note contains specified text
@@ -310,7 +340,6 @@ namespace UNote.Editor
         /// <param name="note"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static bool ContainsSearchTextInMessages(NoteBase note, string text)
         {
             switch (note.NoteType)

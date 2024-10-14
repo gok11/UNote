@@ -14,9 +14,6 @@ namespace UNote.Runtime
         protected string m_author;
 
         [SerializeField]
-        protected string m_noteContent;
-
-        [SerializeField]
         protected string m_createdDate;
 
         [SerializeField]
@@ -39,12 +36,6 @@ namespace UNote.Runtime
         {
             get => m_author;
             set => m_author = value;
-        }
-
-        public string NoteContent
-        {
-            get => m_noteContent;
-            set => m_noteContent = value;
         }
 
         public string CreatedDate
