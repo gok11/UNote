@@ -14,10 +14,6 @@ namespace UNote.Editor
     [InitializeOnLoad]
     public static class NoteInjector
     {
-        private static FieldInfo s_trackerField = typeof(UnityEditor.Editor)
-            .Assembly.GetType("UnityEditor.InspectorWindow")
-            .GetField("m_Tracker", BindingFlags.NonPublic | BindingFlags.Instance);
-
         static NoteInjector()
         {
             EditorApplication.update -= TryInjectNoteElement;
@@ -38,10 +34,10 @@ namespace UNote.Editor
             foreach (var window in windows)
             {
                 string typeName = window.GetType().FullName;
-                bool isInspector = typeName != "UnityEditor.InspectorWindow";
-                bool isPropertyEditor = typeName != "UnityEditor.PropertyEditor";
+                bool isInspector = typeName == "UnityEditor.InspectorWindow";
+                bool isPropertyEditor = typeName == "UnityEditor.PropertyEditor";
                 
-                if (!isInspector && !isPropertyEditor)
+                if (!(isInspector || isPropertyEditor))
                 {
                     continue;
                 }
@@ -61,13 +57,7 @@ namespace UNote.Editor
                 VisualElement parentElement = inspectorElement.parent;
                 int insertIndex = parentElement.IndexOf(inspectorElement);
                 
-                var tracker = s_trackerField.GetValue(window) as ActiveEditorTracker;
-                if (tracker == null)
-                {
-                    continue;
-                }
-                
-                var activeEditors = tracker.activeEditors;
+                UnityEditor.Editor[] activeEditors = ActiveEditorTracker.sharedTracker.activeEditors;
                 if (activeEditors == null || activeEditors.Length == 0)
                 {
                     continue;
@@ -79,33 +69,24 @@ namespace UNote.Editor
                     Object target = editor.target;
                     if (PrefabUtility.IsPartOfPrefabAsset(target))
                     {
+                        // Prefab
                         inspectorNoteEditor = new InspectorNoteEditor(target);
                         parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
-                }
-                
-                // Determine if this is gameobject
-                foreach (var editor in activeEditors)
-                {
-                    Object target = editor.target;
-                    if (target is GameObject)
+                    else if (target is GameObject)
                     {
-                        // TODO Not supported yet
+                        // GameObject dummy
                         parentElement.Insert(insertIndex, new VisualElement { name = nameof(InspectorNoteEditor) });
 
+                        // TODO GameObject support
                         // inspectorNoteEditor = new InspectorNoteEditor(NoteType.Scene, target);
                         // parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;
                     }
-                }
-                
-                // register objects except component
-                foreach (var editor in activeEditors)
-                {
-                    Object target = editor.target;
-                    if (target is not Component)
+                    else if (target is not Component)
                     {
+                        // Other Object except Component
                         inspectorNoteEditor = new InspectorNoteEditor(target);
                         parentElement.Insert(insertIndex, inspectorNoteEditor);
                         return;

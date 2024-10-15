@@ -60,6 +60,11 @@ namespace UNote.Editor
         
         private static void DrawCountAtRightEdge(List<AssetNote> noteList, Rect rect)
         {
+            if (!NoteIcon)
+            {
+                return;
+            }
+            
             // background
             rect.x = rect.xMax - 16;
             rect.width = 14;
@@ -77,6 +82,11 @@ namespace UNote.Editor
 
         private static void DrawCountAtLeftTop(List<AssetNote> noteList, Rect rect)
         {
+            if (!NoteIcon)
+            {
+                return;
+            }
+            
             // background
             rect.x = rect.xMin - 2;
             rect.y += 2;
