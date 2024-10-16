@@ -187,7 +187,8 @@ namespace UNote.Editor
                     return noteList;
                 }
                 
-                notes = rootNotes.Where(t => t.NoteName.Contains(searchText) || ContainsSearchTextInMessages(t, searchText));
+                searchText = searchText.ToLower();
+                notes = rootNotes.Where(t => t.NoteName.ToLower().Contains(searchText) || ContainsSearchTextInMessages(t, searchText));
             }
             
             return notes;
@@ -347,13 +348,13 @@ namespace UNote.Editor
                 case NoteType.Project:
                 {
                     List<ProjectNoteMessage> messageList = GetProjectNoteMessageListByNoteId(note.NoteId);
-                    return messageList.FindIndex(t => t.NoteContent.Contains(text)) >= 0;
+                    return messageList.FindIndex(t => t.NoteContent.ToLower().Contains(text)) >= 0;
                 }
 
                 case NoteType.Asset:
                 {
                     List<AssetNoteMessage> messageList = GetAssetNoteMessageListByNoteId(note.NoteId);
-                    return messageList.FindIndex(t => t.NoteContent.Contains(text)) >= 0;
+                    return messageList.FindIndex(t => t.NoteContent.ToLower().Contains(text)) >= 0;
                 }
                 
                 default:
