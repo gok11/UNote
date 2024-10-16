@@ -25,6 +25,8 @@ namespace UNote.Editor
         [InitializeOnLoadMethod]
         internal static void Initialize()
         {
+            s_initialized = false;
+            
             ListRequest request = Client.List();
             EditorApplication.update += DetectIfUNoteIsPackage;
             
