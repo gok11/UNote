@@ -69,8 +69,11 @@ namespace UNote.Editor
             secondSplitView.Add(CenterPane);
             secondSplitView.Add(RightPane);
 
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath.UNoteEditor);
-            root.styleSheets.Add(styleSheet);
+            EditorApplication.delayCall += () =>
+            {
+                var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath.UNoteEditor);
+                root.styleSheets.Add(styleSheet);
+            };
 
             // Undo event
             Undo.undoRedoEvent += (in UndoRedoInfo info) =>
