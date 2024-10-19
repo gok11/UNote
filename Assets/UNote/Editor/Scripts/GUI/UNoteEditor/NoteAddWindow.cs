@@ -42,6 +42,10 @@ namespace UNote.Editor
                     case NoteType.Asset:
                         CreateAssetNoteGUI();
                         break;
+                    
+                    case NoteType.Scene:
+                        CreateSceneNoteGUI();
+                        break;
                 }
             });
             
@@ -86,7 +90,7 @@ namespace UNote.Editor
             {
                 string path = AssetDatabase.GetAssetPath(assetField.value);
                 string guid = AssetDatabase.AssetPathToGUID(path);
-                AssetNote assetNote = EditorUNoteManager.AddNewAssetNote(guid, "");
+                AssetNote assetNote = EditorUNoteManager.AddNewAssetNote(guid);
                 EditorUNoteManager.SelectNote(assetNote);
                 
                 Close();
@@ -98,6 +102,27 @@ namespace UNote.Editor
             });
             
             m_container.Add(assetField);
+            m_container.AddSpacer();
+            m_container.Add(addButton);
+        }
+        
+        /// <summary>
+        /// Scene note add GUI
+        /// </summary>
+        private void CreateSceneNoteGUI()
+        {
+            // Button
+            Button addButton = new Button();
+            addButton.style.SetMargin(2, 4, 2, 4);
+            addButton.text = "Add New Note";
+            addButton.clicked += () =>
+            {
+                SceneNote sceneNote = EditorUNoteManager.AddNewSceneNote();
+                EditorUNoteManager.SelectNote(sceneNote);
+                
+                Close();
+            };
+            
             m_container.AddSpacer();
             m_container.Add(addButton);
         }

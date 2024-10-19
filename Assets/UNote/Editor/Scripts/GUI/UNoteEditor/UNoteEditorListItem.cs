@@ -100,39 +100,47 @@ namespace UNote.Editor
             m_archvieLabel.style.display = note.Archived ? DisplayStyle.Flex : DisplayStyle.None;
 
             // Label
+            NoteMessageBase message = null;
+            
             switch (note.NoteType)
             {
                 case NoteType.Project:
                 {
-                    ProjectNoteMessage message = EditorUNoteManager
+                    message = EditorUNoteManager
                         .GetProjectNoteMessageListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
-
-                    m_noteContentLabel.text = message
-                        ?.NoteContent.Replace("\r", " ")
-                        .Replace("\n", " ");
-
-                    RegisterMouseEvent();
                     break;
                 } 
 
                 case NoteType.Asset:
                 {
-                    AssetNoteMessage message = EditorUNoteManager
+                    message = EditorUNoteManager
                         .GetAssetNoteMessageListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.CreatedDate)
                         .FirstOrDefault();
+                    break;
+                }
 
-                    m_noteContentLabel.text = message
-                        ?.NoteContent.Replace("\r", " ")
-                        .Replace("\n", " ");
-                    
-                    // TODO
-                    RegisterMouseEvent();
+                case NoteType.Scene:
+                {
+                    message = EditorUNoteManager
+                        .GetSceneMessageListByNoteId(note.NoteId)
+                        .OrderByDescending(t => t.CreatedDate)
+                        .FirstOrDefault();
                     break;
                 }
             }
+
+            if (message != null)
+            {
+                m_noteContentLabel.text = message
+                    ?.NoteContent.Replace("\r", " ")
+                    .Replace("\n", " ");
+                    
+                RegisterMouseEvent();
+            }
+            
             Focus();
         }
 

@@ -10,6 +10,7 @@ namespace UNote.Editor
         All,
         Project,
         Asset,
+        Scene,
     }
     
     [Serializable]

@@ -271,6 +271,16 @@ namespace UNote.Editor
                     }
                     break;
                 
+                case NoteType.Scene:
+                    SceneNote sceneNote = note as SceneNote;
+                    string sceneNoteId = sceneNote?.NoteId;
+
+                    foreach (var noteMessage in EditorUNoteManager.GetSceneMessageListByNoteId(sceneNoteId))
+                    {
+                        m_noteList.Insert(m_noteList.childCount - 1, new UNoteEditorContentElem(noteMessage));
+                    }
+                    break;
+                
                 default:
                     throw new NotImplementedException();
             }
@@ -348,6 +358,10 @@ namespace UNote.Editor
                 
                 case NoteType.Asset:
                     EditorUNoteManager.ReloadAssetNotes();
+                    break;
+                
+                case NoteType.Scene:
+                    EditorUNoteManager.ReloadSceneNotes();
                     break;
             }
             

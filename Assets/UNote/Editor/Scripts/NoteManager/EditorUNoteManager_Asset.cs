@@ -65,7 +65,7 @@ namespace UNote.Editor
             }
         }
         
-        public static AssetNote AddNewAssetNote(string guid, string noteContent)
+        public static AssetNote AddNewAssetNote(string guid)
         {
             AssetNoteContainer container = GetOwnAssetNoteContainer();
             

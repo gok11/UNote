@@ -272,7 +272,7 @@ namespace UNote.Editor
                     // Add parent note if needed
                     if (m_bindId.IsNullOrEmpty())
                     {
-                        AssetNote newNote = EditorUNoteManager.AddNewAssetNote(m_objectId, "");
+                        AssetNote newNote = EditorUNoteManager.AddNewAssetNote(m_objectId);
                         m_bindId = newNote.NoteId;
                     }
                     
@@ -282,6 +282,14 @@ namespace UNote.Editor
                         m_inputText.value,
                         new List<string>(tagIdList)
                     );
+                    break;
+                
+                case NoteType.Scene:
+                    newNoteMessage = EditorUNoteManager.AddNewSceneNoteMessage(
+                        m_bindId,
+                        m_inputText.value,
+                        new List<string>(tagIdList)
+                    );   
                     break;
 
                 default:

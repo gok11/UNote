@@ -145,6 +145,7 @@ namespace UNote.Editor
                 case NoteTypeFilter.All:
                     noteList.AddRange(GetProjectNoteAllList());
                     noteList.AddRange(GetAllAssetNotesIdDistinct());
+                    noteList.AddRange(GetCurrentSceneNoteList());
                     break;
                 
                 case NoteTypeFilter.Project:
@@ -153,6 +154,10 @@ namespace UNote.Editor
                 
                 case NoteTypeFilter.Asset:
                     noteList.AddRange(GetAllAssetNotesIdDistinct());
+                    break;
+                
+                case NoteTypeFilter.Scene:
+                    noteList.AddRange(GetCurrentSceneNoteList());
                     break;
             }
 
@@ -215,6 +220,12 @@ namespace UNote.Editor
                 case NoteType.Asset:
                 {
                     List<AssetNoteMessage> messageList = GetAssetNoteMessageListByNoteId(note.NoteId);
+                    return CheckMessageListInternal(messageList);
+                }
+
+                case NoteType.Scene:
+                {
+                    List<SceneNoteMessage> messageList = GetSceneMessageListByNoteId(note.NoteId);
                     return CheckMessageListInternal(messageList);
                 }
                 
@@ -309,6 +320,14 @@ namespace UNote.Editor
                         .FirstOrDefault();
                     return message != null ? message.UpdatedDate : note.CreatedDate;
                 }
+
+                case NoteType.Scene:
+                {
+                    SceneNoteMessage message = GetSceneMessageListByNoteId(note.NoteId)
+                        .OrderByDescending(t => t.UpdatedDate)
+                        .FirstOrDefault();
+                    return message != null ? message.UpdatedDate : note.CreatedDate;
+                }
                 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -356,6 +375,12 @@ namespace UNote.Editor
                     List<AssetNoteMessage> messageList = GetAssetNoteMessageListByNoteId(note.NoteId);
                     return messageList.FindIndex(t => t.NoteContent.ToLower().Contains(text)) >= 0;
                 }
+
+                case NoteType.Scene:
+                {
+                    List<SceneNoteMessage> messageList = GetSceneMessageListByNoteId(note.NoteId);
+                    return messageList.FindIndex(t => t.NoteContent.ToLower().Contains(text)) >= 0;
+                }
                 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -399,6 +424,12 @@ namespace UNote.Editor
                 case NoteType.Asset:
                     DeleteAssetNote(note);
                     break;
+
+                case NoteType.Scene:
+                {
+                    DeleteSceneNote(note);
+                    break;
+                }
                 
                 default:
                     throw new NotImplementedException();
@@ -497,33 +528,47 @@ namespace UNote.Editor
             switch (noteType)
             {
                 case NoteType.Project:
-                    string noteName = baseName;
-                    int id = 0;
-                    var notes = GetProjectNoteAllList();
-                    while (true)
-                    {
-                        bool isOverlap = false;
-                        foreach (var note in notes)
-                        {
-                            if (note.NoteName == noteName)
-                            {
-                                isOverlap = true;
-                                break;
-                            }
-                        }
-
-                        if (!isOverlap)
-                        {
-                            break;
-                        }
-
-                        noteName = $"{baseName} {id++}";
-                    }
-                    return noteName;
-
+                    var projectNoteList = GetProjectNoteAllList();
+                    return GetUniqueName(baseName, projectNoteList);
+                
+                case NoteType.Scene:
+                    var sceneNoteList = GetCurrentSceneNoteList();
+                    return GetUniqueName(baseName, sceneNoteList);
+                
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        /// <summary>
+        /// Generate unique note name
+        /// </summary>
+        private static string GetUniqueName<T>(string baseName, IReadOnlyList<T> noteList) where T : NoteBase
+        {
+            string noteName = baseName;
+            int id = 0;
+            
+            while (true)
+            {
+                bool isOverlap = false;
+                foreach (var note in noteList)
+                {
+                    if (note.NoteName == noteName)
+                    {
+                        isOverlap = true;
+                        break;
+                    }
+                }
+
+                if (!isOverlap)
+                {
+                    break;
+                }
+
+                noteName = $"{baseName} {id++}";
+            }
+            
+            return noteName;
         }
 
         /// <summary>

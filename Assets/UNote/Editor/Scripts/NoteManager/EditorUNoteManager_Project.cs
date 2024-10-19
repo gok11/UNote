@@ -18,7 +18,7 @@ namespace UNote.Editor
         private List<ProjectNoteMessage> m_projectNoteMessageList = new();
 
         private Dictionary<string, ProjectNote> m_projectNoteDict = new();
-        private Dictionary<string, List<ProjectNoteMessage>> m_projectNoteDictByGUID = new();
+        private Dictionary<string, List<ProjectNoteMessage>> m_projectMessageDictByGUID = new();
         
         internal static IReadOnlyList<ProjectNote> GetProjectNoteAllList() => Instance.m_projectNoteList;
         internal static IReadOnlyList<ProjectNoteMessage> GetProjectNoteMessageAllList() => Instance.m_projectNoteMessageList;
@@ -114,7 +114,7 @@ namespace UNote.Editor
 
         public static List<ProjectNoteMessage> GetProjectNoteMessageListByNoteId(string projectNoteId)
         {
-            if (Instance.m_projectNoteDictByGUID.TryGetValue(projectNoteId, out var noteMessageList))
+            if (Instance.m_projectMessageDictByGUID.TryGetValue(projectNoteId, out var noteMessageList))
             {
                 return noteMessageList;
             }
@@ -130,7 +130,7 @@ namespace UNote.Editor
                 }
             }
 
-            Instance.m_projectNoteDictByGUID.Add(projectNoteId, newList);
+            Instance.m_projectMessageDictByGUID.Add(projectNoteId, newList);
             return newList;
         }
 
@@ -166,7 +166,7 @@ namespace UNote.Editor
             Instance.m_projectNoteList.Clear();
             Instance.m_projectNoteMessageList.Clear();
             Instance.m_projectNoteDict.Clear();
-            Instance.m_projectNoteDictByGUID.Clear();
+            Instance.m_projectMessageDictByGUID.Clear();
         }
     }
 }
