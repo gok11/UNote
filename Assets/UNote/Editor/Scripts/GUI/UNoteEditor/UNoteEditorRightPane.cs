@@ -71,7 +71,7 @@ namespace UNote.Editor
                 return;
             }
             
-            if (note.NoteType != NoteType.Project)
+            if (note.NoteType == NoteType.Asset)
             {
                 return;
             }
@@ -88,44 +88,64 @@ namespace UNote.Editor
             m_titleField.value = note.NoteName;
             m_titleField.Focus();
             
+            // Keydown event
             m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
             m_titleField.RegisterCallback<KeyDownEvent>(TryChangeTitle);
 
-            void TryChangeTitle(KeyDownEvent evt)
+            // Blur event
+            m_titleField.UnregisterCallback<BlurEvent>(OnBlur);
+            m_titleField.RegisterCallback<BlurEvent>(OnBlur);
+
+            void OnBlur(BlurEvent blurEvent)
             {
-                if (evt.keyCode == KeyCode.Return)
-                {
-                    // except invalid title
-                    if (m_titleField.value.IsNullOrWhiteSpace())
-                    {
-                        m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
-                        SetTitleGUIEditMode(false);
-                        return;
-                    }
-                    
-                    // exec rename
-                    EditorUNoteManager.ChangeNoteName(note, m_titleField.value);
-                    
-                    // finish editing title
-                    SetTitleGUIEditMode(false);
-
-                    m_noteTitle.text = EditorUNoteManager.CurrentNote.NoteName;
-                    
-                    UNoteEditor.CenterPane.SetupListItems();
-                    
-                    m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
-                }
-
-                
-                if (evt.keyCode == KeyCode.Escape)
-                {
-                    m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
-
-                    SetTitleGUIEditMode(false);
-                }
+                CancelTitleEditMode();
             }
-        }        
+        }
 
+        private void TryChangeTitle(KeyDownEvent evt)
+        {
+            NoteBase note = EditorUNoteManager.CurrentNote;
+            if (note == null)
+            {
+                return;
+            }
+            
+            if (evt.keyCode == KeyCode.Return)
+            {
+                // except invalid title
+                if (m_titleField.value.IsNullOrWhiteSpace())
+                {
+                    m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
+                    SetTitleGUIEditMode(false);
+                    return;
+                }
+                    
+                // exec rename
+                EditorUNoteManager.ChangeNoteName(note, m_titleField.value);
+                    
+                // finish editing title
+                SetTitleGUIEditMode(false);
+
+                m_noteTitle.text = EditorUNoteManager.CurrentNote.NoteName;
+                    
+                UNoteEditor.CenterPane.SetupListItems();
+                    
+                m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
+            }
+                
+            if (evt.keyCode == KeyCode.Escape)
+            {
+                CancelTitleEditMode();
+            }
+        }
+        
+        private void CancelTitleEditMode()
+        {
+            m_titleField.UnregisterCallback<KeyDownEvent>(TryChangeTitle);
+
+            SetTitleGUIEditMode(false);
+        }
+        
         private void Initialize()
         {
             NoteBase currentNote = EditorUNoteManager.CurrentNote;
