@@ -8,4 +8,7 @@
     <ui:VisualElement name="AssetNoteElem" style="flex-grow: 0; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0; padding-top: 2px; padding-bottom: 4px;">
         <ui:Label tabindex="-1" text="Asset Notes" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="font-size: 12px; -unity-font-style: normal; white-space: nowrap; margin-left: 14px; margin-top: 2px; -unity-background-image-tint-color: rgb(37, 37, 37);" />
     </ui:VisualElement>
+    <ui:VisualElement name="SceneNoteElem" style="flex-grow: 0; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0; padding-top: 2px; padding-bottom: 4px;">
+        <ui:Label tabindex="-1" text="Scene Notes" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="font-size: 12px; -unity-font-style: normal; white-space: nowrap; margin-left: 14px; margin-top: 2px; -unity-background-image-tint-color: rgb(37, 37, 37);" />
+    </ui:VisualElement>
 </ui:UXML>

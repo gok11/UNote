@@ -137,9 +137,13 @@ namespace UNote.Editor
                 m_noteContentLabel.text = message
                     ?.NoteContent.Replace("\r", " ")
                     .Replace("\n", " ");
-                    
-                RegisterMouseEvent();
             }
+            else
+            {
+                m_noteContentLabel.text = "";
+            }
+            
+            RegisterMouseEvent();
             
             Focus();
         }
@@ -190,7 +194,7 @@ namespace UNote.Editor
             tagElem.style.backgroundImage = Texture2D.whiteTexture;
             tagElem.style.unityBackgroundImageTintColor = tag.ToColor();
             tagElem.style.width = 18;
-            tagElem.style.height = 1;
+            tagElem.style.height = 2;
             tagElem.style.marginRight = 2;
             return tagElem;
         }

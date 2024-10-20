@@ -97,10 +97,12 @@ namespace UNote.Editor
                 // Initialize own container
                 GetOwnProjectNoteContainer();
                 GetOwnAssetNoteContainer();
+                GetOwnSceneNoteContainer();
 
                 // Load all notes
                 ReloadProjectNotes();
                 ReloadAssetNotes();
+                ReloadSceneNotes();
             };
         }
 
@@ -405,6 +407,16 @@ namespace UNote.Editor
                         container.Save();
                     }
                     break;
+                
+                case NoteType.Scene:
+                    if (note is SceneNote sceneNote)
+                    {
+                        SceneNoteContainer container = GetOwnSceneNoteContainer();
+                        Undo.RecordObject(container, "UNote Change Scene Note Title");
+                        sceneNote.ChangeNoteName(noteName);
+                        container.Save();
+                    }
+                    break;
             }
         }
 
@@ -586,6 +598,10 @@ namespace UNote.Editor
                 
                 case NoteType.Asset:
                     GetOwnAssetNoteContainer().Save();
+                    break;
+                
+                case NoteType.Scene:
+                    GetOwnSceneNoteContainer().Save();
                     break;
                 
                 default:

@@ -51,6 +51,9 @@ namespace UNote.Editor
             return s_sceneNoteInstance;
         }
         
+        /// <summary>
+        /// Clear cache and load scene note
+        /// </summary>
         internal static void ReloadSceneNotes()
         {
             ClearSceneNoteCache();
@@ -64,6 +67,9 @@ namespace UNote.Editor
             }
         }
 
+        /// <summary>
+        /// Add new scene note
+        /// </summary>
         public static SceneNote AddNewSceneNote()
         {
             SceneNoteContainer container = GetOwnSceneNoteContainer();
@@ -88,6 +94,9 @@ namespace UNote.Editor
             return newNote;
         }
 
+        /// <summary>
+        /// Add new scene note message
+        /// </summary>
         public static SceneNoteMessage AddNewSceneNoteMessage(string guid, string noteContent, List<string> noteTagList)
         {
             SceneNoteContainer container = GetOwnSceneNoteContainer();
@@ -112,6 +121,9 @@ namespace UNote.Editor
             return newNote;
         }
 
+        /// <summary>
+        /// Get scene note message by scene note GUID
+        /// </summary>
         public static List<SceneNoteMessage> GetSceneMessageListByNoteId(string sceneNoteId)
         {
             if (Instance.m_sceneMessageDict.TryGetValue(sceneNoteId, out var noteMessageList))
@@ -133,6 +145,9 @@ namespace UNote.Editor
             return newList;
         }
 
+        /// <summary>
+        /// Delete scene note
+        /// </summary>
         private static void DeleteSceneNote(NoteBase note)
         {
             SceneNoteContainer container = GetOwnSceneNoteContainer();
@@ -156,8 +171,13 @@ namespace UNote.Editor
                     container.Save();
                 }
             }
+            
+            ReloadSceneNotes();
         }
 
+        /// <summary>
+        /// Clear scene note cache
+        /// </summary>
         internal static void ClearSceneNoteCache()
         {
             Instance.m_currentSceneNoteList.Clear();

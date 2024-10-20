@@ -56,11 +56,13 @@ namespace UNote.Editor
             VisualElement allNoteElem = categoryContainer.Q("AllNoteElem");
             VisualElement projectNoteElem = categoryContainer.Q("ProjectNoteElem");
             VisualElement assetNoteElem = categoryContainer.Q("AssetNoteElem");
+            VisualElement sceneNoteElem = categoryContainer.Q("SceneNoteElem");
             
             AllNotesQuery allNoteQuery = new AllNotesQuery();
             m_presetQueryElemDict.Add(allNoteQuery, allNoteElem);
             m_presetQueryElemDict.Add(new ProjectNotesQuery(), projectNoteElem);
             m_presetQueryElemDict.Add(new AssetNotesQuery(), assetNoteElem);
+            m_presetQueryElemDict.Add(new SceneNoteQuery(), sceneNoteElem);
 
             // Register select event
             foreach (var pair in m_presetQueryElemDict)
@@ -81,6 +83,10 @@ namespace UNote.Editor
                         
                         case NoteTypeFilter.Asset:
                             query = pair.Key.Clone<AssetNotesQuery>();
+                            break;
+                        
+                        case NoteTypeFilter.Scene:
+                            query = pair.Key.Clone<SceneNoteQuery>();
                             break;
                         
                         default:
