@@ -608,5 +608,10 @@ namespace UNote.Editor
                     throw new NotImplementedException();
             }
         }
+
+        internal void TriggerNoteAdded(NoteBase note)
+        {
+            OnNoteAdded?.Invoke(note);
+        }
     }
 }
