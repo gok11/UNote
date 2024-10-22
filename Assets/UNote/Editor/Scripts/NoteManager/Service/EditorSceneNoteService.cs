@@ -9,13 +9,13 @@ using UNote.Runtime;
 namespace UNote.Editor
 {
     /// <summary>
-    /// Editor note service
+    /// Editor scene note service
     /// </summary>
     internal class EditorSceneNoteService : EditorNoteServiceBase
     {
         private EditorUNoteManager m_noteManager;
         
-        private SceneNoteContainer m_sceneNoteInstance;
+        private SceneNoteContainer m_sceneNoteContainer;
 
         private List<SceneNote> m_currentSceneNoteList = new();
         private List<SceneNoteMessage> m_currentSceneMessageList = new();
@@ -23,19 +23,19 @@ namespace UNote.Editor
         private Dictionary<string, List<SceneNote>> m_sceneNoteDict = new();
         private Dictionary<string, List<SceneNoteMessage>> m_sceneMessageDict = new();
 
-        private IReadOnlyList<SceneNote> GetCurrentSceneNoteList() => m_currentSceneNoteList;
-        private IReadOnlyList<SceneNoteMessage> GetCurrentSceneNoteMessageList() => m_currentSceneMessageList;
+        internal IReadOnlyList<SceneNote> GetCurrentSceneNoteList() => m_currentSceneNoteList;
+        internal IReadOnlyList<SceneNoteMessage> GetCurrentSceneNoteMessageList() => m_currentSceneMessageList;
 
         public EditorSceneNoteService(EditorUNoteManager noteManager)
         {
             m_noteManager = noteManager;
         }
         
-        private SceneNoteContainer GetOwnSceneNoteContainer()
+        internal SceneNoteContainer GetOwnSceneNoteContainer()
         {
-            if (m_sceneNoteInstance)
+            if (m_sceneNoteContainer)
             {
-                return m_sceneNoteInstance;
+                return m_sceneNoteContainer;
             }
             
             string dir = Path.Combine(NoteAssetDirectory, "Scene");
@@ -44,7 +44,7 @@ namespace UNote.Editor
             
             if (container)
             {
-                m_sceneNoteInstance = container;
+                m_sceneNoteContainer = container;
                 return container;
             }
 
@@ -53,9 +53,9 @@ namespace UNote.Editor
                 Directory.CreateDirectory(dir);   
             }
 
-            m_sceneNoteInstance = ScriptableObject.CreateInstance<SceneNoteContainer>();
-            AssetDatabase.CreateAsset(m_sceneNoteInstance, filePath);
-            return m_sceneNoteInstance;
+            m_sceneNoteContainer = ScriptableObject.CreateInstance<SceneNoteContainer>();
+            AssetDatabase.CreateAsset(m_sceneNoteContainer, filePath);
+            return m_sceneNoteContainer;
         }
         
         /// <summary>
@@ -88,7 +88,7 @@ namespace UNote.Editor
                 Author = UNoteSetting.UserName,
             };
 
-            string uniqueName = GenerateUniqueName(NoteType.Scene);
+            string uniqueName = GenerateUniqueName();
             newNote.ChangeNoteName(uniqueName);
 
             container.GetCurrentSceneNoteList().Add(newNote);
@@ -104,7 +104,7 @@ namespace UNote.Editor
         /// <summary>
         /// Generate unique note name for specified note type
         /// </summary>
-        private string GenerateUniqueName(NoteType noteType)
+        private string GenerateUniqueName()
         {
             const string baseName = "New Note";
             IReadOnlyList<SceneNote> sceneNoteList = GetCurrentSceneNoteList();

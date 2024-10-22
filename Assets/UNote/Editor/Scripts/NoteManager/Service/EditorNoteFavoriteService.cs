@@ -7,15 +7,15 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
-    public partial class EditorUNoteManager
+    internal class EditorNoteFavoriteService : EditorNoteServiceBase
     {
-        private static FavoriteNoteContainer s_favoriteNoteContainerInstance;
+        private FavoriteNoteContainer m_favoriteNoteContainerInstance;
 
-        private static FavoriteNoteContainer GetOwnFavoriteNoteContainer()
+        internal FavoriteNoteContainer GetOwnFavoriteNoteContainer()
         {
-            if (s_favoriteNoteContainerInstance)
+            if (m_favoriteNoteContainerInstance)
             {
-                return s_favoriteNoteContainerInstance;
+                return m_favoriteNoteContainerInstance;
             }
             
             string dir = Path.Combine(NoteAssetDirectory, "Favorite");
@@ -24,7 +24,7 @@ namespace UNote.Editor
 
             if (container)
             {
-                s_favoriteNoteContainerInstance = container;
+                m_favoriteNoteContainerInstance = container;
                 return container;
             }
 
@@ -33,25 +33,25 @@ namespace UNote.Editor
                 Directory.CreateDirectory(dir);   
             }
             
-            s_favoriteNoteContainerInstance = ScriptableObject.CreateInstance<FavoriteNoteContainer>();
-            AssetDatabase.CreateAsset(s_favoriteNoteContainerInstance, filePath);
+            m_favoriteNoteContainerInstance = ScriptableObject.CreateInstance<FavoriteNoteContainer>();
+            AssetDatabase.CreateAsset(m_favoriteNoteContainerInstance, filePath);
             AssetDatabase.Refresh();
-            return s_favoriteNoteContainerInstance;
+            return m_favoriteNoteContainerInstance;
         }
 
-        public static IReadOnlyList<string> GetFavoriteNoteList()
+        public IReadOnlyList<string> GetFavoriteNoteList()
         {
             return GetOwnFavoriteNoteContainer().GetFavoriteNoteList();
         }
 
-        public static void AddFavorite(NoteBase note)
+        public void AddFavorite(NoteBase note)
         {
             if (note == null)
             {
                 return;
             }
             
-            List<string> favoriteNoteList = s_favoriteNoteContainerInstance.GetFavoriteNoteList();
+            List<string> favoriteNoteList = m_favoriteNoteContainerInstance.GetFavoriteNoteList();
             if (favoriteNoteList.Contains(note.NoteId))
             {
                 return;
@@ -61,14 +61,14 @@ namespace UNote.Editor
             GetOwnFavoriteNoteContainer().Save();
         }
 
-        public static void DeleteFavorite(NoteBase note)
+        public void DeleteFavorite(NoteBase note)
         {
             if (note == null)
             {
                 return;
             }
             
-            List<string> favoriteNoteList = s_favoriteNoteContainerInstance.GetFavoriteNoteList();
+            List<string> favoriteNoteList = m_favoriteNoteContainerInstance.GetFavoriteNoteList();
             if (!favoriteNoteList.Contains(note.NoteId))
             {
                 return;

@@ -370,20 +370,7 @@ namespace UNote.Editor
                 UNoteEditor.CenterPane.OnUndoRedo(undoName);
             }
 
-            switch (EditorUNoteManager.CurrentNoteType)
-            {
-                case NoteType.Project:
-                    EditorUNoteManager.ReloadProjectNotes();
-                    break;
-                
-                case NoteType.Asset:
-                    EditorUNoteManager.ReloadAssetNotes();
-                    break;
-                
-                case NoteType.Scene:
-                    EditorUNoteManager.ReloadSceneNotes();
-                    break;
-            }
+            EditorUNoteManager.ReloadNotes(EditorUNoteManager.CurrentNoteType);
             
             SetupMessageList();
         }

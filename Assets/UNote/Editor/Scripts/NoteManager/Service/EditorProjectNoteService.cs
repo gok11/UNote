@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,11 +9,13 @@ using UNote.Runtime;
 namespace UNote.Editor
 {
     /// <summary>
-    /// Note manager for ProjectNote
+    /// Editor project note service
     /// </summary>
-    public partial class EditorUNoteManager
+    internal class EditorProjectNoteService : EditorNoteServiceBase
     {
-        private static ProjectNoteContainer s_projectNoteInstance;
+        private EditorUNoteManager m_noteManager;
+        
+        private ProjectNoteContainer m_projectNoteContainer;
         
         private List<ProjectNote> m_projectNoteList = new();
         private List<ProjectNoteMessage> m_projectNoteMessageList = new();
@@ -20,14 +23,19 @@ namespace UNote.Editor
         private Dictionary<string, ProjectNote> m_projectNoteDict = new();
         private Dictionary<string, List<ProjectNoteMessage>> m_projectMessageDictByGUID = new();
         
-        internal static IReadOnlyList<ProjectNote> GetProjectNoteAllList() => Instance.m_projectNoteList;
-        internal static IReadOnlyList<ProjectNoteMessage> GetProjectNoteMessageAllList() => Instance.m_projectNoteMessageList;
+        internal IReadOnlyList<ProjectNote> GetProjectNoteAllList() => m_projectNoteList;
+        internal IReadOnlyList<ProjectNoteMessage> GetProjectNoteMessageAllList() => m_projectNoteMessageList;
 
-        private static ProjectNoteContainer GetOwnProjectNoteContainer()
+        public EditorProjectNoteService(EditorUNoteManager noteManager)
         {
-            if (s_projectNoteInstance)
+            m_noteManager = noteManager;
+        }
+        
+        internal ProjectNoteContainer GetOwnProjectNoteContainer()
+        {
+            if (m_projectNoteContainer)
             {
-                return s_projectNoteInstance;
+                return m_projectNoteContainer;
             }
             
             string dir = Path.Combine(NoteAssetDirectory, "Project");
@@ -36,7 +44,7 @@ namespace UNote.Editor
 
             if (container)
             {
-                s_projectNoteInstance = container;
+                m_projectNoteContainer = container;
                 return container;
             }
 
@@ -45,13 +53,13 @@ namespace UNote.Editor
                 Directory.CreateDirectory(dir);   
             }
             
-            s_projectNoteInstance = ScriptableObject.CreateInstance<ProjectNoteContainer>();
-            AssetDatabase.CreateAsset(s_projectNoteInstance, filePath);
+            m_projectNoteContainer = ScriptableObject.CreateInstance<ProjectNoteContainer>();
+            AssetDatabase.CreateAsset(m_projectNoteContainer, filePath);
             AssetDatabase.Refresh();
-            return s_projectNoteInstance;
+            return m_projectNoteContainer;
         }
         
-        internal static void ReloadProjectNotes()
+        internal void ReloadProjectNotes()
         {
             ClearProjectNoteCache();
             
@@ -59,12 +67,12 @@ namespace UNote.Editor
             foreach (var file in Directory.GetFiles(dir, "*.asset"))
             {
                 ProjectNoteContainer tmpContainer = AssetDatabase.LoadAssetAtPath<ProjectNoteContainer>(file.FullPathToAssetPath());
-                Instance.m_projectNoteList.AddRange(tmpContainer.GetProjectNoteList());
-                Instance.m_projectNoteMessageList.AddRange(tmpContainer.GetProjectMessageList());
+                m_projectNoteList.AddRange(tmpContainer.GetProjectNoteList());
+                m_projectNoteMessageList.AddRange(tmpContainer.GetProjectMessageList());
             }
         }
 
-        public static ProjectNote AddNewProjectNote()
+        internal ProjectNote AddNewProjectNote()
         {
             ProjectNoteContainer container = GetOwnProjectNoteContainer();
             
@@ -75,7 +83,7 @@ namespace UNote.Editor
                 Author = UNoteSetting.UserName
             };
 
-            string uniqueName = GenerateUniqueName(NoteType.Project);
+            string uniqueName = GenerateUniqueName();
             newNote.ChangeNoteName(uniqueName);
             
             container.GetProjectNoteList().Add(newNote);
@@ -83,12 +91,19 @@ namespace UNote.Editor
 
             ReloadProjectNotes();
             
-            OnNoteAdded?.Invoke(newNote);
+            m_noteManager.TriggerNoteAdded(newNote);
             
             return newNote;
         }
+
+        private string GenerateUniqueName()
+        {
+            const string baseName = "New Note";
+            var projectNoteList = GetProjectNoteAllList();
+            return GetUniqueName(baseName, projectNoteList);
+        }
         
-        public static ProjectNoteMessage AddNewProjectNoteMessage(string guid, string noteContent, List<string> noteTagList)
+        public ProjectNoteMessage AddNewProjectNoteMessage(string guid, string noteContent, List<string> noteTagList)
         {
             ProjectNoteContainer container = GetOwnProjectNoteContainer();
             
@@ -107,14 +122,14 @@ namespace UNote.Editor
             
             ReloadProjectNotes();
             
-            OnNoteAdded?.Invoke(newNote);
+            m_noteManager.TriggerNoteAdded(newNote);
             
             return newNote;
         }
 
-        public static List<ProjectNoteMessage> GetProjectNoteMessageListByNoteId(string projectNoteId)
+        public List<ProjectNoteMessage> GetProjectNoteMessageListByNoteId(string projectNoteId)
         {
-            if (Instance.m_projectMessageDictByGUID.TryGetValue(projectNoteId, out var noteMessageList))
+            if (m_projectMessageDictByGUID.TryGetValue(projectNoteId, out var noteMessageList))
             {
                 return noteMessageList;
             }
@@ -122,7 +137,7 @@ namespace UNote.Editor
             List<ProjectNoteMessage> newList = new(64);
 
             // sort by created date
-            foreach (var note in Instance.m_projectNoteMessageList.OrderBy(t => t.CreatedDate))
+            foreach (var note in m_projectNoteMessageList.OrderBy(t => t.CreatedDate))
             {
                 if (note.ReferenceNoteId == projectNoteId)
                 {
@@ -130,11 +145,11 @@ namespace UNote.Editor
                 }
             }
 
-            Instance.m_projectMessageDictByGUID.Add(projectNoteId, newList);
+            m_projectMessageDictByGUID.Add(projectNoteId, newList);
             return newList;
         }
 
-        private static void DeleteProjectNote(NoteBase note)
+        internal void DeleteProjectNote(NoteBase note)
         {
             ProjectNoteContainer projContainer = GetOwnProjectNoteContainer();
             Undo.RecordObject(projContainer, "Delete Project Note");
@@ -161,12 +176,12 @@ namespace UNote.Editor
             ReloadProjectNotes();
         }
 
-        internal static void ClearProjectNoteCache()
+        internal void ClearProjectNoteCache()
         {
-            Instance.m_projectNoteList.Clear();
-            Instance.m_projectNoteMessageList.Clear();
-            Instance.m_projectNoteDict.Clear();
-            Instance.m_projectMessageDictByGUID.Clear();
+            m_projectNoteList.Clear();
+            m_projectNoteMessageList.Clear();
+            m_projectNoteDict.Clear();
+            m_projectMessageDictByGUID.Clear();
         }
     }
 }

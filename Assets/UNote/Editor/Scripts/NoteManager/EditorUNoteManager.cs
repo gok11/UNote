@@ -12,13 +12,18 @@ namespace UNote.Editor
     /// Note manager in Unity Editor
     /// </summary>
     [Serializable]
-    public partial class EditorUNoteManager
+    public class EditorUNoteManager
     {
         private NoteType m_currentNoteType = NoteType.Project;
         private NoteBase m_currentNote;
         
         [SerializeField]
         private NoteQuery m_noteQuery;
+        
+        private static EditorProjectNoteService s_projectNoteService;
+        private static EditorAssetNoteService s_assetnoteService;
+        private static EditorSceneNoteService s_sceneNoteService;
+        private static EditorNoteFavoriteService s_noteFavoriteService;
         
         private ProjectNoteContainer m_projectNoteContainer;
         private AssetNoteContainer m_assetNoteContainer;
@@ -75,12 +80,19 @@ namespace UNote.Editor
                 switch (Instance.m_currentNoteType)
                 {
                     case NoteType.Project:
-                        SelectNote(GetProjectNoteAllList()?.FirstOrDefault());
+                        SelectNote(s_projectNoteService.GetProjectNoteAllList()?.FirstOrDefault());
                         break;
                     
                     case NoteType.Asset:
-                        SelectNote(GetAssetNoteAllList()?.FirstOrDefault());
+                        SelectNote(s_assetnoteService.GetAssetNoteAllList()?.FirstOrDefault());
                         break;
+                    
+                    case NoteType.Scene:
+                        SelectNote(s_sceneNoteService.GetCurrentSceneNoteList()?.FirstOrDefault());
+                        break;
+                    
+                    default:
+                        throw new NotImplementedException();
                 }
 
                 return Instance.m_currentNote;
@@ -92,17 +104,23 @@ namespace UNote.Editor
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
+            // Initialize services
+            s_projectNoteService = new EditorProjectNoteService(Instance);
+            s_assetnoteService = new EditorAssetNoteService(Instance);
+            s_sceneNoteService = new EditorSceneNoteService(Instance);
+            s_noteFavoriteService = new EditorNoteFavoriteService();
+            
             EditorApplication.delayCall += () =>
             {
                 // Initialize own container
-                GetOwnProjectNoteContainer();
-                GetOwnAssetNoteContainer();
-                GetOwnSceneNoteContainer();
+                s_projectNoteService.GetOwnProjectNoteContainer();
+                s_assetnoteService.GetOwnAssetNoteContainer();
+                s_sceneNoteService.GetOwnSceneNoteContainer();
 
                 // Load all notes
-                ReloadProjectNotes();
-                ReloadAssetNotes();
-                ReloadSceneNotes();
+                s_projectNoteService.ReloadProjectNotes();
+                s_assetnoteService.ReloadAssetNotes();
+                s_sceneNoteService.ReloadSceneNotes();
             };
         }
 
@@ -145,21 +163,21 @@ namespace UNote.Editor
             switch (noteQuery.NoteTypeFilter)
             {
                 case NoteTypeFilter.All:
-                    noteList.AddRange(GetProjectNoteAllList());
-                    noteList.AddRange(GetAllAssetNotesIdDistinct());
-                    noteList.AddRange(GetCurrentSceneNoteList());
+                    noteList.AddRange(s_projectNoteService.GetProjectNoteAllList());
+                    noteList.AddRange(s_assetnoteService.GetAllAssetNotesIdDistinct());
+                    noteList.AddRange(s_sceneNoteService.GetCurrentSceneNoteList());
                     break;
                 
                 case NoteTypeFilter.Project:
-                    noteList.AddRange(GetProjectNoteAllList());
+                    noteList.AddRange(s_projectNoteService.GetProjectNoteAllList());
                     break;
                 
                 case NoteTypeFilter.Asset:
-                    noteList.AddRange(GetAllAssetNotesIdDistinct());
+                    noteList.AddRange(s_assetnoteService.GetAllAssetNotesIdDistinct());
                     break;
                 
                 case NoteTypeFilter.Scene:
-                    noteList.AddRange(GetCurrentSceneNoteList());
+                    noteList.AddRange(s_sceneNoteService.GetCurrentSceneNoteList());
                     break;
             }
 
@@ -215,19 +233,19 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                 {
-                    List<ProjectNoteMessage> messageList = GetProjectNoteMessageListByNoteId(note.NoteId);
+                    List<ProjectNoteMessage> messageList = s_projectNoteService.GetProjectNoteMessageListByNoteId(note.NoteId);
                     return CheckMessageListInternal(messageList);
                 }
 
                 case NoteType.Asset:
                 {
-                    List<AssetNoteMessage> messageList = GetAssetNoteMessageListByNoteId(note.NoteId);
+                    List<AssetNoteMessage> messageList = s_assetnoteService.GetAssetNoteMessageListByNoteId(note.NoteId);
                     return CheckMessageListInternal(messageList);
                 }
 
                 case NoteType.Scene:
                 {
-                    List<SceneNoteMessage> messageList = GetSceneMessageListByNoteId(note.NoteId);
+                    List<SceneNoteMessage> messageList = s_sceneNoteService.GetSceneMessageListByNoteId(note.NoteId);
                     return CheckMessageListInternal(messageList);
                 }
                 
@@ -309,7 +327,7 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                 {
-                    ProjectNoteMessage message = GetProjectNoteMessageListByNoteId(note.NoteId)
+                    ProjectNoteMessage message = s_projectNoteService.GetProjectNoteMessageListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.UpdatedDate)
                         .FirstOrDefault();
                     return message != null ? message.UpdatedDate : note.CreatedDate;
@@ -317,7 +335,7 @@ namespace UNote.Editor
 
                 case NoteType.Asset:
                 {
-                    AssetNoteMessage message = GetAssetNoteMessageListByNoteId(note.NoteId)
+                    AssetNoteMessage message = s_assetnoteService.GetAssetNoteMessageListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.UpdatedDate)
                         .FirstOrDefault();
                     return message != null ? message.UpdatedDate : note.CreatedDate;
@@ -325,7 +343,7 @@ namespace UNote.Editor
 
                 case NoteType.Scene:
                 {
-                    SceneNoteMessage message = GetSceneMessageListByNoteId(note.NoteId)
+                    SceneNoteMessage message = s_sceneNoteService.GetSceneMessageListByNoteId(note.NoteId)
                         .OrderByDescending(t => t.UpdatedDate)
                         .FirstOrDefault();
                     return message != null ? message.UpdatedDate : note.CreatedDate;
@@ -368,19 +386,19 @@ namespace UNote.Editor
             {
                 case NoteType.Project:
                 {
-                    List<ProjectNoteMessage> messageList = GetProjectNoteMessageListByNoteId(note.NoteId);
+                    List<ProjectNoteMessage> messageList = s_projectNoteService.GetProjectNoteMessageListByNoteId(note.NoteId);
                     return messageList.FindIndex(t => t.NoteContent.ToLower().Contains(text)) >= 0;
                 }
 
                 case NoteType.Asset:
                 {
-                    List<AssetNoteMessage> messageList = GetAssetNoteMessageListByNoteId(note.NoteId);
+                    List<AssetNoteMessage> messageList = s_assetnoteService.GetAssetNoteMessageListByNoteId(note.NoteId);
                     return messageList.FindIndex(t => t.NoteContent.ToLower().Contains(text)) >= 0;
                 }
 
                 case NoteType.Scene:
                 {
-                    List<SceneNoteMessage> messageList = GetSceneMessageListByNoteId(note.NoteId);
+                    List<SceneNoteMessage> messageList = s_sceneNoteService.GetSceneMessageListByNoteId(note.NoteId);
                     return messageList.FindIndex(t => t.NoteContent.ToLower().Contains(text)) >= 0;
                 }
                 
@@ -401,7 +419,7 @@ namespace UNote.Editor
                 case NoteType.Project:
                     if (note is ProjectNote projectNote)
                     {
-                        ProjectNoteContainer container = GetOwnProjectNoteContainer();
+                        ProjectNoteContainer container = s_projectNoteService.GetOwnProjectNoteContainer();
                         Undo.RecordObject(container, "UNote Change Project Note Title");
                         projectNote.ChangeNoteName(noteName);
                         container.Save();
@@ -411,7 +429,7 @@ namespace UNote.Editor
                 case NoteType.Scene:
                     if (note is SceneNote sceneNote)
                     {
-                        SceneNoteContainer container = GetOwnSceneNoteContainer();
+                        SceneNoteContainer container = s_sceneNoteService.GetOwnSceneNoteContainer();
                         Undo.RecordObject(container, "UNote Change Scene Note Title");
                         sceneNote.ChangeNoteName(noteName);
                         container.Save();
@@ -430,16 +448,16 @@ namespace UNote.Editor
             switch (note.NoteType)
             {
                 case NoteType.Project:
-                    DeleteProjectNote(note);
+                    s_projectNoteService.DeleteProjectNote(note);
                     break;
                 
                 case NoteType.Asset:
-                    DeleteAssetNote(note);
+                    s_assetnoteService.DeleteAssetNote(note);
                     break;
 
                 case NoteType.Scene:
                 {
-                    DeleteSceneNote(note);
+                    s_sceneNoteService.DeleteSceneNote(note);
                     break;
                 }
                 
@@ -466,14 +484,14 @@ namespace UNote.Editor
             bool isFavorite = note.IsFavorite();
             if (isFavorite)
             {
-                DeleteFavorite(note);
+                s_noteFavoriteService.DeleteFavorite(note);
             }
             else
             {
                 AddFavorite(note);
             }
             OnNoteFavoriteChanged?.Invoke(note);
-            GetOwnFavoriteNoteContainer().Save();
+            s_noteFavoriteService.GetOwnFavoriteNoteContainer().Save();
         }
 
         /// <summary>
@@ -525,62 +543,10 @@ namespace UNote.Editor
         /// </summary>
         public static void SaveAll()
         {
-            GetOwnProjectNoteContainer().Save();
-            GetOwnAssetNoteContainer().Save();
-            GetOwnFavoriteNoteContainer().Save();
-        }
-        
-        /// <summary>
-        /// Generate unique note name for specified note type
-        /// </summary>
-        private static string GenerateUniqueName(NoteType noteType)
-        {
-            const string baseName = "New Note";
-
-            switch (noteType)
-            {
-                case NoteType.Project:
-                    var projectNoteList = GetProjectNoteAllList();
-                    return GetUniqueName(baseName, projectNoteList);
-                
-                case NoteType.Scene:
-                    var sceneNoteList = GetCurrentSceneNoteList();
-                    return GetUniqueName(baseName, sceneNoteList);
-                
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        /// <summary>
-        /// Generate unique note name
-        /// </summary>
-        private static string GetUniqueName<T>(string baseName, IReadOnlyList<T> noteList) where T : NoteBase
-        {
-            string noteName = baseName;
-            int id = 0;
-            
-            while (true)
-            {
-                bool isOverlap = false;
-                foreach (var note in noteList)
-                {
-                    if (note.NoteName == noteName)
-                    {
-                        isOverlap = true;
-                        break;
-                    }
-                }
-
-                if (!isOverlap)
-                {
-                    break;
-                }
-
-                noteName = $"{baseName} {id++}";
-            }
-            
-            return noteName;
+            s_projectNoteService.GetOwnProjectNoteContainer().Save();
+            s_assetnoteService.GetOwnAssetNoteContainer().Save();
+            s_noteFavoriteService.GetOwnFavoriteNoteContainer().Save();
+            s_sceneNoteService.GetOwnSceneNoteContainer().Save();
         }
 
         /// <summary>
@@ -593,15 +559,15 @@ namespace UNote.Editor
             switch (note.NoteType)
             {
                 case NoteType.Project:
-                    GetOwnProjectNoteContainer().Save();
+                    s_projectNoteService.GetOwnProjectNoteContainer().Save();
                     break;
                 
                 case NoteType.Asset:
-                    GetOwnAssetNoteContainer().Save();
+                    s_assetnoteService.GetOwnAssetNoteContainer().Save();
                     break;
                 
                 case NoteType.Scene:
-                    GetOwnSceneNoteContainer().Save();
+                    s_sceneNoteService.GetOwnSceneNoteContainer().Save();
                     break;
                 
                 default:
@@ -612,6 +578,134 @@ namespace UNote.Editor
         internal void TriggerNoteAdded(NoteBase note)
         {
             OnNoteAdded?.Invoke(note);
+        }
+        
+        /// <summary>
+        /// Clear cache and load note
+        /// </summary>
+        internal static void ReloadNotes(NoteType noteType)
+        {
+            switch (noteType)
+            {
+                case NoteType.Project:
+                    s_projectNoteService.ReloadProjectNotes();
+                    break;
+
+                case NoteType.Asset:
+                    s_assetnoteService.ReloadAssetNotes();
+                    break;
+                case NoteType.Scene:
+                    s_sceneNoteService.ReloadSceneNotes();
+                    break;
+            }
+            
+            s_projectNoteService.ReloadProjectNotes();
+        }
+
+        /// <summary>
+        /// Get asset note by Object GUID
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public static List<AssetNote> GetAssetNoteListByGuid(string guid)
+        {
+            return s_assetnoteService.GetAssetNoteListByGuid(guid);
+        }
+
+        /// <summary>
+        /// Get project note message by project note GUID
+        /// </summary>
+        public static List<ProjectNoteMessage> GetProjectNoteMessageListByNoteId(string projectNoteId)
+        {
+            return s_projectNoteService.GetProjectNoteMessageListByNoteId(projectNoteId);
+        }
+
+        /// <summary>
+        /// Get asset note message by asset note GUID
+        /// </summary>
+        public static List<AssetNoteMessage> GetAssetNoteMessageListByNoteId(string assetNoteId)
+        {
+            return s_assetnoteService.GetAssetNoteMessageListByNoteId(assetNoteId);
+        }
+        
+        /// <summary>
+        /// Get scene note message by scene note GUID
+        /// </summary>
+        public static List<SceneNoteMessage> GetSceneMessageListByNoteId(string sceneNoteId)
+        {
+            return s_sceneNoteService.GetSceneMessageListByNoteId(sceneNoteId);
+        }
+
+        /// <summary>
+        /// Add new project note
+        /// </summary>
+        /// <returns></returns>
+        public static ProjectNote AddNewProjectNote()
+        {
+            return s_projectNoteService.AddNewProjectNote();
+        }
+        
+        /// <summary>
+        /// Add new asset note
+        /// </summary>
+        public static AssetNote AddNewAssetNote(string guid)
+        {
+            return s_assetnoteService.AddNewAssetNote(guid);
+        }
+        
+        /// <summary>
+        /// Add new scene note
+        /// </summary>
+        public static SceneNote AddNewSceneNote()
+        {
+            return s_sceneNoteService.AddNewSceneNote();
+        }
+
+        /// <summary>
+        /// Add new scene note message
+        /// </summary>
+        public static ProjectNoteMessage AddNewProjectNoteMessage(string guid, string noteContent, List<string> noteTagList)
+        {
+            return s_projectNoteService.AddNewProjectNoteMessage(guid, noteContent, noteTagList);
+        }
+        
+        /// <summary>
+        /// Add new asset note message
+        /// </summary>
+        public static AssetNoteMessage AddNewAssetNoteMessage(string guid, string noteContent, List<string> noteTagList)
+        {
+            return s_assetnoteService.AddNewAssetNoteMessage(guid, noteContent, noteTagList);
+        }
+        
+        /// <summary>
+        /// Add new scene note message
+        /// </summary>
+        public static SceneNoteMessage AddNewSceneNoteMessage(string guid, string noteContent, List<string> noteTagList)
+        {
+            return s_sceneNoteService.AddNewSceneNoteMessage(guid, noteContent, noteTagList);
+        }
+
+        /// <summary>
+        /// Mark specified note as favorite
+        /// </summary>
+        /// <param name="note"></param>
+        public static void AddFavorite(NoteBase note)
+        {
+            s_noteFavoriteService.AddFavorite(note);
+        }
+
+        /// <summary>
+        /// Get notes marked as favorite
+        /// </summary>
+        /// <returns></returns>
+        public static IReadOnlyList<string> GetFavoriteNoteList()
+        {
+            return s_noteFavoriteService.GetFavoriteNoteList();
+        }
+
+        internal static void ClearSceneNoteCache()
+        {
+            s_sceneNoteService.ClearSceneNoteCache();
         }
     }
 }
