@@ -7,6 +7,9 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Editor note base service
+    /// </summary>
     internal abstract class EditorNoteServiceBase
     {
         protected static string NoteAssetDirectory => Path.Combine("Assets", "UNote", "NoteAssets");

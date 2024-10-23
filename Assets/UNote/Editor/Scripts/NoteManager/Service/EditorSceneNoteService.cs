@@ -26,7 +26,7 @@ namespace UNote.Editor
         internal IReadOnlyList<SceneNote> GetCurrentSceneNoteList() => m_currentSceneNoteList;
         internal IReadOnlyList<SceneNoteMessage> GetCurrentSceneNoteMessageList() => m_currentSceneMessageList;
 
-        public EditorSceneNoteService(EditorUNoteManager noteManager)
+        internal EditorSceneNoteService(EditorUNoteManager noteManager)
         {
             m_noteManager = noteManager;
         }
@@ -114,7 +114,7 @@ namespace UNote.Editor
         /// <summary>
         /// Add new scene note message
         /// </summary>
-        public SceneNoteMessage AddNewSceneNoteMessage(string guid, string noteContent, List<string> noteTagList)
+        internal SceneNoteMessage AddNewSceneNoteMessage(string guid, string noteContent, List<string> noteTagList)
         {
             SceneNoteContainer container = GetOwnSceneNoteContainer();
             
@@ -141,7 +141,7 @@ namespace UNote.Editor
         /// <summary>
         /// Get scene note message by scene note GUID
         /// </summary>
-        public List<SceneNoteMessage> GetSceneMessageListByNoteId(string sceneNoteId)
+        internal List<SceneNoteMessage> GetSceneMessageListByNoteId(string sceneNoteId)
         {
             if (m_sceneMessageDict.TryGetValue(sceneNoteId, out var noteMessageList))
             {

@@ -26,7 +26,7 @@ namespace UNote.Editor
         internal IReadOnlyList<ProjectNote> GetProjectNoteAllList() => m_projectNoteList;
         internal IReadOnlyList<ProjectNoteMessage> GetProjectNoteMessageAllList() => m_projectNoteMessageList;
 
-        public EditorProjectNoteService(EditorUNoteManager noteManager)
+        internal EditorProjectNoteService(EditorUNoteManager noteManager)
         {
             m_noteManager = noteManager;
         }
@@ -103,7 +103,7 @@ namespace UNote.Editor
             return GetUniqueName(baseName, projectNoteList);
         }
         
-        public ProjectNoteMessage AddNewProjectNoteMessage(string guid, string noteContent, List<string> noteTagList)
+        internal ProjectNoteMessage AddNewProjectNoteMessage(string guid, string noteContent, List<string> noteTagList)
         {
             ProjectNoteContainer container = GetOwnProjectNoteContainer();
             
@@ -127,7 +127,7 @@ namespace UNote.Editor
             return newNote;
         }
 
-        public List<ProjectNoteMessage> GetProjectNoteMessageListByNoteId(string projectNoteId)
+        internal List<ProjectNoteMessage> GetProjectNoteMessageListByNoteId(string projectNoteId)
         {
             if (m_projectMessageDictByGUID.TryGetValue(projectNoteId, out var noteMessageList))
             {

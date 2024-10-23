@@ -702,10 +702,5 @@ namespace UNote.Editor
         {
             return s_noteFavoriteService.GetFavoriteNoteList();
         }
-
-        internal static void ClearSceneNoteCache()
-        {
-            s_sceneNoteService.ClearSceneNoteCache();
-        }
     }
 }

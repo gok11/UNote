@@ -8,6 +8,9 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Editor asset note service
+    /// </summary>
     internal class EditorAssetNoteService : EditorNoteServiceBase
     {
         private EditorUNoteManager m_noteManager;
@@ -70,7 +73,7 @@ namespace UNote.Editor
             }
         }
         
-        public AssetNote AddNewAssetNote(string guid)
+        internal AssetNote AddNewAssetNote(string guid)
         {
             AssetNoteContainer container = GetOwnAssetNoteContainer();
             
@@ -92,7 +95,7 @@ namespace UNote.Editor
             return newNote;
         }
         
-        public AssetNoteMessage AddNewAssetNoteMessage(string noteId, string noteContent, List<string> noteTagList)
+        internal AssetNoteMessage AddNewAssetNoteMessage(string noteId, string noteContent, List<string> noteTagList)
         {
             AssetNoteContainer container = GetOwnAssetNoteContainer();
             
@@ -116,7 +119,7 @@ namespace UNote.Editor
             return newNote;
         }
 
-        public List<AssetNote> GetAssetNoteListByGuid(string guid)
+        internal List<AssetNote> GetAssetNoteListByGuid(string guid)
         {
             if (m_assetNoteDict.TryGetValue(guid, out var noteList))
             {
@@ -137,7 +140,7 @@ namespace UNote.Editor
             return newList;
         }
 
-        public IEnumerable<AssetNote> GetAllAssetNotesIdDistinct()
+        internal IEnumerable<AssetNote> GetAllAssetNotesIdDistinct()
         {
             if (m_assetNoteListDistinct.Count > 0)
             {
@@ -159,7 +162,7 @@ namespace UNote.Editor
             return m_assetNoteListDistinct;
         }
 
-        public List<AssetNoteMessage> GetAssetNoteMessageListByNoteId(string assetNoteId)
+        internal List<AssetNoteMessage> GetAssetNoteMessageListByNoteId(string assetNoteId)
         {
             if (m_assetNoteMessageDict.TryGetValue(assetNoteId, out var noteMessageList))
             {

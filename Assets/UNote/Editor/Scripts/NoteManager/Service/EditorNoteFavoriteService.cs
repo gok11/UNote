@@ -7,6 +7,9 @@ using UNote.Runtime;
 
 namespace UNote.Editor
 {
+    /// <summary>
+    /// Editor note favorite service
+    /// </summary>
     internal class EditorNoteFavoriteService : EditorNoteServiceBase
     {
         private FavoriteNoteContainer m_favoriteNoteContainerInstance;
@@ -39,12 +42,12 @@ namespace UNote.Editor
             return m_favoriteNoteContainerInstance;
         }
 
-        public IReadOnlyList<string> GetFavoriteNoteList()
+        internal IReadOnlyList<string> GetFavoriteNoteList()
         {
             return GetOwnFavoriteNoteContainer().GetFavoriteNoteList();
         }
 
-        public void AddFavorite(NoteBase note)
+        internal void AddFavorite(NoteBase note)
         {
             if (note == null)
             {
@@ -61,7 +64,7 @@ namespace UNote.Editor
             GetOwnFavoriteNoteContainer().Save();
         }
 
-        public void DeleteFavorite(NoteBase note)
+        internal void DeleteFavorite(NoteBase note)
         {
             if (note == null)
             {
