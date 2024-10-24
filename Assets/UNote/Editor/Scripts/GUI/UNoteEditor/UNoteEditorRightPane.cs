@@ -221,7 +221,7 @@ namespace UNote.Editor
         /// <summary>
         /// Load messages
         /// </summary>
-        private void SetupMessageList()
+        internal void SetupMessageList()
         {
             // disable to edit title
             SetTitleGUIEditMode(false);

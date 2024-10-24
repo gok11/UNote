@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UNote.Runtime;
 
 namespace UNote.Editor
@@ -29,8 +31,23 @@ namespace UNote.Editor
         internal EditorSceneNoteService(EditorUNoteManager noteManager)
         {
             m_noteManager = noteManager;
+            
+            // Reload on scene event
+            EditorSceneManager.activeSceneChanged -= OnActiveSceneChanged;
+            EditorSceneManager.activeSceneChangedInEditMode -= OnActiveSceneChanged;
+            EditorSceneManager.sceneOpened -= OnSceneOpened;
+            EditorSceneManager.newSceneCreated -= OnSceneCreated;
+            EditorSceneManager.sceneLoaded -= OnSceneLoaded;
+            EditorSceneManager.sceneClosed -= OnSceneClosed;
+            
+            EditorSceneManager.activeSceneChanged += OnActiveSceneChanged;
+            EditorSceneManager.activeSceneChangedInEditMode += OnActiveSceneChanged;
+            EditorSceneManager.sceneOpened += OnSceneOpened;
+            EditorSceneManager.newSceneCreated += OnSceneCreated;
+            EditorSceneManager.sceneLoaded += OnSceneLoaded;
+            EditorSceneManager.sceneClosed += OnSceneClosed;
         }
-        
+
         internal SceneNoteContainer GetOwnSceneNoteContainer()
         {
             if (m_sceneNoteContainer)
@@ -190,6 +207,38 @@ namespace UNote.Editor
             }
             
             ReloadSceneNotes();
+        }
+        
+        private void OnActiveSceneChanged(Scene prev, Scene current)
+        {
+            ReloadNotesAndEditorViews();
+        }
+
+        private void OnSceneOpened(Scene scene, OpenSceneMode mode)
+        {
+            ReloadNotesAndEditorViews();
+        }
+
+        private void OnSceneCreated(Scene scene, NewSceneSetup setup, NewSceneMode mode)
+        {
+            ReloadNotesAndEditorViews();
+        }
+
+        private void OnSceneLoaded(Scene prev, LoadSceneMode current)
+        {
+            ReloadNotesAndEditorViews();
+        }
+        
+        private void OnSceneClosed(Scene scene)
+        {
+            ReloadNotesAndEditorViews();
+        }
+
+        private void ReloadNotesAndEditorViews()
+        {
+            ReloadSceneNotes();
+            UNoteEditor.CenterPane.SetupListItems();
+            UNoteEditor.RightPane.SetupMessageList();
         }
 
         /// <summary>
