@@ -237,8 +237,8 @@ namespace UNote.Editor
         private void ReloadNotesAndEditorViews()
         {
             ReloadSceneNotes();
-            UNoteEditor.CenterPane.SetupListItems();
-            UNoteEditor.RightPane.SetupMessageList();
+            UNoteEditor.CenterPane?.SetupListItems();
+            UNoteEditor.RightPane?.SetupMessageList();
         }
 
         /// <summary>

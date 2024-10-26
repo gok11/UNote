@@ -1,7 +1,9 @@
 using System;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using UNote.Runtime;
 
@@ -122,9 +124,33 @@ namespace UNote.Editor
                 
                 Close();
             };
+
+            HelpBox helpBox = new HelpBox("Scene note can be created on saved scene.", HelpBoxMessageType.Warning);
             
             m_container.AddSpacer();
+            m_container.Add(helpBox);
             m_container.Add(addButton);
+
+            // Allow notes to be created only in saved scenes
+            EnableSceneNoteGUI(EditorSceneManager.GetActiveScene());
+            
+            EditorSceneManager.activeSceneChangedInEditMode -= OnActiveSceneChanged;
+            EditorSceneManager.activeSceneChanged -= OnActiveSceneChanged;
+            
+            EditorSceneManager.activeSceneChangedInEditMode += OnActiveSceneChanged;
+            EditorSceneManager.activeSceneChanged += OnActiveSceneChanged;            
+            
+            void OnActiveSceneChanged(Scene _, Scene activeScene)
+            {
+                EnableSceneNoteGUI(activeScene);
+            }
+
+            void EnableSceneNoteGUI(Scene scene)
+            {
+                bool isValidScene = !string.IsNullOrEmpty(scene.path);
+                helpBox.style.display = isValidScene ? DisplayStyle.None : DisplayStyle.Flex;
+                addButton.SetEnabled(isValidScene);
+            }
         }
     }
 }
