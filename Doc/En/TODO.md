@@ -8,7 +8,7 @@
 * [x] Add feature: Tag
 * [ ] Add multiple threads for Asset Notes, etc.
 * [ ] Add SceneNote
-  * [ ] Notes for the entire scene (Scene version of ProjectNote)
+  * [x] Notes for the entire scene (Scene version of ProjectNote)
   * [ ] Notes linked to objects in the scene (Scene version of AssetNote)
   * [ ] Notes pointing to specific coordinates
   * [ ] Notes pointing to specific scene camera coordinates
